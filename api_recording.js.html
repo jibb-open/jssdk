@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: api/recording.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: api/recording.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import {Config} from "../config.js";
+import {Auth} from "./auth.js";
+import {http} from "../utils/http/index.js"
+
+/**
+ * @module Recording
+ *  This is an experimental API.
+ * 
+ */
+
+/**
+ * 
+ * @async
+ * @param {object} param0 
+ * @param {string} param0.recordingId 
+ * @param {string} param0.title  
+ * @returns - http result
+ */
+export async function  updateRecording({recordingId, title}) {
+		let headers = {
+			"Content-Type": "application/json",
+			Accept: "application/json",
+			"x-jibb-user-jwt": await Auth.getUserToken(),
+		}
+		let body = {
+			title: title,
+		}
+		return http.post(`${Config.apiBaseURL}/v1/meetings/recordings/${recordingId}`, body, headers)
+	}
+/**
+ * 
+ * @async	
+ * @param {string} recordingId 
+ * @returns {list}
+ */
+export async function getRecording(recordingId) {
+	let headers = {
+		"Content-Type": "application/json",
+		Accept: "application/json",
+		"x-jibb-user-jwt": await Auth.getUserToken(),
+	}
+	let response = await http.get(`${Config.apiBaseURL}/v1/meetings/recordings/${recordingId}`, headers)
+	return response.data
+}
+
+/**
+ * 
+ * @async
+ * @param {*} pagination 
+ * @returns {}
+ */
+export async function getRecordingList(pagination) {
+	let headers = {
+		"Content-Type": "application/json",
+		Accept: "application/json",
+		"x-jibb-user-jwt": await Auth.getUserToken(),
+	}
+	if (pagination !== undefined) headers["x-jibb-pagination"] = JSON.stringify(pagination)
+	let response = await http.get(`${Config.apiBaseURL}/v1/meetings/recordings`, headers)
+	pagination = response.headers["x-jibb-pagination"]
+	pagination = pagination &amp;&amp; JSON.parse(pagination)
+	return {
+		items: response.data.items,
+		pagination: pagination,
+	}
+}
+
+
+/**
+ * 
+ * @async
+ * @param {string} recordingId 
+ * @returns - http result
+ */
+export async function deleteRecording(recordingId) {
+	let headers = {
+		"Content-Type": "application/json",
+		Accept: "application/json",
+		"x-jibb-user-jwt": await Auth.getUserToken(),
+	}
+
+	return http.delete(`${Config.apiBaseURL}/v1/meetings/recordings/${recordingId}`, headers)
+}
+
+/**
+ *
+ * @async
+ * @param {string} recordingId
+ * @returns {array}
+ */
+export async function getImageList(recordingId) {
+	let headers = {
+		"Content-Type": "application/json",
+		Accept: "application/json",
+		"x-jibb-user-jwt": await Auth.getUserToken(),
+	}
+	let response = await http.get(`${Config.apiBaseURL}/v1/meetings/recordings/${recordingId}/images`, headers)
+	return response.data.imageName
+}
+/**
+ * @async
+ * @param {object} param0
+ * @param {string} param0.recordingId
+ * @param {string} param0.imageName
+ * @returns {data}
+ */
+export async function getImage({ recordingId, imageName }) {
+	let headers = {
+		"Content-Type": "application/json",
+		Accept: "image/jpeg",
+		"x-jibb-user-jwt": await Auth.getUserToken(),
+	}
+
+	let url = `${Config.apiBaseURL}/v1/meetings/recordings/${recordingId}/images/${imageName}`
+	let response = await http.get(url, headers, { responseType: "arraybuffer" })
+	return response.data
+}
+
+/**
+ *
+ * @async
+ * @param {string} recordingId
+ * @returns {array}
+ */
+export async function getAllRecordImages(recordingId) {
+	let imageList = []
+	let imageNameList = await this.getImageList(recordingId)
+
+	for (const imageName of imageNameList) {
+		let headers = {
+			"Content-Type": "application/json",
+			Accept: "application/json",
+			"x-jibb-user-jwt": await Auth.getUserToken(),
+		}
+		let response = await http.get(`${Config.apiBaseURL}/v1/meetings/recordings/${recordingId}/images/${imageName}`, {
+			headers,
+		})
+		imageList.push({ imageName: imageName, data: response.data })
+	}
+
+	return imageList
+}
+
+/**
+ *
+ * @async
+ * @param {object} param0
+ * @param {string} param0.recordingId
+ * @param {string} param0.imageName
+ * @returns - http result
+ */
+export async function deleteImage({ recordingId, imageName }) {
+	let headers = {
+		"Content-Type": "application/json",
+		Accept: "application/json",
+		"x-jibb-user-jwt": await Auth.getUserToken(),
+	}
+
+	return http.delete(`${Config.apiBaseURL}/v1/meetings/recordings/${recordingId}/images/${imageName}`, headers)
+}
+
+/**
+ *
+ * @async
+ * @param {object} options
+ * @param {string} options.meetingId
+ * @param {string} options.meetingToken
+ * @param {string} [options.title="UNTITLED"]
+ * @param {number} [options.interval=60]
+ * @returns {data} - recording details
+ */
+export async function startRecording(options = { meetingId, meetingToken, title: "UNTITLED", interval: 60 }) {
+	let meetingToken = options?.meetingToken
+	let title = options?.title || "UNTITLED"
+	let interval = options?.interval || 60
+	let meetingId = options?.meetingId
+
+	let headers = {
+		"Content-Type": "application/json",
+		Accept: "application/json",
+		"x-jibb-user-jwt": await Auth.getUserToken(),
+		"x-jibb-meeting-jwt": meetingToken,
+	}
+	let body = {
+		title: title,
+		write_interval: interval,
+		meeting_id: meetingId,
+	}
+	let response = await http.post(`${Config.apiBaseURL}/v1/meetings/recordings/start`, body, headers)
+	return response.data
+}
+
+/**
+ *
+ * @async
+ * @returns - http result
+ */
+export async function stopRecording() {
+	let headers = {
+		"Content-Type": "application/json",
+		Accept: "application/json",
+		"x-jibb-user-jwt": await Auth.getUserToken(),
+	}
+	let body = {}
+	let response = await http.post(`${Config.apiBaseURL}/v1/meetings/recordings/stop`, body, headers)
+	return response.data
+}
+
+/**
+ *
+ * @async
+ * @returns {data}
+ */
+
+export async function takeSnapshot() {
+	let headers = {
+		"Content-Type": "application/json",
+		Accept: "application/json",
+		"x-jibb-user-jwt": await Auth.getUserToken(),
+	}
+	let body = {}
+	let response = await http.post(`${Config.apiBaseURL}/v1/meetings/recordings/snapshot`, body, headers)
+	return response.data
+}
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="admin%250AThis%2520is%2520an%2520experimental%2520API.module_.html">admin
+This is an experimental API.</a></li><li><a href="module-auth.html">auth</a></li><li><a href="module-EventBus.html">EventBus</a></li><li><a href="module-meeting.html">meeting</a></li><li><a href="Recording%250A%2520This%2520is%2520an%2520experimental%2520API.module_.html">Recording
+ This is an experimental API.</a></li><li><a href="superadmin%250AThis%2520is%2520an%2520experimental%2520API.module_.html">superadmin
+This is an experimental API.</a></li><li><a href="User%250AThis%2520is%2520an%2520experimental%2520API.module_.html">User
+This is an experimental API.</a></li><li><a href="webexbot%250AThis%2520is%2520an%2520experimental%2520API.module_.html">webexbot
+This is an experimental API.</a></li></ul><h3>Namespaces</h3><ul><li><a href="Examples.html">Examples</a></li></ul><h3>Classes</h3><ul><li><a href="module-auth-AuthClass.html">AuthClass</a></li><li><a href="Whiteboard.html">Whiteboard</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Nov 24 2022 09:28:33 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

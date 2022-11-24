@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: api/eventbus.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: api/eventbus.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import {Auth} from './auth.js';
+import {Config} from '../config.js'
+import {http} from "../utils/http/index.js"
+
+/**
+ * EventBus.
+ * @module EventBus
+ * 
+ * 
+ */
+
+/**
+ *
+ * @async
+ * @param {string} clientId
+ * @returns {array} - list of available camera, each camera is an object of with id and name properties.
+ */
+export async function getCameraList(clientId) {
+	let response = await http.get(
+		`${Config.apiBaseURL}/v1/eventbus/clients/${clientId}/cameras`,
+		await _prepareRequestHeaders()
+	)
+	return response.data.items
+}
+
+/**
+ *
+ * @async
+ * @param {object} param0
+ * @param {object} param0.cameraId
+ * @param {object} param0.clientId
+ * @returns {data}
+ */
+export async function getCameraPreview({ cameraId, clientId }) {
+	let body = {
+		source: {
+			id: cameraId,
+		},
+	}
+	let response = await http.post(
+		`${Config.apiBaseURL}/v1/eventbus/${clientId}/preview`,
+		body,
+		await _prepareRequestHeaders()
+	)
+	return response.data.image
+}
+
+/**
+ *
+ * @async
+ * @param {object} param0
+ * @param {string} param0.meetingId
+ * @param {string} param0.meeting_token
+ * @param {string} param0.surfaceType - PAPER or WHITEBOARD
+ * @param {string} [param0.cameraId] - either sipUri or cameraId should be specified.
+ * @param {string} [param0.sipUri] - either sipUri or cameraId should be specified.
+ * @param {boolean} [param0.flipLeftRight=false] - mirror output stream.
+ * @param {boolean} [param0.flipUpDown=false] - mirror vertically  output stream.
+ * @param {number} [param0.rotation=0] - output rotation degree 0, 90, 180, 270.
+ * @param {boolean} [param0.fixedCorners=fales] - enable srufcae fixed corners after first detection.
+ * @param {string} param0.clientId
+ * @param {array} [param0.customCorners] - array of 8 Numbers ranged from 0-1 that decribe 4 points based on percentage [x1, y1, x2, y2 ...] example [0.1, 0.1, 0.8, 0.1, 0.1, 0.8, 0.8 ,0.8]
+ * @param {boolean} [param0.enableColor]
+ * @param {boolean} [param0.enableEstimation]
+ * @returns - http result
+ */
+export async function startStream({
+	meetingId,
+	meetingToken,
+	surfaceType,
+	cameraId,
+	sipUri,
+	flipLeftRight,
+	flipUpDown,
+	rotation,
+	fixedCorners,
+	clientId,
+	customCorners,
+	enableColor,
+	enableEstimation,
+}) {
+	let request = {
+		config: {
+			surface_type: surfaceType,
+		},
+		app_config: {
+			meeting_id: meetingId,
+			meeting_token: meetingToken,
+		},
+		runtime_config: _makeRuntimeConfig({
+			fixedCorners,
+			flipLeftRight,
+			flipUpDown,
+			rotation,
+			customCorners,
+			enableColor,
+			enableEstimation,
+		}),
+	}
+
+	if (!cameraId &amp;&amp; !sipUri) {
+		return Promise.reject(`Invalid request: either sipUri or cameraId should be specified`)
+	}
+	if (cameraId &amp;&amp; sipUri) {
+		return Promise.reject(`Invalid request: both sipUri (${sipUri}) and cameraId (${sipUri}) are specified`)
+	} else if (sipUri) {
+		request["sip_uri"] = sipUri
+	} else {
+		request["camera"] = {
+			id: cameraId,
+		}
+	}
+
+	let body = {
+		start_request: request,
+	}
+
+	return http.post(`${Config.apiBaseURL}/v1/eventbus/clients/${clientId}/start`, body, await _prepareRequestHeaders())
+}
+
+//if there is no body I get error code:401 status:Unauthorized
+
+/**
+ *
+ * @async
+ * @param {string} clientId
+ * @returns  - http result
+ */
+export async function stopStream(clientId) {
+	let body = {}
+	return http.post(`${Config.apiBaseURL}/v1/eventbus/${clientId}/stop`, body, await _prepareRequestHeaders())
+}
+
+// the only decent solution that comes to my mind is using body as parameter,
+//other one is having all possible events as paramaters ( more than 13) and then check for null and build the body like jibb.startStream.
+// we can send grpc event data but then client need to have the grpc file and complie it.
+
+/**
+ *
+ * @async
+ * @param {string} body
+ * @returns - http result.
+ */
+export async function sendMessage(body) {
+	return http.post(`${Config.apiBaseURL}/v1/eventbus`, body, await _prepareRequestHeaders())
+}
+/**
+ *
+ * @async
+ * @param {object} param0
+ * @param {boolean} [param0.flipLeftRight=false] - mirror output stream.
+ * @param {boolean} [param0.flipUpDown=false] - mirror vertically  output stream.
+ * @param {number} [param0.rotation=0] - output rotation degree 0, 90, 180, 270.
+ * @param {boolean} [param0.fixedCorners=fales] - enable srufcae fixed corners after first detection.
+ * @param {string} param0.clientId
+ * @param {array} [param0.customCorners] - array of 8 Numbers ranged from 0-1 that decribe 4 points based on percentage [x1, y1, x2, y2 ...] example [0.1, 0.1, 0.8, 0.1, 0.1, 0.8, 0.8 ,0.8]
+ * @param {boolean} [param0.enableColor]
+ * @param {boolean} [param0.enableEstimation]
+ * @returns - http result.
+ */
+export async function setRuntimeConfig({
+	flipLeftRight,
+	flipUpDown,
+	rotation,
+	fixedCorners,
+	customCorners,
+	clientId,
+	enableColor,
+	enableEstimation,
+}) {
+	let body = {
+		runtime_config_request: {
+			runtime_config: _makeRuntimeConfig({
+				fixedCorners,
+				flipLeftRight,
+				flipUpDown,
+				rotation,
+				customCorners,
+				enableColor,
+				enableEstimation,
+			}),
+		},
+	}
+
+	return http.post(`${Config.apiBaseURL}/v1/eventbus/${clientId}/runtime_config`, body, await _prepareRequestHeaders())
+}
+
+/**
+ *
+ *
+ * @async
+ * @returns {array} - list of connected clients, each clinet is an object with id and type property
+ */
+export async function getClientStatusList() {
+	let response = await http.get(`${Config.apiBaseURL}/v1/eventbus/clients`, await _prepareRequestHeaders())
+
+	return response.data.clients
+}
+
+async function _prepareRequestHeaders() {
+	return {
+		"Content-Type": "application/json",
+		Accept: "application/json",
+		"x-jibb-user-jwt": await Auth.getUserToken(),
+	}
+}
+
+function _makeRuntimeConfig({
+	fixedCorners,
+	flipLeftRight,
+	flipUpDown,
+	rotation,
+	customCorners,
+	enableColor,
+	enableEstimation,
+}) {
+	switch (rotation) {
+		case 90:
+			rotation = "1"
+			break
+		case 180:
+		case -180:
+			rotation = "2"
+			break
+		case -90:
+		case 270:
+			rotation = "3"
+			break
+		case 0:
+		case 360:
+		default:
+			rotation = "0"
+			break
+	}
+
+	return {
+		custom_corners: customCorners || [],
+		rotation: rotation,
+		enable_color: enableColor || false,
+		fixed_corners: fixedCorners,
+		enable_estimation: enableEstimation || false,
+		flip_up_down: flipUpDown || false,
+		flip_left_right: flipLeftRight || false,
+	}
+}
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="admin%250AThis%2520is%2520an%2520experimental%2520API.module_.html">admin
+This is an experimental API.</a></li><li><a href="module-auth.html">auth</a></li><li><a href="module-EventBus.html">EventBus</a></li><li><a href="module-meeting.html">meeting</a></li><li><a href="Recording%250A%2520This%2520is%2520an%2520experimental%2520API.module_.html">Recording
+ This is an experimental API.</a></li><li><a href="superadmin%250AThis%2520is%2520an%2520experimental%2520API.module_.html">superadmin
+This is an experimental API.</a></li><li><a href="User%250AThis%2520is%2520an%2520experimental%2520API.module_.html">User
+This is an experimental API.</a></li><li><a href="webexbot%250AThis%2520is%2520an%2520experimental%2520API.module_.html">webexbot
+This is an experimental API.</a></li></ul><h3>Namespaces</h3><ul><li><a href="Examples.html">Examples</a></li></ul><h3>Classes</h3><ul><li><a href="module-auth-AuthClass.html">AuthClass</a></li><li><a href="Whiteboard.html">Whiteboard</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Nov 24 2022 09:28:33 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
