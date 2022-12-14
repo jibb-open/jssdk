@@ -86,21 +86,21 @@ const SurfaceType = {
 function Config(apiKey) {
 	this.apiKey = apiKey
 	this.webURL = "https://app.jibb.ai"
-	xapi.Command.WebEngine.MediaAccess.add({ Hostname: "app.jibb.ai", Device: "Camera" })
-	xapi.Command.WebEngine.MediaAccess.add({ Hostname: "app.jibb.ai", Device: "Microphone" })
-	JIBB.Auth.setApiKey(this.apiKey)
+	xapi.Command.WebEngine.MediaAccess.add({Hostname: "app.jibb.ai", Device: "Camera"})
+	xapi.Command.WebEngine.MediaAccess.add({Hostname: "app.jibb.ai", Device: "Microphone"})
+	JIBB.Auth.configure({apiKey: apiKey})
 }
 
 async function generateMeetingLink() {
 	console.log("generating meeting link ...")
 
-	var title = String(await xapi.Config.SystemUnit.CustomDeviceId.get())
+	let title = String(await xapi.Config.SystemUnit.CustomDeviceId.get())
 	if (String(title) == "") {
 		title = "webex"
 	}
 	let userToken = await Auth.getUserToken()
 
-	meetingId = await MeetingAPI.createMeeting({ title: title, isTemporary: true })
+	meetingId = await MeetingAPI.createMeeting({title: title, isTemporary: true})
 
 	let url = `${config.webURL}/remote/${meetingId}?user_token=${userToken}`
 	return url
@@ -112,7 +112,7 @@ async function autoStartMeeting() {
 	xapi.Command.UserInterface.Extensions.Panel.Close()
 
 	let url = await generateMeetingLink()
-	await xapi.Command.UserInterface.WebView.Display({ Title: "jibb", Url: url })
+	await xapi.Command.UserInterface.WebView.Display({Title: "jibb", Url: url})
 	await sleep(10000)
 
 	let statusList = await EventBus.getClientStatusList()
@@ -122,7 +122,7 @@ async function autoStartMeeting() {
 	let cameraList = await EventBus.getCameraList(clinetID)
 
 	if (cameraList.length) {
-		let meetingToken = await MeetingAPI.getMeetingToken({ meetingId: meetingId, permission: 2 })
+		let meetingToken = await MeetingAPI.getMeetingToken({meetingId: meetingId, permission: 2})
 		let surfaceType = SurfaceType.WHITEBOARD
 		let cameraId = cameraList[0].id
 
@@ -142,7 +142,7 @@ async function autoStartMeeting() {
 async function stopMeeting() {
 	console.log("stopMeeting ...")
 
-	xapi.Command.UserInterface.WebView.Clear({ Target: "PersistentWebApp" })
+	xapi.Command.UserInterface.WebView.Clear({Target: "PersistentWebApp"})
 
 	xapi.Command.Video.Selfview.Set({
 		FullscreenMode: "Off",
@@ -155,45 +155,45 @@ async function stopMeeting() {
 async function zoomIn() {
 	let value = await xapi.Status.Cameras.Camera[1].Position.Zoom.get()
 	value = parseInt(value) - 100
-	xapi.Command.Camera.PositionSet({ CameraId: "1", Zoom: value })
+	xapi.Command.Camera.PositionSet({CameraId: "1", Zoom: value})
 }
 
 async function zoomOut() {
 	let value = await xapi.Status.Cameras.Camera[1].Position.Zoom.get()
 	value = parseInt(value) + 100
-	xapi.Command.Camera.PositionSet({ CameraId: "1", Zoom: value })
+	xapi.Command.Camera.PositionSet({CameraId: "1", Zoom: value})
 }
 
 async function moveUp() {
 	let value = await xapi.Status.Cameras.Camera[1].Position.Tilt.get()
 	value = parseInt(value) + 100
-	xapi.Command.Camera.PositionSet({ CameraId: "1", Tilt: value })
+	xapi.Command.Camera.PositionSet({CameraId: "1", Tilt: value})
 }
 
 async function moveDown() {
 	let value = await xapi.Status.Cameras.Camera[1].Position.Tilt.get()
 	value = parseInt(value) - 100
-	xapi.Command.Camera.PositionSet({ CameraId: "1", Tilt: value })
+	xapi.Command.Camera.PositionSet({CameraId: "1", Tilt: value})
 }
 
 async function moveRigt() {
 	let value = await xapi.Status.Cameras.Camera[1].Position.Pan.get()
 	value = parseInt(value) - 100
-	xapi.Command.Camera.PositionSet({ CameraId: "1", Pan: value })
+	xapi.Command.Camera.PositionSet({CameraId: "1", Pan: value})
 }
 
 async function moveLeft() {
 	let value = await xapi.Status.Cameras.Camera[1].Position.Pan.get()
 	value = parseInt(value) + 100
-	xapi.Command.Camera.PositionSet({ CameraId: "1", Pan: value })
+	xapi.Command.Camera.PositionSet({CameraId: "1", Pan: value})
 }
 
 async function resetCamera() {
-	xapi.Command.Camera.PositionReset({ Axis: "all", CameraId: 1 })
+	xapi.Command.Camera.PositionReset({Axis: "all", CameraId: 1})
 }
 
 async function setCameraPosition(postionName) {
-	let json = await xapi.Command.Camera.Preset.List({ CameraId: 1, DefaultPosition: false })
+	let json = await xapi.Command.Camera.Preset.List({CameraId: 1, DefaultPosition: false})
 	let jsonArray = json["Preset"]
 	let index = -1
 	var filteredObj = jsonArray.find(function (item, i) {
@@ -204,7 +204,7 @@ async function setCameraPosition(postionName) {
 		}
 	})
 	if (filteredObj != undefined) {
-		xapi.Command.Camera.Preset.Activate({ PresetId: filteredObj["PresetId"] })
+		xapi.Command.Camera.Preset.Activate({PresetId: filteredObj["PresetId"]})
 	}
 }
 // Add the management panel to UI
@@ -236,7 +236,7 @@ async function main() {
 	xapi.Event.UserInterface.Extensions.Panel.Clicked.on((value) => {
 		if (value.PanelId == "jibb_panel") {
 			setCameraPosition("Jibb")
-			xapi.Command.Video.Selfview.Set({ FullscreenMode: "Off", Mode: "Off", PIPPosition: "LowerRight" })
+			xapi.Command.Video.Selfview.Set({FullscreenMode: "Off", Mode: "Off", PIPPosition: "LowerRight"})
 		}
 	})
 
@@ -400,13 +400,13 @@ This is an experimental API.</a></li><li><a href="module-auth.html">auth</a></li
  This is an experimental API.</a></li><li><a href="superadmin%250AThis%2520is%2520an%2520experimental%2520API.module_.html">superadmin
 This is an experimental API.</a></li><li><a href="User%250AThis%2520is%2520an%2520experimental%2520API.module_.html">User
 This is an experimental API.</a></li><li><a href="webexbot%250AThis%2520is%2520an%2520experimental%2520API.module_.html">webexbot
-This is an experimental API.</a></li></ul><h3>Namespaces</h3><ul><li><a href="Examples.html">Examples</a></li></ul><h3>Classes</h3><ul><li><a href="module-auth-AuthClass.html">AuthClass</a></li><li><a href="Whiteboard.html">Whiteboard</a></li></ul>
+This is an experimental API.</a></li></ul><h3>Namespaces</h3><ul><li><a href="Examples.html">Examples</a></li></ul><h3>Classes</h3><ul><li><a href="Whiteboard.html">Whiteboard</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Dec 13 2022 00:45:19 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Dec 14 2022 02:19:22 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -27,9 +27,14 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import {Config} from "../config.js"
-import {logger} from "../utils/logger/index.js"
 import {AccessLevel, UserClaims} from "../types/types.js"
 import {http} from "../utils/http/index.js"
+
+let _userClaims = new Map()
+let _apiKey = undefined
+let _getIdToken = async () => {
+	throw new Error("not implemented")
+}
 
 /**
  * @module auth
@@ -37,201 +42,188 @@ import {http} from "../utils/http/index.js"
 
 
 /**
- * AuthClass.
- * @class AuthClass
- *
+ * setting Api key
+ * @param {object} [param0={}]
+ * @param {Number} [param0.apiKey] - optional variable defining user's API key
+ * @param {Number} [param0.getIdToken] - optional async function to get user's idToken
  */
+export function configure({apiKey, getIdToken}) {
+	if (apiKey)
+		_apiKey = apiKey
+	if (getIdToken)
+		_getIdToken = getIdToken
+	_userClaims.clear()
+}
 
-class AuthClass {
-	#userClaims
+/**
+ * Manually setting userToken
+ * @param {string} token
+ * @param {AccessLevel} accessLevel
+ */
+export function setUserToken(token, accessLevel = AccessLevel.USER) {
+	if (!token)
+		return
+	let c = new UserClaims(token)
+	if (!c.isExpired())
+		_userClaims.set(accessLevel, c)
+}
 
-	constructor() {
-		logger.debug("Creating new Auth instance")
-		this.apiKey = undefined
-		this.#userClaims = new Map()
-		this.getIdToken = undefined
-	}
+/**
+ *
+ * @returns {UserClaims}
+ */
+export async function getUserClaims() {
+	return getUserToken()
+		.then(_token => {
+			return _userClaims.get(AccessLevel.USER)
+		})
+}
 
-	/**
-	 * Manually setting userToken
-	 * @param {string} token
-	 * @param {AccessLevel} accessLevel
-	 */
-	setUserToken(token, accessLevel = AccessLevel.USER) {
-		let claims = new UserClaims(token)
-		this.#userClaims.set(accessLevel, claims)
-	}
+/**
+ *
+ * @async
+ * @param {object} [param0={}]
+ * @param {Number} [param0.minExpiry] - optional variable defining minimum expiry time in seconds
+ * @param {AccessLevel} [param0.accessLevel=AccessLevel.USER]
+ * @returns {string} - user Token.
+ */
+export async function getUserToken({minExpiry, accessLevel} = {}) {
+	let claim = _userClaims.get(accessLevel)
+	let refresh = false
+	minExpiry = minExpiry || (30 * 60)
+	accessLevel = accessLevel || AccessLevel.USER
 
-	/**
-	 * setting Api key
-	 * @param {string} apiKey
-	 */
-	setApiKey(apiKey) {
-		this.apiKey = apiKey
-		this.#userClaims.clear()
-	}
+	let exp = claim ? claim.getSecondsUntilExpiry() : 0
 
-	async #getUserTokenFromApiKey({expiry, accessLevel}) {
-		let headers = {
-			"Content-Type": "application/json",
-			Accept: "application/json",
-		}
-		let body = {
-			api_key: this.apiKey,
-		}
-		if (expiry !== undefined) {
-			body.expiry = {seconds: expiry}
-		}
-		let url
+	//at least 1 minute expiry time
+	if (exp &lt; 60) {
+		claim = undefined
+		refresh = true
+	} else if (exp &lt; minExpiry)
+		refresh = true
 
-		switch (accessLevel) {
-			case AccessLevel.ADMIN:
-				url = `${Config.apiBaseURL}/v1/admin/auth/token`
-				break
-			case AccessLevel.SUPERADMIN:
-				url = `${Config.apiBaseURL}/v1/superadmin/auth/token`
-				break
-			default:
-				url = `${Config.apiBaseURL}/v1/auth/token`
-				break
-		}
-
-		let response = await http.post(url, body, headers)
-		return response.data.token
-	}
-
-	async #getUserTokenFromIDToken({expiry, accessLevel}) {
-		let headers = {
-			"Content-Type": "application/json",
-			Accept: "application/json",
-			"x-jibb-id-jwt": await this.getIdToken(),
-		}
-		let body = {}
-		if (expiry !== undefined) {
-			body.expiry = {seconds: expiry}
-		}
-		let url
-
-		switch (accessLevel) {
-			case AccessLevel.ADMIN:
-				url = `${Config.apiBaseURL}/v1/admin/auth/token`
-				break
-			case AccessLevel.SUPERADMIN:
-				url = `${Config.apiBaseURL}/v1/superadmin/auth/token`
-				break
-			default:
-				url = `${Config.apiBaseURL}/v1/auth/token`
-				break
-		}
-
-		let response = await http.post(url, body, headers)
-		return response.data.token
-	}
-
-	/**
-	 *
-	 * @returns {UserClaims}
-	 */
-	async getUserClaims() {
-		await this.getUserToken()
-		return this.#userClaims.get(AccessLevel.USER)
-	}
-
-	/**
-	 *
-	 * @async
-	 * @param {object} [param0={}]
-	 * @param {Number} [param0.expiry] - optional variable defining the token expiry time in seconds.
-	 * @param {boolean} [param0.refresh=fales] - 1 Read or 2 Write.
-	 * @param {AccessLevel} [param0.accessLevel=AccessLevel.USER]
-	 * @returns {string} - user Token.
-	 */
-
-	async getUserToken({expiry, refresh, accessLevel} = {}) {
-		let claim = undefined
-		refresh = refresh || false
-		accessLevel = accessLevel || AccessLevel.USER
-
-		if (refresh === true) {
-			await this.#refreshUserToken({expiry, accessLevel})
-		}
-
-		claim = this.#userClaims.get(accessLevel)
-		if (claim !== undefined &amp;&amp; !claim.isExpired()) return claim.token
-
-		await this.#refreshUserToken({expiry, accessLevel})
-
-		claim = this.#userClaims.get(accessLevel)
-		if (claim !== undefined &amp;&amp; !claim.isExpired()) return claim.token
-
-		throw new Error("could not create user token")
-	}
-
-	async #refreshUserToken({expiry, accessLevel}) {
-		if (this.apiKey) {
-			let token = await this.#getUserTokenFromApiKey({expiry, accessLevel})
-			this.setUserToken(token, accessLevel)
-			return token
-		}
-
-		try {
-			let token = await this.#getUserTokenFromIDToken({expiry, accessLevel})
-			this.setUserToken(token, accessLevel)
-			return token
-		} catch (error) {
-			logger.error(error)
-		}
-	}
-
-	/**
-	 * clear user.
-	 */
-
-	logout() {
-		this.#userClaims.clear()
-	}
-
-	/**
-	 *
-	 * Generate a new API Key, old API KEY will be discareded
-	 * It require a userToken to be set.
-	 * @returns {string} api key
-	 */
-	async generateAPIKey() {
-		let headers = {
-			"Content-Type": "application/json",
-			Accept: "application/json",
-			"x-jibb-user-jwt": await this.getUserToken(),
-		}
-		let response = await http.get(`${Config.apiBaseURL}/v1/auth/apikey`, headers)
-		return response.data.apiKey
-	}
-
-	/**
-	 *
-	 * Generating a one time password.
-	 * It require a IdToken to be set.
-	 * @async
-	 * @returns  {string} - Custom Password.
-	 */
-	async generateCustomAuthPassword() {
-		let headers = {
-			"Content-Type": "application/json",
-			Accept: "application/json",
-			"x-jibb-id-jwt": await this.getIdToken(),
-		}
-
-		let response = await http.get(`${Config.apiBaseURL}/v1/auth/custom`, headers)
-		return response.data.password
+	if (refresh === true) {
+		return _refreshUserToken(accessLevel)
+			.then(token => {
+				setUserToken(token, accessLevel)
+				return token
+			})
+			.catch(_err => {
+				if (claim)
+					return claim.token
+				else
+					throw new Error("unable to create user token")
+			})
+	} else {
+		if (claim)
+			return claim.token
+		else
+			throw new Error("could not create user token")
 	}
 }
 
 /**
- *   Expotred instance of AuthClass.
- * @type {AuthClass}
+ * clear user.
  */
-let Auth = new AuthClass()
-export {Auth}
+export function logout() {
+	_apiKey = undefined
+	_userClaims.clear()
+}
+
+/**
+ *
+ * Generate a new API Key, old API KEY will be discareded
+ * It require a userToken to be set.
+ * @returns {string} api key
+ */
+export async function generateAPIKey() {
+	let headers = {
+		"Content-Type": "application/json",
+		Accept: "application/json",
+		"x-jibb-user-jwt": await getUserToken(),
+	}
+	let response = await http.get(`${Config.apiBaseURL}/v1/auth/apikey`, headers)
+	return response.data.apiKey
+}
+
+/**
+ *
+ * Generating a one time password.
+ * It require a IdToken to be set.
+ * @async
+ * @returns  {string} - Custom Password.
+ */
+export async function generateCustomAuthPassword() {
+	let headers = {
+		"Content-Type": "application/json",
+		Accept: "application/json",
+		"x-jibb-id-jwt": await _getIdToken(),
+	}
+
+	let response = await http.get(`${Config.apiBaseURL}/v1/auth/custom`, headers)
+	return response.data.password
+}
+
+async function _getUserTokenFromApiKey(accessLevel) {
+	let headers = {
+		"Content-Type": "application/json",
+		Accept: "application/json",
+	}
+	let body = {
+		api_key: _apiKey,
+	}
+	let url
+
+	switch (accessLevel) {
+		case AccessLevel.ADMIN:
+			url = `${Config.apiBaseURL}/v1/admin/auth/token`
+			break
+		case AccessLevel.SUPERADMIN:
+			url = `${Config.apiBaseURL}/v1/superadmin/auth/token`
+			break
+		default:
+			url = `${Config.apiBaseURL}/v1/auth/token`
+			break
+	}
+
+	let response = await http.post(url, body, headers)
+	return response.data.token
+}
+
+
+async function _getUserTokenFromIDToken(accessLevel) {
+	let headers = {
+		"Content-Type": "application/json",
+		Accept: "application/json",
+		"x-jibb-id-jwt": await _getIdToken(),
+	}
+	let body = {}
+	let url
+
+	switch (accessLevel) {
+		case AccessLevel.ADMIN:
+			url = `${Config.apiBaseURL}/v1/admin/auth/token`
+			break
+		case AccessLevel.SUPERADMIN:
+			url = `${Config.apiBaseURL}/v1/superadmin/auth/token`
+			break
+		default:
+			url = `${Config.apiBaseURL}/v1/auth/token`
+			break
+	}
+
+	let response = await http.post(url, body, headers)
+	return response.data.token
+}
+
+
+async function _refreshUserToken(accessLevel) {
+	if (_apiKey) {
+		return _getUserTokenFromApiKey(accessLevel)
+	}
+
+	return _getUserTokenFromIDToken(accessLevel)
+}
 </code></pre>
         </article>
     </section>
@@ -247,13 +239,13 @@ This is an experimental API.</a></li><li><a href="module-auth.html">auth</a></li
  This is an experimental API.</a></li><li><a href="superadmin%250AThis%2520is%2520an%2520experimental%2520API.module_.html">superadmin
 This is an experimental API.</a></li><li><a href="User%250AThis%2520is%2520an%2520experimental%2520API.module_.html">User
 This is an experimental API.</a></li><li><a href="webexbot%250AThis%2520is%2520an%2520experimental%2520API.module_.html">webexbot
-This is an experimental API.</a></li></ul><h3>Namespaces</h3><ul><li><a href="Examples.html">Examples</a></li></ul><h3>Classes</h3><ul><li><a href="module-auth-AuthClass.html">AuthClass</a></li><li><a href="Whiteboard.html">Whiteboard</a></li></ul>
+This is an experimental API.</a></li></ul><h3>Namespaces</h3><ul><li><a href="Examples.html">Examples</a></li></ul><h3>Classes</h3><ul><li><a href="Whiteboard.html">Whiteboard</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Dec 13 2022 00:45:19 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Dec 14 2022 02:19:22 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>

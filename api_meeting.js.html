@@ -27,7 +27,7 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import {Config} from "../config.js"
-import {Auth} from "./auth.js"
+import {getUserToken} from "./auth.js"
 import {logger} from "../utils/logger/index.js"
 import {NotFoundError, PermissionDeniedError} from "../types/exceptions.js"
 import {http} from "../utils/http/index.js"
@@ -53,7 +53,7 @@ export async function createMeeting({title, isTemporary, capacity, meetingType})
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken(),
+		"x-jibb-user-jwt": await getUserToken(),
 	}
 	let body = {
 		title: title || "",
@@ -79,7 +79,7 @@ export async function createTemporaryShare({meetingId, permission, expiry, auxDa
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken(),
+		"x-jibb-user-jwt": await getUserToken(),
 	}
 	let body = {
 		permission: permission,
@@ -122,7 +122,7 @@ export async function deleteMeetingImages({meetingId, mtoken}) {
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken(),
+		"x-jibb-user-jwt": await getUserToken(),
 		"x-jibb-meeting-jwt": mtoken,
 	}
 
@@ -141,7 +141,7 @@ export async function getMeetingImages({meetingId, meetingToken}) {
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken(),
+		"x-jibb-user-jwt": await getUserToken(),
 		"x-jibb-meeting-jwt": meetingToken,
 	}
 
@@ -162,7 +162,7 @@ export async function getMeetingImage({meetingId, meetingToken, imageId}) {
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken(),
+		"x-jibb-user-jwt": await getUserToken(),
 		"x-jibb-meeting-jwt": meetingToken,
 	}
 
@@ -222,7 +222,7 @@ export async function deleteMeeting(meetingId) {
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken(),
+		"x-jibb-user-jwt": await getUserToken(),
 	}
 	return http.delete(`${Config.apiBaseURL}/v1/meetings/${meetingId}`, headers)
 }
@@ -240,7 +240,7 @@ export async function getMeetingToken({meetingId, permission, expiry = 3600}) {
 	let userToken
 
 	try {
-		userToken = await Auth.getUserToken()
+		userToken = await getUserToken()
 	} catch (err) {
 		logger.error({
 			err,
@@ -276,7 +276,7 @@ export async function getMeetingList(pagination) {
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken(),
+		"x-jibb-user-jwt": await getUserToken(),
 	}
 	if (pagination !== undefined) headers["x-jibb-pagination"] = JSON.stringify(pagination)
 	let response = await http.get(`${Config.apiBaseURL}/v1/meetings`, headers)
@@ -299,7 +299,7 @@ export async function getMeetingDetails(meetingId) {
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken(),
+		"x-jibb-user-jwt": await getUserToken(),
 	}
 
 	let response = await http.get(`${Config.apiBaseURL}/v1/meetings/${meetingId}`, headers)
@@ -319,7 +319,7 @@ export async function updateMeeting({meetingId, title, capacity}) {
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken(),
+		"x-jibb-user-jwt": await getUserToken(),
 	}
 
 	let body = {}
@@ -342,7 +342,7 @@ export async function updateMeeting({meetingId, title, capacity}) {
 export async function isMeetingOwner(meetingToken) {
 	try {
 		let meetingClaims = new MeetingClaims(meetingToken)
-		let userClaims = new UserClaims(await Auth.getUserToken())
+		let userClaims = new UserClaims(await getUserToken())
 		return userClaims.email === meetingClaims.owner
 	} catch (err) {
 		return false
@@ -364,7 +364,7 @@ export async function createShare({email, meetingId, permission, meetingToken}) 
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken(),
+		"x-jibb-user-jwt": await getUserToken(),
 		"x-jibb-meeting-jwt": meetingToken,
 	}
 	let body = {
@@ -383,7 +383,7 @@ export async function getIncomingShares() {
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken(),
+		"x-jibb-user-jwt": await getUserToken(),
 	}
 	let response = await http.get(`${Config.apiBaseURL}/v1/meetings/shares?incoming=true`, headers)
 	return response.data.shares
@@ -397,7 +397,7 @@ export async function getOutgoingShares() {
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken(),
+		"x-jibb-user-jwt": await getUserToken(),
 	}
 	let response = await http.get(`${Config.apiBaseURL}/v1/meetings/shares?outgoing=true`, headers)
 	return response.data.shares
@@ -413,7 +413,7 @@ export async function deleteShare(shareId) {
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken(),
+		"x-jibb-user-jwt": await getUserToken(),
 	}
 	return http.delete(`${Config.apiBaseURL}/v1/meetings/shares/${shareId}`, headers)
 }
@@ -430,7 +430,7 @@ export async function updateShare({shareId, permission}) {
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken(),
+		"x-jibb-user-jwt": await getUserToken(),
 	}
 	let body = {
 		permission: permission,
@@ -451,13 +451,13 @@ This is an experimental API.</a></li><li><a href="module-auth.html">auth</a></li
  This is an experimental API.</a></li><li><a href="superadmin%250AThis%2520is%2520an%2520experimental%2520API.module_.html">superadmin
 This is an experimental API.</a></li><li><a href="User%250AThis%2520is%2520an%2520experimental%2520API.module_.html">User
 This is an experimental API.</a></li><li><a href="webexbot%250AThis%2520is%2520an%2520experimental%2520API.module_.html">webexbot
-This is an experimental API.</a></li></ul><h3>Namespaces</h3><ul><li><a href="Examples.html">Examples</a></li></ul><h3>Classes</h3><ul><li><a href="module-auth-AuthClass.html">AuthClass</a></li><li><a href="Whiteboard.html">Whiteboard</a></li></ul>
+This is an experimental API.</a></li></ul><h3>Namespaces</h3><ul><li><a href="Examples.html">Examples</a></li></ul><h3>Classes</h3><ul><li><a href="Whiteboard.html">Whiteboard</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Dec 13 2022 00:45:19 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Dec 14 2022 02:19:22 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>

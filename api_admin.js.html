@@ -28,7 +28,7 @@
         <article>
             <pre class="prettyprint source linenums"><code>import {Config} from '../config.js';
 import {http} from "../utils/http/index.js"
-import {Auth} from "./auth.js"
+import {getUserToken} from "./auth.js"
 import {AccessLevel, UserType} from "../types/types.js"
 
 
@@ -51,7 +51,7 @@ export async function getOrganizationList() {
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken({ accessLevel: accessLevel }),
+		"x-jibb-user-jwt": await getUserToken({accessLevel: accessLevel}),
 	}
 	let response = await http.get(`${Config.apiBaseURL}/v1/admin/organizations`, headers)
 	return response.data.organizations
@@ -64,14 +64,14 @@ export async function getOrganizationList() {
  * @returns {object}
  */
 export async function getOrganizationDetails(orgId) {
-	if (orgId === "") {
+	if (!orgId) {
 		throw new Error("organization ID can not be empty")
 	}
 
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken({ accessLevel: accessLevel }),
+		"x-jibb-user-jwt": await getUserToken({accessLevel: accessLevel}),
 	}
 	let response = await http.get(`${Config.apiBaseURL}/v1/admin/organizations/${orgId}`, headers)
 	return response.data
@@ -88,7 +88,7 @@ export async function getUserList(orgId, pagination) {
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken({ accessLevel: accessLevel }),
+		"x-jibb-user-jwt": await getUserToken({accessLevel: accessLevel}),
 	}
 	if (pagination !== undefined) headers["x-jibb-pagination"] = JSON.stringify(pagination)
 	let response = await http.get(`${Config.apiBaseURL}/v1/admin/organizations/${orgId}/users`, headers)
@@ -109,11 +109,11 @@ export async function getUserList(orgId, pagination) {
  * @param {list} param0.users - list of user object that contain email, first_name, last_name, user_type. user_type is a number from 0-4 
  * @returns - http result
  */
-export async function createUsers({ orgId, users }) {
+export async function createUsers({orgId, users}) {
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken({ accessLevel: accessLevel }),
+		"x-jibb-user-jwt": await getUserToken({accessLevel: accessLevel}),
 	}
 	let body = {
 		users,
@@ -131,11 +131,11 @@ export async function createUsers({ orgId, users }) {
  * @param {number} param0.userType - UNKNOWN = 0; LIMITED = 1; MEMBER = 2; ADMIN = 3; OWNER = 4;
  * @returns  - http result
  */
-export async function createOrganizationUser({ orgId, email, userType }) {
+export async function createOrganizationUser({orgId, email, userType}) {
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken({ accessLevel: accessLevel }),
+		"x-jibb-user-jwt": await getUserToken({accessLevel: accessLevel}),
 	}
 	let body = {
 		users: [
@@ -156,11 +156,11 @@ export async function createOrganizationUser({ orgId, email, userType }) {
  * @param {number} param0.userId 
  * @returns - http result
  */
-export async function SendUserActivationEmail({ orgId, userIds }) {
+export async function SendUserActivationEmail({orgId, userIds}) {
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken({ accessLevel: accessLevel }),
+		"x-jibb-user-jwt": await getUserToken({accessLevel: accessLevel}),
 	}
 	let body = {
 		user_ids: userIds,
@@ -175,11 +175,11 @@ export async function SendUserActivationEmail({ orgId, userIds }) {
  * @param {number} param0.userId 
  * @returns - http result
  */
-export async function deleteOrganizationUser({ orgId, userId }) {
+export async function deleteOrganizationUser({orgId, userId}) {
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken({ accessLevel: accessLevel }),
+		"x-jibb-user-jwt": await getUserToken({accessLevel: accessLevel}),
 	}
 	return http.delete(`${Config.apiBaseURL}/v1/admin/organizations/${orgId}/users/${userId}`, headers)
 }
@@ -192,11 +192,11 @@ export async function deleteOrganizationUser({ orgId, userId }) {
  * @param {number} param0.userType - UNKNOWN = 0; LIMITED = 1; MEMBER = 2; ADMIN = 3; OWNER = 4;
  * @returns - http result
  */
-export async function updateUserType({ orgId, userId, userType }) {
+export async function updateUserType({orgId, userId, userType}) {
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken({ accessLevel: accessLevel }),
+		"x-jibb-user-jwt": await getUserToken({accessLevel: accessLevel}),
 	}
 	let body = {
 		user_type: userType,
@@ -211,11 +211,11 @@ export async function updateUserType({ orgId, userId, userType }) {
  * @param {number} param0.userId 
  * @returns {object}
  */
-export async function getOrganizationUserDetails({ orgId, userId }) {
+export async function getOrganizationUserDetails({orgId, userId}) {
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken({ accessLevel: accessLevel }),
+		"x-jibb-user-jwt": await getUserToken({accessLevel: accessLevel}),
 	}
 	let response = await http.get(`${Config.apiBaseURL}/v1/admin/organizations/${orgId}/users/${userId}`, headers)
 	return response.data
@@ -233,15 +233,15 @@ export async function getOrganizationUserDetails({ orgId, userId }) {
  * @param {boolean} [param0.enabled=fales] 
  * @returns - http result
  */
-export async function setSAML({ orgId, metadata, autoAddUsers, defaultUserType, enabled }) {
-	if (orgId === "" || orgId === undefined) {
+export async function setSAML({orgId, metadata, autoAddUsers, defaultUserType, enabled}) {
+	if (!orgId) {
 		throw new Error("organization ID can not be empty")
 	}
 
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken({ accessLevel: accessLevel }),
+		"x-jibb-user-jwt": await getUserToken({accessLevel: accessLevel}),
 	}
 	let body = {
 		organization_id: orgId,
@@ -264,7 +264,7 @@ export async function deleteSAML(orgId) {
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken({ accessLevel: accessLevel }),
+		"x-jibb-user-jwt": await getUserToken({accessLevel: accessLevel}),
 	}
 	return http.delete(`${Config.apiBaseURL}/v1/admin/organizations/${orgId}/saml`, headers)
 }
@@ -275,14 +275,14 @@ export async function deleteSAML(orgId) {
  * @returns {object}
  */
 export async function getSAML(orgId) {
-	if (orgId === "") {
+	if (!orgId) {
 		throw new Error("organization ID can not be empty")
 	}
 
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken({ accessLevel: accessLevel }),
+		"x-jibb-user-jwt": await getUserToken({accessLevel: accessLevel}),
 	}
 	let response = await http.get(`${Config.apiBaseURL}/v1/admin/organizations/${orgId}/saml`, headers)
 	return response.data
@@ -297,7 +297,7 @@ export async function getDomainList(orgId) {
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken({ accessLevel: accessLevel }),
+		"x-jibb-user-jwt": await getUserToken({accessLevel: accessLevel}),
 	}
 	let response = await http.get(`${Config.apiBaseURL}/v1/admin/organizations/${orgId}/domains`, headers)
 	return response.data
@@ -310,11 +310,11 @@ export async function getDomainList(orgId) {
  * @param {string} param0.domain 
  * @returns {object}
  */
-export async function createDomain({ orgId, domain }) {
+export async function createDomain({orgId, domain}) {
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken({ accessLevel: accessLevel }),
+		"x-jibb-user-jwt": await getUserToken({accessLevel: accessLevel}),
 	}
 	let body = {
 		domain_name: domain,
@@ -330,11 +330,11 @@ export async function createDomain({ orgId, domain }) {
  * @param {string} param0.domain 
  * @returns - http result
  */
-export async function deleteDomain({ orgId, domainId }) {
+export async function deleteDomain({orgId, domainId}) {
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken({ accessLevel: accessLevel }),
+		"x-jibb-user-jwt": await getUserToken({accessLevel: accessLevel}),
 	}
 	return http.delete(`${Config.apiBaseURL}/v1/admin/organizations/${orgId}/domains/${domainId}`, headers)
 }
@@ -346,11 +346,11 @@ export async function deleteDomain({ orgId, domainId }) {
  * @param {string} param0.domain 
  * @returns {object}
  */
-export async function verifyDomain({ orgId, domainId }) {
+export async function verifyDomain({orgId, domainId}) {
 	let headers = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
-		"x-jibb-user-jwt": await Auth.getUserToken({ accessLevel: accessLevel }),
+		"x-jibb-user-jwt": await getUserToken({accessLevel: accessLevel}),
 	}
 	let response = await http.get(
 		`${Config.apiBaseURL}/v1/admin/organizations/${orgId}/domains/${domainId}/verify`,
@@ -374,13 +374,13 @@ This is an experimental API.</a></li><li><a href="module-auth.html">auth</a></li
  This is an experimental API.</a></li><li><a href="superadmin%250AThis%2520is%2520an%2520experimental%2520API.module_.html">superadmin
 This is an experimental API.</a></li><li><a href="User%250AThis%2520is%2520an%2520experimental%2520API.module_.html">User
 This is an experimental API.</a></li><li><a href="webexbot%250AThis%2520is%2520an%2520experimental%2520API.module_.html">webexbot
-This is an experimental API.</a></li></ul><h3>Namespaces</h3><ul><li><a href="Examples.html">Examples</a></li></ul><h3>Classes</h3><ul><li><a href="module-auth-AuthClass.html">AuthClass</a></li><li><a href="Whiteboard.html">Whiteboard</a></li></ul>
+This is an experimental API.</a></li></ul><h3>Namespaces</h3><ul><li><a href="Examples.html">Examples</a></li></ul><h3>Classes</h3><ul><li><a href="Whiteboard.html">Whiteboard</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Dec 13 2022 00:45:19 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Dec 14 2022 02:19:22 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>
