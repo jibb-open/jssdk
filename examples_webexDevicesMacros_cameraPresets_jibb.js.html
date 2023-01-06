@@ -56,7 +56,8 @@
  *  &lt;li> Navigate to the setup -> settings -> HttpClient, set Mode to On.
  *  &lt;li> &lt;img src="./img/https-settings.png" />
  *  &lt;li> Import and Save each of the following Macros into the Room System: jibbWebexXapi.js found under jssdk folder and jibb.js from desired example.
- *  &lt;li> Edite jibb.js by adding your personal Jibb ApiKey to in line 48, to get your ApiKey visit https://app.jibb.ai/ then navigate to personal settings and click Generate.
+ *  &lt;li> Edite jibb.js by adding your personal Jibb ApiKey to in line 49, to get your ApiKey visit https://app.jibb.ai/ then navigate to personal settings and click Generate.
+ *  &lt;li> Edite jibb.js by add desired Email to receive a pdf Recording of the session to in line 50.
  *  &lt;li> Save and activate jibb.js .
  *  &lt;li> After refreshing the webage you will find  jibb panel automatically added in the UI Extension Editor. variable uiExtension line 268 is is the exported XML panel
  *  &lt;li> Using touch panel create two camera presets "Jibb" and "Jibb2"  (case sensitive) so that camera postion will be set automatically
@@ -70,230 +71,314 @@
  *
  */
 
-import xapi from "xapi"
-import * as JIBB from "./jibb_WebexXapi"
 
-let ApiKey = "Your-Api-Key"
-let MeetingAPI = JIBB.Meeting
-let Auth = JIBB.Auth
-let EventBus = JIBB.EventBus
+ import xapi from "xapi"
+ import * as JIBB from "./jibb_WebexXapi"
 
-const SurfaceType = {
-	PAPER: "PAPER",
-	WHITEBOARD: "WHITEBOARD",
-}
+ let ApiKey = "YourApiKey"
+ let RecordingEmail = "YourEmail"
+ let MeetingAPI = JIBB.Meeting
+ let Auth = JIBB.Auth
+ let EventBus = JIBB.EventBus
+ let Recording = JIBB.Recording
 
-function Config(apiKey) {
-	this.apiKey = apiKey
-	this.webURL = "https://app.jibb.ai"
-	xapi.Command.WebEngine.MediaAccess.add({Hostname: "app.jibb.ai", Device: "Camera"})
-	xapi.Command.WebEngine.MediaAccess.add({Hostname: "app.jibb.ai", Device: "Microphone"})
-	JIBB.Auth.configure({apiKey: apiKey})
-}
+ const SurfaceType = {
+		PAPER: "PAPER",
+		WHITEBOARD: "WHITEBOARD",
+ }
 
-async function generateMeetingLink() {
-	console.log("generating meeting link ...")
+ function Config(apiKey) {
+		this.apiKey = apiKey
+		this.webURL = "https://app.jibb.ai"
+		xapi.Command.WebEngine.MediaAccess.add({ Hostname: "app.jibb.ai", Device: "Camera" })
+		JIBB.Auth.configure({ apiKey: apiKey })
+ }
 
-	let title = String(await xapi.Config.SystemUnit.CustomDeviceId.get())
-	if (String(title) == "") {
-		title = "webex"
-	}
-	let userToken = await Auth.getUserToken()
+ let SessionDetails = {
+		meetingId: "",
+		meetingToken: "",
+		userToken: "",
+		meetingUrl: "",
+		cameraId: "",
+		clientId: "",
+ }
 
-	meetingId = await MeetingAPI.createMeeting({title: title, isTemporary: true})
+ async function generateMeetingLink() {
+		console.log("generating meeting link ...")
+		let title = await createTitle()
+		await gettingUserToken()
+		await createMeeting(title)
+		SessionDetails.meetingUrl = `${config.webURL}/remote/${SessionDetails.meetingId}?user_token=${SessionDetails.userToken}`
+ }
 
-	let url = `${config.webURL}/remote/${meetingId}?user_token=${userToken}`
-	return url
-}
+ async function createTitle() {
+		let title = String(await xapi.Config.SystemUnit.CustomDeviceId.get())
+		if (String(title) == "") {
+			title = "webex"
+		}
+		return title
+ }
 
-async function autoStartMeeting() {
-	console.log("autoStartMeeting ...")
+ async function gettingUserToken() {
+		SessionDetails.userToken = await Auth.getUserToken()
+ }
 
-	xapi.Command.UserInterface.Extensions.Panel.Close()
+ async function gettingMeetingToken() {
+		SessionDetails.meetingToken = await MeetingAPI.getMeetingToken({
+			meetingId: SessionDetails.meetingId,
+			permission: 2,
+		})
+ }
 
-	let url = await generateMeetingLink()
-	await xapi.Command.UserInterface.WebView.Display({Title: "jibb", Url: url})
-	await sleep(10000)
+ async function createMeeting(title) {
+		SessionDetails.meetingId = await MeetingAPI.createMeeting({ title: title, isTemporary: true })
+ }
 
-	let statusList = await EventBus.getClientStatusList()
+ async function autoStartMeeting() {
+		console.log("autoStartMeeting ...")
+		hideJibbPanel()
+		hideCameraSelfView()
+		await generateMeetingLink()
+		await openMeetingUrlInWebView()
+		await sleep(10000) //wait until page finshed loading, could be less than 10s.
+		await getWebClinetId()
+		await getCameraId()
+		await gettingMeetingToken()
+		await startTheMeeting()
+		await sleep(5000)
+		startRecording()
+ }
 
-	let clinetID = statusList[0].id
-
-	let cameraList = await EventBus.getCameraList(clinetID)
-
-	if (cameraList.length) {
-		let meetingToken = await MeetingAPI.getMeetingToken({meetingId: meetingId, permission: 2})
-		let surfaceType = SurfaceType.WHITEBOARD
-		let cameraId = cameraList[0].id
-
+ async function startTheMeeting() {
 		let req = {
-			meetingId: meetingId,
-			meetingToken: meetingToken,
-			surfaceType: surfaceType,
+			meetingToken: SessionDetails.meetingToken,
+			surfaceType: SurfaceType.WHITEBOARD,
 			fixedCorners: true,
-			cameraId: cameraId,
-			clientId: clinetID,
+			cameraId: SessionDetails.cameraId,
+			clientId: SessionDetails.clientId,
 			enableColor: true,
 		}
 		await EventBus.startStream(req)
-	} else return Promise.reject("No Camera Access")
-}
+ }
 
-async function stopMeeting() {
-	console.log("stopMeeting ...")
+ async function getAvailableCameraList() {
+		return await EventBus.getCameraList(SessionDetails.clientId)
+ }
+ async function getCameraId() {
+		let cameraList = await getAvailableCameraList()
+		if (cameraList.length) {
+			SessionDetails.cameraId = cameraList[0].id
+		} else return Promise.reject("No Camera Access")
+ }
 
-	xapi.Command.UserInterface.WebView.Clear({Target: "PersistentWebApp"})
+ async function getWebClinetId() {
+		let statusList = await EventBus.getClientStatusList()
+		SessionDetails.clientId = statusList[0].id
+ }
 
-	xapi.Command.Video.Selfview.Set({
-		FullscreenMode: "Off",
-		Mode: "Off",
-		PIPPosition: "LowerRight",
-	})
-	xapi.Command.UserInterface.Extensions.Panel.Close()
-}
+ async function openMeetingUrlInWebView() {
+		await xapi.Command.UserInterface.WebView.Display({ Title: "jibb", Url: SessionDetails.meetingUrl })
+ }
 
-async function zoomIn() {
-	let value = await xapi.Status.Cameras.Camera[1].Position.Zoom.get()
-	value = parseInt(value) - 100
-	xapi.Command.Camera.PositionSet({CameraId: "1", Zoom: value})
-}
+ async function stopMeeting() {
+		console.log("stopMeeting ...")
+		await stopRecording()
+		closeWebView()
+		hideCameraSelfView()
+		hideJibbPanel()
+ }
 
-async function zoomOut() {
-	let value = await xapi.Status.Cameras.Camera[1].Position.Zoom.get()
-	value = parseInt(value) + 100
-	xapi.Command.Camera.PositionSet({CameraId: "1", Zoom: value})
-}
+ async function startRecording() {
+		console.log("startRecording ...")
+		let title = await createTitle()
+		await Recording.startRecording({
+			email: RecordingEmail,
+			meetingId: SessionDetails.meetingId,
+			meetingToken: SessionDetails.meetingToken,
+			title: title,
+		})
+ }
 
-async function moveUp() {
-	let value = await xapi.Status.Cameras.Camera[1].Position.Tilt.get()
-	value = parseInt(value) + 100
-	xapi.Command.Camera.PositionSet({CameraId: "1", Tilt: value})
-}
+ async function stopRecording() {
+		await Recording.stopRecording()
+ }
 
-async function moveDown() {
-	let value = await xapi.Status.Cameras.Camera[1].Position.Tilt.get()
-	value = parseInt(value) - 100
-	xapi.Command.Camera.PositionSet({CameraId: "1", Tilt: value})
-}
-
-async function moveRigt() {
-	let value = await xapi.Status.Cameras.Camera[1].Position.Pan.get()
-	value = parseInt(value) - 100
-	xapi.Command.Camera.PositionSet({CameraId: "1", Pan: value})
-}
-
-async function moveLeft() {
-	let value = await xapi.Status.Cameras.Camera[1].Position.Pan.get()
-	value = parseInt(value) + 100
-	xapi.Command.Camera.PositionSet({CameraId: "1", Pan: value})
-}
-
-async function resetCamera() {
-	xapi.Command.Camera.PositionReset({Axis: "all", CameraId: 1})
-}
-
-async function setCameraPosition(postionName) {
-	let json = await xapi.Command.Camera.Preset.List({CameraId: 1, DefaultPosition: false})
-	let jsonArray = json["Preset"]
-
-	var filteredObj = jsonArray.find(function (item, i) {
-		if (item.Name === postionName) {
-			return item
+ async function setCameraPosition(postionName) {
+		let PresetId = await getCameraPresetId(postionName)
+		if (PresetId != -1) {
+			xapi.Command.Camera.Preset.Activate({ PresetId: PresetId })
 		}
-	})
-	if (filteredObj != undefined) {
-		xapi.Command.Camera.Preset.Activate({PresetId: filteredObj["PresetId"]})
-	}
-}
-// Add the management panel to UI
-async function addPanel() {
-	console.info("Adding  panel")
+ }
 
-	const xml = uiExtension
+ async function getCameraPresetId(postionName) {
+		let json = await xapi.Command.Camera.Preset.List({ CameraId: 1, DefaultPosition: false })
+		let jsonArray = json["Preset"]
 
-	await xapi.Command.UserInterface.Extensions.Panel.Save(
-		{
-			PanelId: "jibb_panel",
-		},
-		xml
-	)
+		var filteredObj = jsonArray.find(function (item, i) {
+			if (item.Name === postionName) {
+				return item
+			}
+		})
+		if (filteredObj != undefined) {
+			return filteredObj["PresetId"]
+		} else return -1
+ }
 
-	// Update manager on layout change
-	xapi.Event.UserInterface.Extensions.Widget.LayoutUpdated.once(addPanel)
-}
+ function closeWebView() {
+		xapi.Command.UserInterface.WebView.Clear({ Target: "PersistentWebApp" })
+ }
+
+ function hideCameraSelfView() {
+		xapi.Command.Video.Selfview.Set({
+			FullscreenMode: "Off",
+			Mode: "Off",
+			PIPPosition: "LowerRight",
+		})
+ }
+
+ function showCameraSelfView() {
+		xapi.Command.Video.Selfview.Set({
+			FullscreenMode: "Off",
+			Mode: "On",
+			PIPPosition: "LowerRight",
+		})
+ }
+
+ function hideJibbPanel() {
+		xapi.Command.UserInterface.Extensions.Panel.Close()
+ }
+
+ async function zoomIn() {
+		let value = await xapi.Status.Cameras.Camera[1].Position.Zoom.get()
+		value = parseInt(value) - 100
+		xapi.Command.Camera.PositionSet({ CameraId: "1", Zoom: value })
+ }
+
+ async function zoomOut() {
+		let value = await xapi.Status.Cameras.Camera[1].Position.Zoom.get()
+		value = parseInt(value) + 100
+		xapi.Command.Camera.PositionSet({ CameraId: "1", Zoom: value })
+ }
+
+ async function moveUp() {
+		let value = await xapi.Status.Cameras.Camera[1].Position.Tilt.get()
+		value = parseInt(value) + 100
+		xapi.Command.Camera.PositionSet({ CameraId: "1", Tilt: value })
+ }
+
+ async function moveDown() {
+		let value = await xapi.Status.Cameras.Camera[1].Position.Tilt.get()
+		value = parseInt(value) - 100
+		xapi.Command.Camera.PositionSet({ CameraId: "1", Tilt: value })
+ }
+
+ async function moveRigt() {
+		let value = await xapi.Status.Cameras.Camera[1].Position.Pan.get()
+		value = parseInt(value) - 100
+		xapi.Command.Camera.PositionSet({ CameraId: "1", Pan: value })
+ }
+
+ async function moveLeft() {
+		let value = await xapi.Status.Cameras.Camera[1].Position.Pan.get()
+		value = parseInt(value) + 100
+		xapi.Command.Camera.PositionSet({ CameraId: "1", Pan: value })
+ }
+
+ async function resetCamera() {
+		xapi.Command.Camera.PositionReset({ Axis: "all", CameraId: 1 })
+ }
+
+ // Add the Jibb panel to UI
+ async function addPanel() {
+		console.info("Adding  panel")
+		const xml = uiExtension
+		await xapi.Command.UserInterface.Extensions.Panel.Save(
+			{
+				PanelId: "jibb_panel",
+			},
+			xml
+		)
+		// Update manager on layout change
+		xapi.Event.UserInterface.Extensions.Widget.LayoutUpdated.once(addPanel)
+ }
 
 function sleep(ms) {
 	return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
 let config = new Config(ApiKey)
-var meetingId = ""
-// Startup!
-async function main() {
-	addPanel()
-	xapi.Event.UserInterface.Extensions.Panel.Clicked.on((value) => {
-		if (value.PanelId == "jibb_panel") {
-			setCameraPosition("Jibb")
-			xapi.Command.Video.Selfview.Set({FullscreenMode: "Off", Mode: "Off", PIPPosition: "LowerRight"})
-		}
-	})
 
-	xapi.Event.UserInterface.Extensions.Widget.Action.on((event) => {
-		if (event.Type == "released") {
-			switch (event.WidgetId) {
-				case `jibb_start_toggle`:
-					console.log("start toggle" + event.Value)
-					if (event.Value == "start") {
-						autoStartMeeting()
-					} else if (event.Value == "stop") {
-						stopMeeting()
-					}
-					break
+ // Startup!
+ async function main() {
+		addPanel()
+		reactToJibbClick()
+		reactToStartAndStopClick()
+ }
 
-				case `jibb_zoom_in`:
-					zoomIn()
-					break
-				case `jibb_zoom_out`:
-					zoomOut()
-					break
+ function reactToStartAndStopClick() {
+		xapi.Event.UserInterface.Extensions.Widget.Action.on((event) => {
+			if (event.Type == "released") {
+				switch (event.WidgetId) {
+					case `jibb_start_toggle`:
+						if (event.Value == "start") {
+							autoStartMeeting()
+						} else if (event.Value == "stop") {
+							stopMeeting()
+						}
+						break
 
-				case `jibb_camera_control`:
-					switch (event.Value) {
-						case `up`:
-							moveUp()
-							break
-						case `down`:
-							moveDown()
-							break
-						case `right`:
-							moveRigt()
-							break
-						case `left`:
-							moveLeft()
-							break
-						case `center`:
-							resetCamera()
-							break
-						default:
-							break
-					}
-					break
-				case `jibb_Camera_preset`:
-					console.log("start toggle" + event.Value)
-					if (event.Value == "position_1") {
-						setCameraPosition("Jibb")
-					} else if (event.Value == "position_2") {
-						setCameraPosition("Jibb2")
-					}
-					break
-				default:
-					break
+					case `jibb_zoom_in`:
+						zoomIn()
+						break
+					case `jibb_zoom_out`:
+						zoomOut()
+						break
+
+					case `jibb_camera_control`:
+						switch (event.Value) {
+							case `up`:
+								moveUp()
+								break
+							case `down`:
+								moveDown()
+								break
+							case `right`:
+								moveRigt()
+								break
+							case `left`:
+								moveLeft()
+								break
+							case `center`:
+								resetCamera()
+								break
+							default:
+								break
+						}
+					case `jibb_Camera_preset`:
+						console.log("start toggle" + event.Value)
+						if (event.Value == "position_1") {
+							setCameraPosition("Jibb")
+						} else if (event.Value == "position_2") {
+							setCameraPosition("Jibb2")
+						}
+						break
+					default:
+						break
+				}
 			}
-		}
-	})
-}
+		})
+ }
 
-const uiExtension = `&lt;Extensions>
+ function reactToJibbClick() {
+		xapi.Event.UserInterface.Extensions.Panel.Clicked.on((value) => {
+			if (value.PanelId == "jibb_panel") {
+				setCameraPosition("Jibb")
+				showCameraSelfView()
+			}
+		})
+ }
+
+ const uiExtension = `&lt;Extensions>
   &lt;Version>1.9&lt;/Version>
   &lt;Panel>
     &lt;Order>3&lt;/Order>
@@ -343,7 +428,7 @@ const uiExtension = `&lt;Extensions>
             &lt;/Value>
             &lt;Value>
               &lt;Key>position_2&lt;/Key>
-              &lt;Name>Camera Position 1&lt;/Name>
+              &lt;Name>Camera Position 2&lt;/Name>
             &lt;/Value>
           &lt;/ValueSpace>
         &lt;/Widget>
@@ -404,7 +489,7 @@ This is an experimental API.</a></li></ul><h3>Namespaces</h3><ul><li><a href="Ex
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Fri Dec 16 2022 00:40:44 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Fri Jan 06 2023 01:18:43 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>
