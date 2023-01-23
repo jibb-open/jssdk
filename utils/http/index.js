@@ -1,1 +1,0 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.http=void 0,require("core-js/modules/es.global-this.js"),require("./http.axios.js");let http=globalThis.http;exports.http=http;
