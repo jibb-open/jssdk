@@ -269,8 +269,6 @@
 			},
 			xml
 		)
-		// Update manager on layout change
-		xapi.Event.UserInterface.Extensions.Widget.LayoutUpdated.once(addPanel)
  }
 
  function sleep(ms) {

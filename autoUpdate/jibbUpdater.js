@@ -1,6 +1,6 @@
 import xapi from "xapi"
 
-let version = "v3.10.0-exampleUpdate"
+let version = "v3.10.0-exampleUpdate.v2"
 
 let ApiKey = "YourApiKey"
 let jibbCode = ""
@@ -21,19 +21,21 @@ async function enableMacro(name) {
 	xapi.Command.Macros.Macro.Activate({ Name: name })
 }
 
-async function checkReleaseVersion() {
-	let response = await xapi.Command.HttpClient.Get({
-		Header: [],
-		Url: "https://api.github.com/repos/jibb-open/jssdk/releases",
-		ResultBody: "PlainText",
-	})
+async function checkReleaseVersion(Standby) {
+	if (Standby != "Off") {
+		let response = await xapi.Command.HttpClient.Get({
+			Header: [],
+			Url: "https://api.github.com/repos/jibb-open/jssdk/releases",
+			ResultBody: "PlainText",
+		})
 
-	let result = JSON.parse(response.Body)
+		let result = JSON.parse(response.Body)
 
-	console.log(result[0].tag_name)
-	if (version != result[0].tag_name) {
-		showAlert()
-		updateCodes()
+		console.log(result[0].tag_name)
+		if (version != result[0].tag_name) {
+			showAlert()
+			updateCodes()
+		}
 	}
 }
 
@@ -110,14 +112,15 @@ function showAlert() {
 function reactToJibbClick() {
 	xapi.Event.UserInterface.Extensions.Panel.Clicked.on((value) => {
 		if (value.PanelId == "jibb_panel") {
-			checkReleaseVersion()
+			checkReleaseVersion("on")
 		}
 	})
 }
 
-function checkForUpdateEverySixHours() {
-	setInterval(checkReleaseVersion, 21600000)
+async function checkForUpdateEverySixHours() {
+	setInterval(checkReleaseVersion, 21600000, await xapi.Status.Standby.State.get())
 }
+
 
 checkIfMacroInstalled()
 reactToJibbClick()

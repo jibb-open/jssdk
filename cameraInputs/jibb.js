@@ -1,18 +1,17 @@
 /**
  *
- * <h2>webex Device Macro select inputs and edit Email.</h2>
+ *
+ * <h2>webex Device Macro select inputs.</h2>
  * The device user should be able to walk into the meeting room, tap on the JIBB icon on the UI and it will automatically snap to the whiteboard and start detecting/sharing the JIBB Workspace.
  * <h3>Description:</h3>
  * <ul >
  *  <li> start and stop button.
  *  <li> can choose camera input.
  *  <li> camera will snap to whiteboard that admin preset.
- *  <li> can Edit Recording Email.
  * </ul>
- *  <img src="./img/inputsAndEmail_1.png" />
+ *  <img src="./img/camera_inputs.png" />
  *  <img src="./img/camera_inputs_connect.png" />
- *  <img src="./img/inputsAndEmail_2.png" />
- *  <img src="./img/inputsAndEmail_3.png" />
+ *  <img src="./img/camera_inputs_error.png" />
  *  <ul style="list-style: none;">
  *  <li>Click on source to see the script example.
  * </ul>
@@ -33,22 +32,22 @@
  *  <li> Edite jibb.js by add desired Email to receive a pdf Recording of the session to in line 50.
  *  <li> Save and activate jibb.js .
  *  <li> After refreshing the webage you will find  jibb panel automatically added in the UI Extension Editor. variable uiExtension line 325 is is the exported XML panel
- *  <li> Using touch panel create a camera preset "Jibb1" for input 1 (case sensitive) so that camera postion will be set automatically, Jibb2 for input 2 and jibb3 for input 3
+ *  <li> Using touch panel create a camera preset "Jibb1" for input 1 (case sensitive) so that camera postion will be set automatically, Jibb2 for input 2 and jibb3 for input 3 
  *  <li> If not set script will work but camera postions needs to be set manually before clicking start.
- *  <li> <img src="./img/camera-presets.png" />
+ *  <li> <img src="./img/camera-presets.png" />  
  * </ul>
- *
+ * 
  * <h3>Click on source to see the script example.</h3>
  * @name 1-webexDeviceExample
  * @memberof Examples
  *
+ * 
  */
 import xapi from "xapi"
 import * as JIBB from "./jibb_WebexXapi"
 
 let ApiKey = "YourApiKey"
 let RecordingEmail = "YourEmail"
-
 let MeetingAPI = JIBB.Meeting
 let Auth = JIBB.Auth
 let EventBus = JIBB.EventBus
@@ -187,6 +186,7 @@ async function setCameraPosition(postionName) {
 async function getCameraPresetId(postionName) {
 	let json = await xapi.Command.Camera.Preset.List({ CameraId: 1, DefaultPosition: false })
 	let jsonArray = json["Preset"]
+
 	var filteredObj = jsonArray.find(function (item, i) {
 		if (item.Name === postionName) {
 			return item
@@ -223,8 +223,7 @@ function hideJibbPanel() {
 
 // Add the Jibb panel to UI
 async function addPanel() {
-	console.info("Adding  panel")
-	console.log(SessionDetails)
+	console.info("Adding  panel 123")
 	const xml = uiExtension
 	await xapi.Command.UserInterface.Extensions.Panel.Save(
 		{
@@ -262,7 +261,6 @@ async function main() {
 	showAlert()
 	reactToJibbClick()
 	reactToStartAndStopClick()
-	reactToEditEmail()
 }
 
 function reactToStartAndStopClick() {
@@ -286,15 +284,7 @@ function reactToStartAndStopClick() {
 						switchInput(3)
 					}
 					break
-				case "jibb_email":
-					//ask for record email
-					xapi.Command.UserInterface.Message.TextInput.Display({
-						FeedbackId: "user_email",
-						Placeholder: RecordingEmail,
-						Title: "Destination Email Address",
-						Text: "When you complete your captures, this is the email address that will receive the capture",
-					})
-					break
+
 				default:
 					break
 			}
@@ -306,7 +296,7 @@ async function switchInput(id) {
 	let connected = await checkInputIsConnected(id)
 	if (connected == "True") {
 		xapi.Command.Video.Input.SetMainVideoSource({ ConnectorId: id })
-		stringReplace(`Selected Input: ${SessionDetails.selectedInput}`, `Selected Input: ${id}`)
+		await stringReplace(`Selected Input:${SessionDetails.selectedInput}`, `Selected Input:${id}`)
 		await setCameraPosition(`Jibb${id}`)
 		addPanel()
 		SessionDetails.selectedInput = id
@@ -323,15 +313,6 @@ function stringReplace(oldStr, newStr) {
 	uiExtension = uiExtension.replace(oldStr, newStr)
 }
 
-function reactToEditEmail() {
-	xapi.Event.UserInterface.Message.TextInput.Response.on(async (event) => {
-		if (event.FeedbackId === "user_email") {
-			stringReplace(`Current Recording Email: ${RecordingEmail}`, `Current Recording Email: ${event.Text}`)
-			addPanel()
-			RecordingEmail = event.Text
-		}
-	})
-}
 function reactToJibbClick() {
 	xapi.Event.UserInterface.Extensions.Panel.Clicked.on((value) => {
 		if (value.PanelId == "jibb_panel") {
@@ -379,7 +360,7 @@ let uiExtension = `<Extensions>
         <Name>Row</Name>
         <Widget>
           <WidgetId>widget_1</WidgetId>
-          <Name>Selected Input: ${SessionDetails.selectedInput}</Name>
+          <Name>Selected Input:1</Name>
           <Type>Text</Type>
           <Options>size=2;fontSize=normal;align=center</Options>
         </Widget>
@@ -408,21 +389,6 @@ let uiExtension = `<Extensions>
       </Row>
       <Row>
         <Name>Row</Name>
-        <Widget>
-          <WidgetId>widget_2</WidgetId>
-          <Name>Current Recording Email: ${RecordingEmail}</Name>
-          <Type>Text</Type>
-          <Options>size=4;fontSize=normal;align=center</Options>
-        </Widget>
-      </Row>
-      <Row>
-        <Name>Row</Name>
-        <Widget>
-          <WidgetId>jibb_email</WidgetId>
-          <Name>Edit Email</Name>
-          <Type>Button</Type>
-          <Options>size=2</Options>
-        </Widget>
       </Row>
       <Options>hideRowNames=1</Options>
     </Page>
