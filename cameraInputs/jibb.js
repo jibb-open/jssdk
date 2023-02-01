@@ -38,7 +38,7 @@
  * </ul>
  * 
  * <h3>Click on source to see the script example.</h3>
- * @name 1-webexDeviceExample
+ * @name 4-webexDeviceExample
  * @memberof Examples
  *
  * 
