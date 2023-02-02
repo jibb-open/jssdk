@@ -1,6 +1,6 @@
 import xapi from "xapi"
 
-let version = "push"
+let version = "v3.10.0-exampleUpdate.v2"
 
 let ApiKey = "YourApiKey"
 let jibbCode = ""
