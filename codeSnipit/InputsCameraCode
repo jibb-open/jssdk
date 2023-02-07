@@ -1,0 +1,50 @@
+function showAlertInputNotConnected() {
+	xapi.Command.UserInterface.Message.Alert.Display({
+		Duration: 10,
+		Text: "Error",
+		Title: "Input Not Connected",
+	})
+}
+
+function reactToCameraInput() {
+	xapi.Event.UserInterface.Extensions.Widget.Action.on((event) => {
+		if (event.Type == "released") {
+			console.log(event.Type)
+			switch (event.WidgetId) {
+				case `jibb_camera_input`:
+					if (event.Value == "1") {
+						switchInput(1)
+					} else if (event.Value == "2") {
+						switchInput(2)
+					} else if (event.Value == "3") {
+						switchInput(3)
+					}
+					break
+
+				default:
+					break
+			}
+		}
+	})
+}
+
+async function switchInput(id) {
+	let connected = await checkInputIsConnected(id)
+	if (connected == "True") {
+		xapi.Command.Video.Input.SetMainVideoSource({ ConnectorId: id })
+		await stringReplace(`Selected Input:${SessionDetails.selectedInput}`, `Selected Input:${id}`)
+		await setCameraPosition(`Jibb${id}`)
+		addPanel()
+		SessionDetails.selectedInput = id
+	} else {
+		showAlertInputNotConnected()
+	}
+}
+
+async function checkInputIsConnected(id) {
+	return await xapi.Status.Video.Input.Connector[id].Connected.get()
+}
+
+function stringReplace(oldStr, newStr) {
+	uiExtension = uiExtension.replace(oldStr, newStr)
+}

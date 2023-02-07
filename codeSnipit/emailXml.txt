@@ -1,0 +1,18 @@
+ <Row>
+        <Name>Row</Name>
+        <Widget>
+          <WidgetId>widget_2</WidgetId>
+          <Name>Current Recording Email: ${RecordingEmail}</Name>
+          <Type>Text</Type>
+          <Options>size=4;fontSize=normal;align=center</Options>
+        </Widget>
+      </Row>
+      <Row>
+        <Name>Row</Name>
+        <Widget>
+          <WidgetId>jibb_email</WidgetId>
+          <Name>Edit Email</Name>
+          <Type>Button</Type>
+          <Options>size=2</Options>
+        </Widget>
+      </Row>

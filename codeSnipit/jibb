@@ -1,0 +1,285 @@
+import xapi from "xapi"
+import * as JIBB from "./jibb_WebexXapi"
+
+let ApiKey = "YourApiKey"
+let RecordingEmail = "YourEmail"
+let MeetingAPI = JIBB.Meeting
+let Auth = JIBB.Auth
+let EventBus = JIBB.EventBus
+let Recording = JIBB.Recording
+
+const SurfaceType = {
+	PAPER: "PAPER",
+	WHITEBOARD: "WHITEBOARD",
+}
+
+function Config(apiKey) {
+	this.apiKey = apiKey
+	this.webURL = "https://app.jibb.ai"
+	xapi.Command.WebEngine.MediaAccess.add({ Hostname: "app.jibb.ai", Device: "Camera" })
+	JIBB.Auth.configure({ apiKey: apiKey })
+}
+
+let SessionDetails = {
+	meetingId: "",
+	meetingToken: "",
+	userToken: "",
+	meetingUrl: "",
+	cameraId: "",
+	clientId: "",
+	selectedInput: 1,
+}
+
+async function generateMeetingLink() {
+	console.log("generating meeting link ...")
+	let title = await createTitle()
+	await gettingUserToken()
+	await createMeeting(title)
+	SessionDetails.meetingUrl = `${config.webURL}/remote/${SessionDetails.meetingId}?user_token=${SessionDetails.userToken}`
+}
+
+async function createTitle() {
+	let title = String(await xapi.Config.SystemUnit.CustomDeviceId.get())
+	if (String(title) == "") {
+		title = "webex"
+	}
+	return title
+}
+
+async function gettingUserToken() {
+	SessionDetails.userToken = await Auth.getUserToken()
+}
+
+async function gettingMeetingToken() {
+	SessionDetails.meetingToken = await MeetingAPI.getMeetingToken({
+		meetingId: SessionDetails.meetingId,
+		permission: 2,
+	})
+}
+
+async function createMeeting(title) {
+	SessionDetails.meetingId = await MeetingAPI.createMeeting({ title: title, isTemporary: true })
+}
+
+async function autoStartMeeting() {
+	console.log("autoStartMeeting ...")
+	hideJibbPanel()
+	hideCameraSelfView()
+	await generateMeetingLink()
+	await openMeetingUrlInWebView()
+	await sleep(10000) //wait until page finshed loading, could be less than 10s.
+	await getWebClinetId()
+	await getCameraId()
+	await gettingMeetingToken()
+	await startTheMeeting()
+	await sleep(5000)
+	startRecording()
+}
+
+async function startTheMeeting() {
+	let req = {
+		meetingToken: SessionDetails.meetingToken,
+		surfaceType: SurfaceType.WHITEBOARD,
+		fixedCorners: true,
+		cameraId: SessionDetails.cameraId,
+		clientId: SessionDetails.clientId,
+		enableColor: true,
+	}
+	await EventBus.startStream(req)
+}
+
+async function getAvailableCameraList() {
+	return await EventBus.getCameraList(SessionDetails.clientId)
+}
+async function getCameraId() {
+	let cameraList = await getAvailableCameraList()
+	if (cameraList.length) {
+		SessionDetails.cameraId = cameraList[0].id
+	} else return Promise.reject("No Camera Access")
+}
+
+async function getWebClinetId() {
+	let statusList = await EventBus.getClientStatusList()
+	SessionDetails.clientId = statusList[0].id
+}
+
+async function openMeetingUrlInWebView() {
+	await xapi.Command.UserInterface.WebView.Display({ Title: "jibb", Url: SessionDetails.meetingUrl })
+}
+
+async function stopMeeting() {
+	console.log("stopMeeting ...")
+	await stopRecording()
+	closeWebView()
+	hideCameraSelfView()
+	hideJibbPanel()
+}
+
+async function startRecording() {
+	console.log("startRecording ...")
+	let title = await createTitle()
+	await Recording.startRecording({
+		alternativeEmail: RecordingEmail,
+		sensivityLevel: 2,
+		meetingId: SessionDetails.meetingId,
+		meetingToken: SessionDetails.meetingToken,
+		title: title,
+	})
+}
+
+async function stopRecording() {
+	await Recording.stopRecording()
+}
+
+async function setCameraPosition(postionName) {
+	let PresetId = await getCameraPresetId(postionName)
+	if (PresetId != -1) {
+		xapi.Command.Camera.Preset.Activate({ PresetId: PresetId })
+	}
+}
+
+async function getCameraPresetId(postionName) {
+	let json = await xapi.Command.Camera.Preset.List({ CameraId: 1, DefaultPosition: false })
+	let jsonArray = json["Preset"]
+
+	var filteredObj = jsonArray.find(function (item, i) {
+		if (item.Name === postionName) {
+			return item
+		}
+	})
+	if (filteredObj != undefined) {
+		return filteredObj["PresetId"]
+	} else return -1
+}
+
+function closeWebView() {
+	xapi.Command.UserInterface.WebView.Clear({ Target: "PersistentWebApp" })
+}
+
+function hideCameraSelfView() {
+	xapi.Command.Video.Selfview.Set({
+		FullscreenMode: "Off",
+		Mode: "Off",
+		PIPPosition: "LowerRight",
+	})
+}
+
+function showCameraSelfView() {
+	xapi.Command.Video.Selfview.Set({
+		FullscreenMode: "Off",
+		Mode: "On",
+		PIPPosition: "LowerRight",
+	})
+}
+
+function hideJibbPanel() {
+	xapi.Command.UserInterface.Extensions.Panel.Close()
+}
+
+// Add the Jibb panel to UI
+async function addPanel() {
+	console.info("Adding  panel")
+	const xml = uiExtension
+	await xapi.Command.UserInterface.Extensions.Panel.Save(
+		{
+			PanelId: "jibb_panel",
+		},
+		xml
+	)
+}
+
+function sleep(ms) {
+	return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+function showAlert() {
+	xapi.Command.UserInterface.Message.Alert.Display({
+		Duration: 3,
+		Text: "JIBB Ready",
+		Title: "JIBB is Ready",
+	})
+}
+
+let config = new Config(ApiKey)
+
+// Startup!
+async function main() {
+	mainBody
+}
+
+function reactToStartAndStopClick() {
+	xapi.Event.UserInterface.Extensions.Widget.Action.on((event) => {
+		if (event.Type == "released") {
+			switch (event.WidgetId) {
+				case `jibb_start_toggle`:
+					if (event.Value == "start") {
+						autoStartMeeting()
+					} else if (event.Value == "stop") {
+						stopMeeting()
+					}
+					break
+				default:
+					break
+			}
+		}
+	})
+}
+
+function reactToJibbClick() {
+	xapi.Event.UserInterface.Extensions.Panel.Clicked.on((value) => {
+		if (value.PanelId == "jibb_panel") {
+			setCameraPosition(`Jibb${SessionDetails.selectedInput}`)
+			showCameraSelfView()
+		}
+	})
+}
+
+let uiExtension = `<Extensions>
+ <Version>1.9</Version>
+ <Panel>
+   <Order>1</Order>
+   <PanelId>jibb_panel</PanelId>
+   <Location>HomeScreenAndCallControls</Location>
+   <Icon>Custom</Icon>
+   <Name>JIBB</Name>
+   <ActivityType>Custom</ActivityType>
+   <CustomIcon>
+	 <Content>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</Content>
+	 <Id>d5c72d04a0311f930447729e1331908693ed5d5494d6e1003149ddb0a4a5ed95</Id>
+   </CustomIcon>
+   <Page>
+	 <Name>JIBB</Name>
+	 <Row>
+	   <Name>Row</Name>
+	   <Widget>
+		 <WidgetId>jibb_start_toggle</WidgetId>
+		 <Type>GroupButton</Type>
+		 <Options>size=4</Options>
+		 <ValueSpace>
+		   <Value>
+			 <Key>start</Key>
+			 <Name>Start</Name>
+		   </Value>
+		   <Value>
+			 <Key>stop</Key>
+			 <Name>Stop</Name>
+		   </Value>
+		 </ValueSpace>
+	   </Widget>
+	 </Row>
+	inputCameraXml
+	emailXml
+	cameraControlXml
+	 <Options>hideRowNames=1</Options>
+   </Page>
+ </Panel>
+ </Extensions>
+   `
+
+InputCode
+
+emailCode
+
+cameraControlCode
+
+main()

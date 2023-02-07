@@ -1,0 +1,30 @@
+function reactToEmailEdit() {
+	xapi.Event.UserInterface.Extensions.Widget.Action.on((event) => {
+		if (event.Type == "released") {
+			console.log(event.Type)
+			switch (event.WidgetId) {
+				case "jibb_email":
+					//ask for record email
+					xapi.Command.UserInterface.Message.TextInput.Display({
+						FeedbackId: "user_email",
+						Placeholder: RecordingEmail,
+						Title: "Destination Email Address",
+						Text: "When you complete your captures, this is the email address that will receive the capture",
+					})
+					break
+				default:
+					break
+			}
+		}
+	})
+}
+
+function setEmailistener() {
+	xapi.Event.UserInterface.Message.TextInput.Response.on(async (event) => {
+		if (event.FeedbackId === "user_email") {
+			stringReplace(`Current Recording Email: ${RecordingEmail}`, `Current Recording Email: ${event.Text}`)
+			addPanel()
+			RecordingEmail = event.Text
+		}
+	})
+}

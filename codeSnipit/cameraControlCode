@@ -1,0 +1,77 @@
+function reactToCameraControl() {
+	xapi.Event.UserInterface.Extensions.Widget.Action.on((event) => {
+		if (event.Type == "released") {
+			switch (event.WidgetId) {
+				case `jibb_zoom_in`:
+					zoomIn()
+					break
+				case `jibb_zoom_out`:
+					zoomOut()
+					break
+				case `jibb_camera_control`:
+					switch (event.Value) {
+						case `up`:
+							moveUp()
+							break
+						case `down`:
+							moveDown()
+							break
+						case `right`:
+							moveRigt()
+							break
+						case `left`:
+							moveLeft()
+							break
+						case `center`:
+							resetCamera()
+							break
+						default:
+							break
+					}
+					break
+				default:
+					break
+			}
+		}
+	})
+}
+
+async function zoomIn() {
+	let value = await xapi.Status.Cameras.Camera[1].Position.Zoom.get()
+	value = parseInt(value) - 100
+	xapi.Command.Camera.PositionSet({ CameraId: "1", Zoom: value })
+}
+
+async function zoomOut() {
+	let value = await xapi.Status.Cameras.Camera[1].Position.Zoom.get()
+	value = parseInt(value) + 100
+	xapi.Command.Camera.PositionSet({ CameraId: "1", Zoom: value })
+}
+
+async function moveUp() {
+	let value = await xapi.Status.Cameras.Camera[1].Position.Tilt.get()
+	value = parseInt(value) + 100
+	xapi.Command.Camera.PositionSet({ CameraId: "1", Tilt: value })
+}
+
+async function moveDown() {
+	let value = await xapi.Status.Cameras.Camera[1].Position.Tilt.get()
+	value = parseInt(value) - 100
+	xapi.Command.Camera.PositionSet({ CameraId: "1", Tilt: value })
+}
+
+async function moveRigt() {
+	let value = await xapi.Status.Cameras.Camera[1].Position.Pan.get()
+	value = parseInt(value) - 100
+	xapi.Command.Camera.PositionSet({ CameraId: "1", Pan: value })
+}
+
+async function moveLeft() {
+	let value = await xapi.Status.Cameras.Camera[1].Position.Pan.get()
+	value = parseInt(value) + 100
+	xapi.Command.Camera.PositionSet({ CameraId: "1", Pan: value })
+}
+
+async function resetCamera() {
+	xapi.Command.Camera.PositionReset({ Axis: "all", CameraId: 1 })
+}

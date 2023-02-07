@@ -1,0 +1,4 @@
+addPanel()
+showAlert()
+reactToJibbClick()
+reactToStartAndStopClick()
