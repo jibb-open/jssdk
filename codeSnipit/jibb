@@ -28,6 +28,7 @@ let SessionDetails = {
 	cameraId: "",
 	clientId: "",
 	selectedInput: 1,
+	customCorners: [],
 }
 
 async function generateMeetingLink() {
@@ -81,6 +82,7 @@ async function startTheMeeting() {
 		meetingToken: SessionDetails.meetingToken,
 		surfaceType: SurfaceType.WHITEBOARD,
 		fixedCorners: true,
+		customCorners: customCorners,
 		cameraId: SessionDetails.cameraId,
 		clientId: SessionDetails.clientId,
 		enableColor: true,
