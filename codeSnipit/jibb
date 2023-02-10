@@ -82,7 +82,7 @@ async function startTheMeeting() {
 		meetingToken: SessionDetails.meetingToken,
 		surfaceType: SurfaceType.WHITEBOARD,
 		fixedCorners: true,
-		customCorners: customCorners,
+		customCorners: SessionDetails.customCorners,
 		cameraId: SessionDetails.cameraId,
 		clientId: SessionDetails.clientId,
 		enableColor: true,
