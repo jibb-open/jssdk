@@ -165,7 +165,8 @@ async function startRecording() {
 	console.log("startRecording ...")
 	let title = await createTitle()
 	await Recording.startRecording({
-		email: RecordingEmail,
+		alternativeEmail: RecordingEmail,
+		sensivityLevel: 2,
 		meetingId: SessionDetails.meetingId,
 		meetingToken: SessionDetails.meetingToken,
 		title: title,

@@ -166,7 +166,8 @@ async function startRecording() {
 	console.log("startRecording ...")
 	let title = await createTitle()
 	await Recording.startRecording({
-		email: RecordingEmail,
+		alternativeEmail: RecordingEmail,
+		sensivityLevel: 2,
 		meetingId: SessionDetails.meetingId,
 		meetingToken: SessionDetails.meetingToken,
 		title: title,
@@ -262,7 +263,7 @@ async function main() {
 	showAlert()
 	reactToJibbClick()
 	reactToStartAndStopClick()
-	reactToEditEmail()
+	setEmailistener()
 }
 
 function reactToStartAndStopClick() {
@@ -306,7 +307,7 @@ async function switchInput(id) {
 	let connected = await checkInputIsConnected(id)
 	if (connected == "True") {
 		xapi.Command.Video.Input.SetMainVideoSource({ ConnectorId: id })
-		stringReplace(`Selected Input: ${SessionDetails.selectedInput}`, `Selected Input: ${id}`)
+		stringReplace(`Selected Input:${SessionDetails.selectedInput}`, `Selected Input: ${id}`)
 		await setCameraPosition(`Jibb${id}`)
 		addPanel()
 		SessionDetails.selectedInput = id
@@ -323,7 +324,7 @@ function stringReplace(oldStr, newStr) {
 	uiExtension = uiExtension.replace(oldStr, newStr)
 }
 
-function reactToEditEmail() {
+function setEmailistener() {
 	xapi.Event.UserInterface.Message.TextInput.Response.on(async (event) => {
 		if (event.FeedbackId === "user_email") {
 			stringReplace(`Current Recording Email: ${RecordingEmail}`, `Current Recording Email: ${event.Text}`)
@@ -379,7 +380,7 @@ let uiExtension = `<Extensions>
         <Name>Row</Name>
         <Widget>
           <WidgetId>widget_1</WidgetId>
-          <Name>Selected Input: ${SessionDetails.selectedInput}</Name>
+          <Name>Selected Input:${SessionDetails.selectedInput}</Name>
           <Type>Text</Type>
           <Options>size=2;fontSize=normal;align=center</Options>
         </Widget>
