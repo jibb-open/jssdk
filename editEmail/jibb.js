@@ -1,11 +1,10 @@
 /**
  *
- * <h2>webex Device Macro select inputs and edit Email.</h2>
+ * <h2>webex Device Macro edit Email.</h2>
  * The device user should be able to walk into the meeting room, tap on the JIBB icon on the UI and it will automatically snap to the whiteboard and start detecting/sharing the JIBB Workspace.
  * <h3>Description:</h3>
  * <ul >
  *  <li> start and stop button.
- *  <li> can choose camera input.
  *  <li> camera will snap to whiteboard that admin preset.
  *  <li> can Edit Recording Email.
  * </ul>
@@ -39,10 +38,11 @@
  * </ul>
  *
  * <h3>Click on source to see the script example.</h3>
- * @name 5-webexDeviceExample
+ * @name 5-EditEmail
  * @memberof Examples
  *
  */
+
 import xapi from "xapi"
 import * as JIBB from "./jibb_WebexXapi"
 
@@ -256,7 +256,6 @@ showAlert()
 reactToJibbClick()
 reactToStartAndStopClick()
 
-reactToCameraInput()
 reactToEmailEdit()
 setEmailistener()
 }
@@ -321,37 +320,7 @@ let uiExtension = `<Extensions>
 		 </ValueSpace>
 	   </Widget>
 	 </Row>
-	 <Row>
-<Name>Row</Name>
-<Widget>
-  <WidgetId>widget_1</WidgetId>
-  <Name>Selected Input:${SessionDetails.selectedInput}</Name>
-  <Type>Text</Type>
-  <Options>size=2;fontSize=normal;align=center</Options>
-</Widget>
-</Row>
-<Row>
-<Name>Row</Name>
-<Widget>
-  <WidgetId>jibb_camera_input</WidgetId>
-  <Type>GroupButton</Type>
-  <Options>size=4</Options>
-  <ValueSpace>
-	<Value>
-	  <Key>1</Key>
-	  <Name>Default 1</Name>
-	</Value>
-	<Value>
-	  <Key>2</Key>
-	  <Name>Input 2</Name>
-	</Value>
-	<Value>
-	  <Key>3</Key>
-	  <Name>Input 3</Name>
-	</Value>
-  </ValueSpace>
-</Widget>
-</Row>
+	
 	 <Row>
         <Name>Row</Name>
         <Widget>
@@ -377,56 +346,6 @@ let uiExtension = `<Extensions>
  </Extensions>
    `
 
-function showAlertInputNotConnected() {
-	xapi.Command.UserInterface.Message.Alert.Display({
-		Duration: 10,
-		Text: "Error",
-		Title: "Input Not Connected",
-	})
-}
-
-function reactToCameraInput() {
-	xapi.Event.UserInterface.Extensions.Widget.Action.on((event) => {
-		if (event.Type == "released") {
-			console.log(event.Type)
-			switch (event.WidgetId) {
-				case `jibb_camera_input`:
-					if (event.Value == "1") {
-						switchInput(1)
-					} else if (event.Value == "2") {
-						switchInput(2)
-					} else if (event.Value == "3") {
-						switchInput(3)
-					}
-					break
-
-				default:
-					break
-			}
-		}
-	})
-}
-
-async function switchInput(id) {
-	let connected = await checkInputIsConnected(id)
-	if (connected == "True") {
-		xapi.Command.Video.Input.SetMainVideoSource({ ConnectorId: id })
-		await stringReplace(`Selected Input:${SessionDetails.selectedInput}`, `Selected Input:${id}`)
-		await setCameraPosition(`Jibb${id}`)
-		addPanel()
-		SessionDetails.selectedInput = id
-	} else {
-		showAlertInputNotConnected()
-	}
-}
-
-async function checkInputIsConnected(id) {
-	return await xapi.Status.Video.Input.Connector[id].Connected.get()
-}
-
-function stringReplace(oldStr, newStr) {
-	uiExtension = uiExtension.replace(oldStr, newStr)
-}
 
 
 function reactToEmailEdit() {
