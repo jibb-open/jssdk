@@ -36,7 +36,7 @@ async function generateMeetingLink() {
 	let title = await createTitle()
 	await gettingUserToken()
 	await createMeeting(title)
-	SessionDetails.meetingUrl = `${config.webURL}/remote/${SessionDetails.meetingId}?user_token=${SessionDetails.userToken}`
+	SessionDetails.meetingUrl = `${config.webURL}/cisco/devices/${SessionDetails.meetingId}?user_token=${SessionDetails.userToken}`
 }
 
 async function createTitle() {
