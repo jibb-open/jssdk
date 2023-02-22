@@ -15,9 +15,9 @@ const SurfaceType = {
 
 function Config(apiKey) {
 		this.apiKey = apiKey
-		this.webURL = "https://app.testing.jibb.cloud"
-		xapi.Command.WebEngine.MediaAccess.add({ Hostname: "app.testing.jibb.cloud", Device: "Camera" })
-		JIBB.Config.setApiBaseURL("https://api.testing.jibb.cloud")
+		this.webURL = "https://app.testing.jibb.ai"
+		xapi.Command.WebEngine.MediaAccess.add({ Hostname: "app.testing.jibb.ai", Device: "Camera" })
+		JIBB.Config.setApiBaseURL("https://api.testing.jibb.ai")
 
 		JIBB.Auth.configure({ apiKey: apiKey })
 }
