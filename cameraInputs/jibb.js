@@ -325,7 +325,7 @@ let uiExtension = `<Extensions>
   <WidgetId>widget_1</WidgetId>
   <Name>Selected Input:${SessionDetails.selectedInput}</Name>
   <Type>Text</Type>
-  <Options>size=2;fontSize=normal;align=center</Options>
+  <Options>size=4;fontSize=normal;align=center</Options>
 </Widget>
 </Row>
 <Row>
@@ -350,6 +350,7 @@ let uiExtension = `<Extensions>
   </ValueSpace>
 </Widget>
 </Row>
+
 	
 	
 	 <Options>hideRowNames=1</Options>

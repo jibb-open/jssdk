@@ -336,9 +336,10 @@ let uiExtension = `<Extensions>
           <WidgetId>jibb_email</WidgetId>
           <Name>Edit Email</Name>
           <Type>Button</Type>
-          <Options>size=2</Options>
+          <Options>size=4</Options>
         </Widget>
       </Row>
+
 	
 	 <Options>hideRowNames=1</Options>
    </Page>
