@@ -327,7 +327,7 @@ let uiExtension = `<Extensions>
   <WidgetId>widget_1</WidgetId>
   <Name>Selected Input:${SessionDetails.selectedInput}</Name>
   <Type>Text</Type>
-  <Options>size=2;fontSize=normal;align=center</Options>
+  <Options>size=4;fontSize=normal;align=center</Options>
 </Widget>
 </Row>
 <Row>
@@ -352,6 +352,7 @@ let uiExtension = `<Extensions>
   </ValueSpace>
 </Widget>
 </Row>
+
 	 <Row>
         <Name>Row</Name>
         <Widget>
@@ -367,9 +368,10 @@ let uiExtension = `<Extensions>
           <WidgetId>jibb_email</WidgetId>
           <Name>Edit Email</Name>
           <Type>Button</Type>
-          <Options>size=2</Options>
+          <Options>size=4</Options>
         </Widget>
       </Row>
+
 	
 	 <Options>hideRowNames=1</Options>
    </Page>
