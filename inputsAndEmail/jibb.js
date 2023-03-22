@@ -44,8 +44,8 @@
  *
  */
 import xapi from "xapi"
-import * as JIBB from "./jibb_WebexXapi"
-
+import * as JIBB from "./jibb_WebexXapi_v3-14-0"
+let version = "jibb_WebexXapi_v3-14-0"
 let ApiKey = "YourApiKey"
 let RecordingEmail = "YourEmail"
 let MeetingAPI = JIBB.Meeting
@@ -59,9 +59,11 @@ const SurfaceType = {
 }
 
 function Config(apiKey) {
+
 	this.apiKey = apiKey
-	this.webURL = "https://app.jibb.ai"
+	this.webURL = "https://" + "app.jibb.ai"
 	xapi.Command.WebEngine.MediaAccess.add({ Hostname: "app.jibb.ai", Device: "Camera" })
+	JIBB.Config.setApiBaseURL("https://" + "api.jibb.ai")
 	JIBB.Auth.configure({ apiKey: apiKey })
 }
 
