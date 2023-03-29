@@ -44,8 +44,8 @@
  * 
  */
 import xapi from "xapi"
-import * as JIBB from "./jibb_WebexXapi_v3-14-0"
-let version = "jibb_WebexXapi_v3-14-0"
+import * as JIBB from "./jibb_WebexXapi_v3-14-1"
+let version = "jibb_WebexXapi_v3-14-1"
 let ApiKey = "YourApiKey"
 let RecordingEmail = "YourEmail"
 let MeetingAPI = JIBB.Meeting
