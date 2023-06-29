@@ -1,6 +1,6 @@
 {
 	"name": "@jibb-open/jssdk",
-	"version": "3.15.0",
+	"version": "3.14.4",
 	"description": "",
 	"scripts": {
 		"test": "LOG_LEVEL=error mocha --timeout 10000 ",
@@ -66,7 +66,7 @@
 		"pako": "^2.0.4",
 		"raw-loader": "^4.0.2",
 		"watch": "^1.0.2",
-		"webpack": "^5.88.0",
+		"webpack": "^5.74.0",
 		"webpack-bundle-analyzer": "^4.6.1",
 		"webpack-cli": "^4.9.2"
 	}
