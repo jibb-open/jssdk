@@ -1,11 +1,12 @@
 {
 	"name": "@jibb-open/jssdk",
-	"version": "3.15.2",
+	"version": "3.15.6",
 	"description": "",
 	"scripts": {
 		"test": "LOG_LEVEL=error mocha --timeout 10000 ",
 		"coverage": "npm run test",
-		"build": "BABEL_ENV=webapp babel src --out-dir dist --no-copy-ignored",
+		"build": "babel src --out-dir dist --no-copy-ignored --config-file ./.babelrc",
+		"build-macro": "rollup -c rollup.config.mjs",
 		"watch": "watch 'npm run build' src",
 		"docs": "jsdoc -c ./jsdoc-config.json -r ./src/ ./README.md"
 	},
@@ -28,7 +29,7 @@
 		"path": "^0.12.7",
 		"pino": "^7.6.5",
 		"pino-pretty": "^7.5.3",
-		"protobufjs": "6.11.3",
+		"protobufjs": "7.2.4",
 		"rimraf": "^3.0.2",
 		"utf-8-validate": "^5.0.9",
 		"ws": "^8.5.0"
@@ -42,6 +43,10 @@
 		"@babel/polyfill": "^7.12.1",
 		"@babel/preset-env": "^7.19.4",
 		"@babel/runtime": "^7.20.0",
+		"@rollup/plugin-commonjs": "^25.0.2",
+		"@rollup/plugin-json": "^6.0.0",
+		"@rollup/plugin-node-resolve": "^15.1.0",
+		"@rollup/plugin-terser": "^0.4.3",
 		"babel-loader": "^8.2.5",
 		"babel-minify": "^0.5.2",
 		"babel-plugin-add-module-exports": "^1.0.4",
@@ -65,8 +70,11 @@
 		"nyc": "^15.1.0",
 		"pako": "^2.0.4",
 		"raw-loader": "^4.0.2",
+		"rollup": "^3.26.2",
+		"rollup-plugin-inject-process-env": "^1.3.1",
+		"rollup-plugin-node-builtins": "^2.1.2",
 		"watch": "^1.0.2",
-		"webpack": "^5.74.0",
+		"webpack": "^5.76.0",
 		"webpack-bundle-analyzer": "^4.6.1",
 		"webpack-cli": "^4.9.2"
 	}
