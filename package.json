@@ -1,6 +1,6 @@
 {
 	"name": "@jibb-open/jssdk",
-	"version": "3.15.15",
+	"version": "3.16.0",
 	"description": "",
 	"scripts": {
 		"test": "LOG_LEVEL=error mocha --timeout 10000 ",
@@ -18,7 +18,7 @@
 	},
 	"homepage": "https://github.com/Inkerz/jibb-jssdk#readme",
 	"dependencies": {
-		"axios": "^0.24.0",
+		"axios": "^1.6.8",
 		"browser-or-node": "^2.0.0",
 		"buffer": "^6.0.3",
 		"bufferutil": "^4.0.6",
