@@ -1,1 +1,1 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.Config=void 0;class ConfigClass{constructor(){this.apiBaseURL=process.env.API_BASE_URL||"https://api.jibb.ai"}setApiBaseURL(a){this.apiBaseURL=a}}let Config=new ConfigClass;exports.Config=Config;
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.Config=void 0;class ConfigClass{constructor(){this.apiBaseURL=process.env.API_BASE_URL||"https://api.jibb.ai"}setApiBaseURL(a){this.apiBaseURL=a}}let Config=exports.Config=new ConfigClass;
