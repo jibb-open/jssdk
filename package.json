@@ -1,6 +1,6 @@
 {
 	"name": "@jibb-open/jssdk",
-	"version": "3.17.6",
+	"version": "3.17.7",
 	"description": "",
 	"scripts": {
 		"test": "LOG_LEVEL=error mocha --timeout 10000 ",
