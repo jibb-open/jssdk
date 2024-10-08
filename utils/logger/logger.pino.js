@@ -1,12 +1,1 @@
-import Pino from "pino";
-let logger = new Pino({
-  browser: {
-    asObject: false
-  },
-  timestamp: false,
-  level: "warn"
-});
-logger.setLevel = level => {
-  logger.level = level;
-};
-export { logger };
+"use strict";var _pino=_interopRequireDefault(require("pino"));Object.defineProperty(exports,"__esModule",{value:!0}),exports.logger=void 0;function _interopRequireDefault(a){return a&&a.__esModule?a:{default:a}}let logger=exports.logger=new _pino.default({browser:{asObject:!1},timestamp:!1,level:"warn"});logger.setLevel=a=>{logger.level=a};

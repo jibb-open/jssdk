@@ -1,18 +1,1 @@
-export class CachedVariable {
-  constructor() {
-    let expirySeconds = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 60;
-    this.value = null;
-    this.expirySeconds = expirySeconds;
-    this.expiryTime = Date.now();
-  }
-  isExpired() {
-    return this.value == null || Date.now() > this.expiryTime;
-  }
-  get() {
-    if (this.isExpired()) return undefined;else return this.value;
-  }
-  set(value) {
-    this.value = value;
-    this.expiryTime = Date.now() + this.expirySeconds * 1000;
-  }
-}
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.CachedVariable=void 0;class CachedVariable{constructor(){let a=0<arguments.length&&arguments[0]!==void 0?arguments[0]:60;this.value=null,this.expirySeconds=a,this.expiryTime=Date.now()}isExpired(){return null==this.value||Date.now()>this.expiryTime}get(){return this.isExpired()?void 0:this.value}set(a){this.value=a,this.expiryTime=Date.now()+1e3*this.expirySeconds}}exports.CachedVariable=CachedVariable;

@@ -1,9 +1,1 @@
-import "core-js/modules/es.global-this.js";
-import "core-js/modules/es.promise.js";
-let http = globalThis.http;
-const initAxios = () => {
-  import("./http.axios.js").then(() => {
-    http = globalThis.http;
-  });
-};
-export { http, initAxios };
+"use strict";require("core-js/modules/es.weak-map.js"),require("core-js/modules/web.dom-collections.iterator.js"),Object.defineProperty(exports,"__esModule",{value:!0}),exports.initAxios=exports.http=void 0,require("core-js/modules/es.global-this.js"),require("core-js/modules/es.promise.js");function _getRequireWildcardCache(a){if("function"!=typeof WeakMap)return null;var b=new WeakMap,c=new WeakMap;return(_getRequireWildcardCache=function(a){return a?c:b})(a)}function _interopRequireWildcard(b,c){if(!c&&b&&b.__esModule)return b;if(null===b||"object"!=typeof b&&"function"!=typeof b)return{default:b};var d=_getRequireWildcardCache(c);if(d&&d.has(b))return d.get(b);var e={__proto__:null},f=Object.defineProperty&&Object.getOwnPropertyDescriptor;for(var a in b)if("default"!=a&&{}.hasOwnProperty.call(b,a)){var g=f?Object.getOwnPropertyDescriptor(b,a):null;g&&(g.get||g.set)?Object.defineProperty(e,a,g):e[a]=b[a]}return e.default=b,d&&d.set(b,e),e}let http=exports.http=globalThis.http;const initAxios=()=>{Promise.resolve().then(()=>_interopRequireWildcard(require("./http.axios.js"))).then(()=>{exports.http=http=globalThis.http})};exports.initAxios=initAxios;
