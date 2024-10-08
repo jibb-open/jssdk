@@ -1,1 +1,5 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.types=exports.meeting=exports.ipsa=exports.cilix=void 0;const root=require("./jibb.pb.js"),ipsa=exports.ipsa=root.lookup("jibb.ipsa.v1"),types=exports.types=root.lookup("types"),cilix=exports.cilix=root.lookup("cilix"),meeting=exports.meeting=root.lookup("meeting");
+import root from "./jibb.pb.js";
+export const ipsa = root.lookup("jibb.ipsa.v1");
+export const types = root.lookup("types");
+export const cilix = root.lookup("cilix");
+export const meeting = root.lookup("meeting");

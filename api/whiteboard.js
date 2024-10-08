@@ -1,1 +1,116 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.Whiteboard=void 0,require("core-js/modules/es.promise.js"),require("core-js/modules/web.dom-collections.iterator.js");var _config=require("../config.js"),_index=require("../utils/http/index.js");class Whiteboard{constructor(a,b){this.meetingId=a,this.meetingToken=b}async saveImage(a){let{image:b,type:c}=a;switch(c=c||"",c.toLowerCase()){case"jpeg":c="IMAGE_JPEG";break;case"webp":c="IMAGE_WEBP";break;default:c=""}let d={"Content-Type":"image/jpeg",Accept:"application/json","x-jibb-meeting-jwt":this.meetingToken},e={image:b,type:c},f=await _index.http.post("".concat(_config.Config.apiBaseURL,"/v1/meetings/").concat(this.meetingId,"/whiteboard/images"),e,d);return f.data.imageName}async getImageList(){let a={"Content-Type":"application/json",Accept:"application/json","x-jibb-meeting-jwt":this.meetingToken},b=await _index.http.get("".concat(_config.Config.apiBaseURL,"/v1/meetings/").concat(this.meetingId,"/whiteboard/images"),a);return b.data.imagesName}async getImage(a){let b={"Content-Type":"application/json",Accept:"image/jpeg","x-jibb-meeting-jwt":this.meetingToken},c="".concat(_config.Config.apiBaseURL,"/v1/meetings/").concat(this.meetingId,"/whiteboard/images/").concat(a),d=await _index.http.get(c,b,{responseType:"arraybuffer"});return d.data}async getImages(){let a=[],b=await this.getImageList();for(const c of b){let b={"Content-Type":"application/json",Accept:"application/json","x-jibb-meeting-jwt":this.meetingToken},d=await _index.http.get("".concat(_config.Config.apiBaseURL,"/v1/meetings/").concat(this.meetingId,"/whiteboard/images/").concat(c),{headers:b});a.push({imageName:c,data:d.data})}return a}async deleteImage(a){let b={"Content-Type":"application/json",Accept:"application/json","x-jibb-meeting-jwt":this.meetingToken};return _index.http.delete("".concat(_config.Config.apiBaseURL,"/v1/meetings/").concat(this.meetingId,"/whiteboard/images/").concat(a),b)}async saveBoard(a){let b={"Content-Type":"application/json",Accept:"application/json","x-jibb-meeting-jwt":this.meetingToken},c=await _index.http.post("".concat(_config.Config.apiBaseURL,"/v1/meetings/").concat(this.meetingId,"/whiteboard"),{board:a},b);return c.data}async getBoard(){let a={"Content-Type":"application/json",Accept:"image/jpeg","x-jibb-meeting-jwt":this.meetingToken},b=await _index.http.get("".concat(_config.Config.apiBaseURL,"/v1/meetings/").concat(this.meetingId,"/whiteboard"),a);return b.data}async deleteBoard(){let a={"Content-Type":"application/json",Accept:"application/json","x-jibb-meeting-jwt":this.meetingToken};return _index.http.delete("".concat(_config.Config.apiBaseURL,"/v1/meetings/").concat(this.meetingId,"/whiteboard"),a)}}exports.Whiteboard=Whiteboard;
+import "core-js/modules/es.promise.js";
+import "core-js/modules/web.dom-collections.iterator.js";
+import { Config } from "../config.js";
+import { http } from "../utils/http/index.js";
+export class Whiteboard {
+  constructor(meetingId, meetingToken) {
+    this.meetingId = meetingId;
+    this.meetingToken = meetingToken;
+  }
+  async saveImage(_ref) {
+    let {
+      image,
+      type
+    } = _ref;
+    type = type || "";
+    switch (type.toLowerCase()) {
+      case "jpeg":
+        type = "IMAGE_JPEG";
+        break;
+      case "webp":
+        type = "IMAGE_WEBP";
+        break;
+      default:
+        type = "";
+        break;
+    }
+    let headers = {
+      "Content-Type": "image/jpeg",
+      Accept: "application/json",
+      "x-jibb-meeting-jwt": this.meetingToken
+    };
+    let body = {
+      image: image,
+      type: type
+    };
+    let response = await http.post("".concat(Config.apiBaseURL, "/v1/meetings/").concat(this.meetingId, "/whiteboard/images"), body, headers);
+    return response.data.imageName;
+  }
+  async getImageList() {
+    let headers = {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "x-jibb-meeting-jwt": this.meetingToken
+    };
+    let response = await http.get("".concat(Config.apiBaseURL, "/v1/meetings/").concat(this.meetingId, "/whiteboard/images"), headers);
+    return response.data.imagesName;
+  }
+  async getImage(imageName) {
+    let headers = {
+      "Content-Type": "application/json",
+      Accept: "image/jpeg",
+      "x-jibb-meeting-jwt": this.meetingToken
+    };
+    let url = "".concat(Config.apiBaseURL, "/v1/meetings/").concat(this.meetingId, "/whiteboard/images/").concat(imageName);
+    let response = await http.get(url, headers, {
+      responseType: "arraybuffer"
+    });
+    return response.data;
+  }
+  async getImages() {
+    let imageList = [];
+    let imageNameList = await this.getImageList();
+    for (const imageName of imageNameList) {
+      let headers = {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "x-jibb-meeting-jwt": this.meetingToken
+      };
+      let response = await http.get("".concat(Config.apiBaseURL, "/v1/meetings/").concat(this.meetingId, "/whiteboard/images/").concat(imageName), {
+        headers
+      });
+      imageList.push({
+        imageName: imageName,
+        data: response.data
+      });
+    }
+    return imageList;
+  }
+  async deleteImage(imageName) {
+    let headers = {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "x-jibb-meeting-jwt": this.meetingToken
+    };
+    return http.delete("".concat(Config.apiBaseURL, "/v1/meetings/").concat(this.meetingId, "/whiteboard/images/").concat(imageName), headers);
+  }
+  async saveBoard(board) {
+    let headers = {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "x-jibb-meeting-jwt": this.meetingToken
+    };
+    let body = {
+      board: board
+    };
+    let response = await http.post("".concat(Config.apiBaseURL, "/v1/meetings/").concat(this.meetingId, "/whiteboard"), body, headers);
+    return response.data;
+  }
+  async getBoard() {
+    let headers = {
+      "Content-Type": "application/json",
+      Accept: "image/jpeg",
+      "x-jibb-meeting-jwt": this.meetingToken
+    };
+    let response = await http.get("".concat(Config.apiBaseURL, "/v1/meetings/").concat(this.meetingId, "/whiteboard"), headers);
+    return response.data;
+  }
+  async deleteBoard() {
+    let headers = {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "x-jibb-meeting-jwt": this.meetingToken
+    };
+    return http.delete("".concat(Config.apiBaseURL, "/v1/meetings/").concat(this.meetingId, "/whiteboard"), headers);
+  }
+}
