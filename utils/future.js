@@ -1,1 +1,24 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.Future=void 0,require("core-js/modules/es.promise.js");class Future{constructor(){let a=this;this.resolve=void 0,this.reject=void 0,this.promise=new Promise((b,c)=>{a.resolve=b,a.reject=c}),this.promise.catch(()=>{})}get(){return this.promise}reject(a){this.reject(a)}set(a){this.resolve(a)}}exports.Future=Future;
+import "core-js/modules/es.promise.js";
+export class Future {
+  constructor() {
+    let self = this;
+    this.resolve = undefined;
+    this.reject = undefined;
+    this.promise = new Promise((resolve, reject) => {
+      self.resolve = resolve;
+      self.reject = reject;
+    });
+    this.promise.catch(() => {
+      return undefined;
+    });
+  }
+  get() {
+    return this.promise;
+  }
+  reject(val) {
+    this.reject(val);
+  }
+  set(val) {
+    this.resolve(val);
+  }
+}

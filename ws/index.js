@@ -1,1 +1,11 @@
-"use strict";require("core-js/modules/es.weak-map.js"),require("core-js/modules/web.dom-collections.iterator.js"),Object.defineProperty(exports,"__esModule",{value:!0}),Object.defineProperty(exports,"EventBusConnection",{enumerable:!0,get:function get(){return _eventbus.EventBusConnection}}),Object.defineProperty(exports,"IPSA",{enumerable:!0,get:function get(){return _ipsa.IPSA}}),Object.defineProperty(exports,"MeetingConnection",{enumerable:!0,get:function get(){return _meeting.MeetingConnection}}),require("core-js/modules/es.global-this.js"),require("core-js/modules/es.promise.js");var _eventbus=require("./eventbus.js"),_ipsa=require("./ipsa.js"),_meeting=require("./meeting.js");function _getRequireWildcardCache(a){if("function"!=typeof WeakMap)return null;var b=new WeakMap,c=new WeakMap;return(_getRequireWildcardCache=function(a){return a?c:b})(a)}function _interopRequireWildcard(b,c){if(!c&&b&&b.__esModule)return b;if(null===b||"object"!=typeof b&&"function"!=typeof b)return{default:b};var d=_getRequireWildcardCache(c);if(d&&d.has(b))return d.get(b);var e={__proto__:null},f=Object.defineProperty&&Object.getOwnPropertyDescriptor;for(var a in b)if("default"!=a&&{}.hasOwnProperty.call(b,a)){var g=f?Object.getOwnPropertyDescriptor(b,a):null;g&&(g.get||g.set)?Object.defineProperty(e,a,g):e[a]=b[a]}return e.default=b,d&&d.set(b,e),e}(null===globalThis||void 0===globalThis?void 0:globalThis.WebSocket)==null&&Promise.resolve().then(()=>_interopRequireWildcard(require("isomorphic-ws"))).then(a=>{globalThis.WebSocket=a.default});
+import "core-js/modules/es.global-this.js";
+import "core-js/modules/es.promise.js";
+import { EventBusConnection } from "./eventbus.js";
+import { IPSA } from "./ipsa.js";
+import { MeetingConnection } from "./meeting.js";
+if ((globalThis === null || globalThis === void 0 ? void 0 : globalThis.WebSocket) == undefined) {
+  import("isomorphic-ws").then(webSocket => {
+    globalThis.WebSocket = webSocket.default;
+  });
+}
+export { MeetingConnection, EventBusConnection, IPSA };

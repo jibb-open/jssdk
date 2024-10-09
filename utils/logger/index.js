@@ -1,1 +1,9 @@
-"use strict";var _loggerEmpty=require("./logger.empty.js");Object.defineProperty(exports,"__esModule",{value:!0}),exports.logger=exports.initPinoLogger=void 0,require("core-js/modules/es.promise.js"),require("core-js/modules/es.weak-map.js"),require("core-js/modules/web.dom-collections.iterator.js");function _getRequireWildcardCache(a){if("function"!=typeof WeakMap)return null;var b=new WeakMap,c=new WeakMap;return(_getRequireWildcardCache=function(a){return a?c:b})(a)}function _interopRequireWildcard(b,c){if(!c&&b&&b.__esModule)return b;if(null===b||"object"!=typeof b&&"function"!=typeof b)return{default:b};var d=_getRequireWildcardCache(c);if(d&&d.has(b))return d.get(b);var e={__proto__:null},f=Object.defineProperty&&Object.getOwnPropertyDescriptor;for(var a in b)if("default"!=a&&{}.hasOwnProperty.call(b,a)){var g=f?Object.getOwnPropertyDescriptor(b,a):null;g&&(g.get||g.set)?Object.defineProperty(e,a,g):e[a]=b[a]}return e.default=b,d&&d.set(b,e),e}let logger=exports.logger=_loggerEmpty.logger;const initPinoLogger=()=>{Promise.resolve().then(()=>_interopRequireWildcard(require("./logger.pino.js"))).then(a=>{exports.logger=logger=a.logger})};exports.initPinoLogger=initPinoLogger;
+import "core-js/modules/es.promise.js";
+import { logger as emptyLogger } from "./logger.empty.js";
+let logger = emptyLogger;
+const initPinoLogger = () => {
+  import("./logger.pino.js").then(exports => {
+    logger = exports.logger;
+  });
+};
+export { logger, initPinoLogger };
