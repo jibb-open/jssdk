@@ -1,5 +1,5 @@
 import root from "./jibb.pb.js";
-export const ipsa = root.jibb;
+export const ipsa = root.jibb.ipsa.v1;
 export const types = root.types;
 export const cilix = root.cilix;
 export const meeting = root.meeting;
