@@ -1,1 +1,21 @@
-"use strict";var WebexBot=_interopRequireWildcard(require("./webexbot.js"));var Meeting=_interopRequireWildcard(require("./meeting.js"));var User=_interopRequireWildcard(require("./user.js"));var Auth=_interopRequireWildcard(require("./auth.js"));var EventBus=_interopRequireWildcard(require("./eventbus.js"));var Recording=_interopRequireWildcard(require("./recording.js"));require("core-js/modules/es.weak-map.js"),require("core-js/modules/web.dom-collections.iterator.js"),Object.defineProperty(exports,"__esModule",{value:!0}),exports.WebexBot=exports.User=exports.Recording=exports.Meeting=exports.EventBus=exports.Auth=void 0,Object.defineProperty(exports,"Whiteboard",{enumerable:!0,get:function get(){return _whiteboard.Whiteboard}}),exports.default=void 0;exports.WebexBot=WebexBot;exports.Meeting=Meeting;exports.User=User;exports.Auth=Auth;exports.EventBus=EventBus;exports.Recording=Recording;var _whiteboard=require("./whiteboard.js"),_index=require("../utils/logger/index.js"),_index2=require("../utils/http/index.js");function _getRequireWildcardCache(a){if("function"!=typeof WeakMap)return null;var b=new WeakMap,c=new WeakMap;return(_getRequireWildcardCache=function(a){return a?c:b})(a)}function _interopRequireWildcard(b,c){if(!c&&b&&b.__esModule)return b;if(null===b||"object"!=typeof b&&"function"!=typeof b)return{default:b};var d=_getRequireWildcardCache(c);if(d&&d.has(b))return d.get(b);var e={__proto__:null},f=Object.defineProperty&&Object.getOwnPropertyDescriptor;for(var a in b)if("default"!=a&&{}.hasOwnProperty.call(b,a)){var g=f?Object.getOwnPropertyDescriptor(b,a):null;g&&(g.get||g.set)?Object.defineProperty(e,a,g):e[a]=b[a]}return e.default=b,d&&d.set(b,e),e}(0,_index.initPinoLogger)(),(0,_index2.initAxios)();var _default=exports.default={WebexBot,Meeting,Auth,User,Recording,Whiteboard:_whiteboard.Whiteboard,EventBus};
+import * as WebexBot from "./webexbot.js";
+import * as Meeting from "./meeting.js";
+import * as User from "./user.js";
+import * as Auth from "./auth.js";
+import * as EventBus from "./eventbus.js";
+import * as Recording from "./recording.js";
+import { Whiteboard } from "./whiteboard.js";
+import { initPinoLogger } from "../utils/logger/index.js";
+import { initAxios } from "../utils/http/index.js";
+initPinoLogger();
+initAxios();
+export { WebexBot, Meeting, Auth, User, Recording, Whiteboard, EventBus };
+export default {
+  WebexBot,
+  Meeting,
+  Auth,
+  User,
+  Recording,
+  Whiteboard,
+  EventBus
+};

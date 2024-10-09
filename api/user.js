@@ -1,1 +1,24 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.activateUser=activateUser,exports.getUserInfo=getUserInfo,require("core-js/modules/es.promise.js");var _config=require("../config.js"),_auth=require("./auth.js"),_index=require("../utils/http/index.js");async function getUserInfo(){let a={"Content-Type":"application/json",Accept:"application/json","x-jibb-user-jwt":await(0,_auth.getUserToken)()},b=await _index.http.get("".concat(_config.Config.apiBaseURL,"/v1/users/me"),a);return b.data}async function activateUser(a){let b={"Content-Type":"application/json",Accept:"application/json","x-jibb-user-jwt":await(0,_auth.getUserToken)()};return _index.http.post("".concat(_config.Config.apiBaseURL,"/v1/users/activate"),{organizationId:a},b)}
+import "core-js/modules/es.promise.js";
+import { Config } from "../config.js";
+import { getUserToken } from "./auth.js";
+import { http } from "../utils/http/index.js";
+export async function getUserInfo() {
+  let headers = {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+    "x-jibb-user-jwt": await getUserToken()
+  };
+  let response = await http.get("".concat(Config.apiBaseURL, "/v1/users/me"), headers);
+  return response.data;
+}
+export async function activateUser(orgId) {
+  let headers = {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+    "x-jibb-user-jwt": await getUserToken()
+  };
+  let body = {
+    organizationId: orgId
+  };
+  return http.post("".concat(Config.apiBaseURL, "/v1/users/activate"), body, headers);
+}

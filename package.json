@@ -1,7 +1,9 @@
 {
 	"name": "@jibb-open/jssdk",
-	"version": "3.17.7",
+	"version": "3.18.1",
 	"description": "",
+	"main": "dist/index.js",
+	"type": "module",
 	"scripts": {
 		"test": "LOG_LEVEL=error mocha --timeout 10000 ",
 		"coverage": "npm run test",

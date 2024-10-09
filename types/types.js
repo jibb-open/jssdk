@@ -1,1 +1,167 @@
-"use strict";var _jwtDecode=_interopRequireDefault(require("jwt-decode"));Object.defineProperty(exports,"__esModule",{value:!0}),exports.UserType=exports.UserClaims=exports.SkuAction=exports.RenewalTerm=exports.MeetingTypes=exports.MeetingClaims=exports.JibbUser=exports.JibbStarterPack=exports.JibbRoom=exports.JibbPlans=exports.JibbPilot=exports.Action=exports.AccessLevel=void 0,require("core-js/modules/es.weak-map.js"),require("core-js/modules/web.dom-collections.iterator.js");function _interopRequireDefault(a){return a&&a.__esModule?a:{default:a}}function _classPrivateMethodInitSpec(a,b){_checkPrivateRedeclaration(a,b),b.add(a)}function _classPrivateFieldInitSpec(a,b,c){_checkPrivateRedeclaration(a,b),b.set(a,c)}function _checkPrivateRedeclaration(a,b){if(b.has(a))throw new TypeError("Cannot initialize the same private elements twice on an object")}function _classPrivateFieldGet(b,c){return b.get(_assertClassBrand(b,c))}function _classPrivateFieldSet(b,c,a){return b.set(_assertClassBrand(b,c),a),a}function _assertClassBrand(a,b,c){if("function"==typeof a?a===b:a.has(b))return 3>arguments.length?b:c;throw new TypeError("Private element is not present on this object")}const MeetingTypes=exports.MeetingTypes={DEFAULT:0,WHITEBOARD:1},AccessLevel=exports.AccessLevel={USER:"USER",ADMIN:"ADMIN",SUPERADMIN:"SUPERADMIN"},UserType=exports.UserType={UNKNOWN:0,MEMBER:2,ADMIN:3,OWNER:4},Action=exports.Action={NEW:"NEW",CANCEL:"CANCEL",CHANGE:"CHANGE"},RenewalTerm=exports.RenewalTerm={MANUAL:"0",AUTO:"12"},SkuAction=exports.SkuAction={ADD:"0",MODIFIED:"1",DELETE:"2",NO_CHANGE:"3"};var _billingFrequencies=/*#__PURE__*/new WeakMap,_name=/*#__PURE__*/new WeakMap,_JibbPlan_brand=/*#__PURE__*/new WeakSet;class JibbPlan{constructor(a,b){_classPrivateMethodInitSpec(this,_JibbPlan_brand),_classPrivateFieldInitSpec(this,_billingFrequencies,void 0),_classPrivateFieldInitSpec(this,_name,void 0),_classPrivateFieldSet(_name,this,a),_classPrivateFieldSet(_billingFrequencies,this,new Map),0<b&&_assertClassBrand(_JibbPlan_brand,this,_createBillingFrequencies).call(this,b)}getPlanName(){return _classPrivateFieldGet(_name,this)}getBillingFrequencies(){return _classPrivateFieldGet(_billingFrequencies,this)}}function _createBillingFrequencies(a){for(let b,c=12;c<=a;c++)b="Every ".concat(c," Months"),_classPrivateFieldGet(_billingFrequencies,this).set(b,"".concat(c))}class JibbPilot extends JibbPlan{constructor(){super("JIBB-Pilot",0),super.getBillingFrequencies().set("Every 3 Months","3")}}exports.JibbPilot=JibbPilot;class JibbRoom extends JibbPlan{constructor(){super("JIBB-Room",60)}}exports.JibbRoom=JibbRoom;class JibbUser extends JibbPlan{constructor(){super("JIBB-User",60)}}exports.JibbUser=JibbUser;class JibbStarterPack extends JibbPlan{constructor(){super("JIBB-Starter-Pack",60)}}exports.JibbStarterPack=JibbStarterPack;class JibbPlans{constructor(){this.starterPack=new JibbStarterPack,this.jibbRoom=new JibbRoom,this.jibbUser=new JibbUser,this.jibbPilot=new JibbPilot}getAllPlan(){let a=[this.starterPack,this.jibbRoom,this.jibbUser,this.jibbPilot];return a}getAllPlanNames(){let a=[this.starterPack.getPlanName(),this.jibbRoom.getPlanName(),this.jibbUser.getPlanName(),this.jibbPilot.getPlanName()];return a}getPlan(a){return a===this.starterPack.getPlanName()?this.starterPack:a===this.jibbRoom.getPlanName()?this.jibbRoom:a===this.jibbUser.getPlanName()?this.jibbUser:a===this.jibbPilot.getPlanName()?this.jibbPilot:void 0}}exports.JibbPlans=JibbPlans;class StandardClaims{constructor(a){this.token=a,this.claims=(0,_jwtDecode.default)(a),this.expiryTime=new Date(1e3*this.claims.exp)}getSecondsUntilExpiry(){let a=this.expiryTime-Date.now();return 0>a?0:a}getHoursUntilExpiry(){let a=this.getSecondsUntilExpiry();return Math.floor(a/3600)}isExpired(){return 60>=this.getSecondsUntilExpiry()}}class MeetingClaims extends StandardClaims{constructor(a){super(a),this.ownerId=this.claims.data.owner_id,this.meetindId=this.claims.data.meeting_id,this.title=this.claims.data.title,this.capacity=this.claims.data.capacity,this.permission=this.claims.data.permission,this.isTemporary=this.claims.data.is_temporary}}exports.MeetingClaims=MeetingClaims;class UserClaims extends StandardClaims{constructor(a){var b,c,d;super(a),this.email=null===(b=this.claims.data)||void 0===b?void 0:b.email,this.userId=this.claims.sub,this.organizationId=null===(c=this.claims.data)||void 0===c?void 0:c.organization_id,this.organizationName=null===(d=this.claims.data)||void 0===d?void 0:d.organization_name}getUserId(){return this.userId}}exports.UserClaims=UserClaims;
+import "core-js/modules/es.weak-map.js";
+import "core-js/modules/web.dom-collections.iterator.js";
+function _classPrivateMethodInitSpec(obj, privateSet) { _checkPrivateRedeclaration(obj, privateSet); privateSet.add(obj); }
+function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedeclaration(obj, privateMap); privateMap.set(obj, value); }
+function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
+function _classPrivateFieldGet(s, a) { return s.get(_assertClassBrand(s, a)); }
+function _classPrivateFieldSet(s, a, r) { return s.set(_assertClassBrand(s, a), r), r; }
+function _assertClassBrand(e, t, n) { if ("function" == typeof e ? e === t : e.has(t)) return arguments.length < 3 ? t : n; throw new TypeError("Private element is not present on this object"); }
+import jwt_decode from "jwt-decode";
+export const MeetingTypes = {
+  DEFAULT: 0,
+  WHITEBOARD: 1
+};
+export const AccessLevel = {
+  USER: "USER",
+  ADMIN: "ADMIN",
+  SUPERADMIN: "SUPERADMIN"
+};
+export const UserType = {
+  UNKNOWN: 0,
+  MEMBER: 2,
+  ADMIN: 3,
+  OWNER: 4
+};
+export const Action = {
+  NEW: "NEW",
+  CANCEL: "CANCEL",
+  CHANGE: "CHANGE"
+};
+export const RenewalTerm = {
+  MANUAL: "0",
+  AUTO: "12"
+};
+export const SkuAction = {
+  ADD: "0",
+  MODIFIED: "1",
+  DELETE: "2",
+  NO_CHANGE: "3"
+};
+var _billingFrequencies = /*#__PURE__*/new WeakMap();
+var _name = /*#__PURE__*/new WeakMap();
+var _JibbPlan_brand = /*#__PURE__*/new WeakSet();
+class JibbPlan {
+  constructor(name, count) {
+    _classPrivateMethodInitSpec(this, _JibbPlan_brand);
+    _classPrivateFieldInitSpec(this, _billingFrequencies, void 0);
+    _classPrivateFieldInitSpec(this, _name, void 0);
+    _classPrivateFieldSet(_name, this, name);
+    _classPrivateFieldSet(_billingFrequencies, this, new Map());
+    if (count > 0) {
+      _assertClassBrand(_JibbPlan_brand, this, _createBillingFrequencies).call(this, count);
+    }
+  }
+  getPlanName() {
+    return _classPrivateFieldGet(_name, this);
+  }
+  getBillingFrequencies() {
+    return _classPrivateFieldGet(_billingFrequencies, this);
+  }
+}
+function _createBillingFrequencies(month) {
+  for (let i = 12; i <= month; i++) {
+    let text = "Every ".concat(i, " Months");
+    _classPrivateFieldGet(_billingFrequencies, this).set(text, "".concat(i));
+  }
+}
+export class JibbPilot extends JibbPlan {
+  constructor() {
+    super("JIBB-Pilot", 0);
+    super.getBillingFrequencies().set('Every 3 Months', "3");
+  }
+}
+export class JibbRoom extends JibbPlan {
+  constructor() {
+    super("JIBB-Room", 60);
+  }
+}
+export class JibbUser extends JibbPlan {
+  constructor() {
+    super("JIBB-User", 60);
+  }
+}
+export class JibbStarterPack extends JibbPlan {
+  constructor() {
+    super("JIBB-Starter-Pack", 60);
+  }
+}
+export class JibbPlans {
+  constructor() {
+    this.starterPack = new JibbStarterPack();
+    this.jibbRoom = new JibbRoom();
+    this.jibbUser = new JibbUser();
+    this.jibbPilot = new JibbPilot();
+  }
+  getAllPlan() {
+    let pList = [];
+    pList.push(this.starterPack);
+    pList.push(this.jibbRoom);
+    pList.push(this.jibbUser);
+    pList.push(this.jibbPilot);
+    return pList;
+  }
+  getAllPlanNames() {
+    let pList = [];
+    pList.push(this.starterPack.getPlanName());
+    pList.push(this.jibbRoom.getPlanName());
+    pList.push(this.jibbUser.getPlanName());
+    pList.push(this.jibbPilot.getPlanName());
+    return pList;
+  }
+  getPlan(planName) {
+    switch (planName) {
+      case this.starterPack.getPlanName():
+        return this.starterPack;
+      case this.jibbRoom.getPlanName():
+        return this.jibbRoom;
+      case this.jibbUser.getPlanName():
+        return this.jibbUser;
+      case this.jibbPilot.getPlanName():
+        return this.jibbPilot;
+      default:
+        return undefined;
+    }
+  }
+}
+class StandardClaims {
+  constructor(token) {
+    this.token = token;
+    this.claims = jwt_decode(token);
+    this.expiryTime = new Date(this.claims.exp * 1000);
+  }
+  getSecondsUntilExpiry() {
+    let sec = this.expiryTime - Date.now();
+    return sec < 0 ? 0 : sec;
+  }
+  getHoursUntilExpiry() {
+    let sec = this.getSecondsUntilExpiry();
+    return Math.floor(sec / 3600);
+  }
+  isExpired() {
+    return this.getSecondsUntilExpiry() <= 60;
+  }
+}
+export class MeetingClaims extends StandardClaims {
+  constructor(token) {
+    super(token);
+    this.ownerId = this.claims.data.owner_id;
+    this.meetindId = this.claims.data.meeting_id;
+    this.title = this.claims.data.title;
+    this.capacity = this.claims.data.capacity;
+    this.permission = this.claims.data.permission;
+    this.isTemporary = this.claims.data.is_temporary;
+  }
+}
+export class UserClaims extends StandardClaims {
+  constructor(token) {
+    var _this$claims$data, _this$claims$data2, _this$claims$data3;
+    super(token);
+    this.email = (_this$claims$data = this.claims.data) === null || _this$claims$data === void 0 ? void 0 : _this$claims$data.email;
+    this.userId = this.claims.sub;
+    this.organizationId = (_this$claims$data2 = this.claims.data) === null || _this$claims$data2 === void 0 ? void 0 : _this$claims$data2.organization_id;
+    this.organizationName = (_this$claims$data3 = this.claims.data) === null || _this$claims$data3 === void 0 ? void 0 : _this$claims$data3.organization_name;
+  }
+  getUserId() {
+    return this.userId;
+  }
+}
