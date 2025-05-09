@@ -59,14 +59,20 @@ export const types = $root.types = (() => {
         var t = r.uint32();
         switch (t >>> 3) {
           case 1:
-            m.level = r.int32();
-            break;
+            {
+              m.level = r.int32();
+              break;
+            }
           case 2:
-            m.code = r.int32();
-            break;
+            {
+              m.code = r.int32();
+              break;
+            }
           case 3:
-            m.reason = r.string();
-            break;
+            {
+              m.reason = r.string();
+              break;
+            }
           default:
             r.skipType(t & 7);
             break;
@@ -117,6 +123,12 @@ export const types = $root.types = (() => {
       if (d instanceof $root.types.Error) return d;
       var m = new $root.types.Error();
       switch (d.level) {
+        default:
+          if (typeof d.level === "number") {
+            m.level = d.level;
+            break;
+          }
+          break;
         case "DEBUG":
         case 0:
           m.level = 0;
@@ -139,6 +151,12 @@ export const types = $root.types = (() => {
           break;
       }
       switch (d.code) {
+        default:
+          if (typeof d.code === "number") {
+            m.code = d.code;
+            break;
+          }
+          break;
         case "SUCCESS":
         case 0:
           m.code = 0;
@@ -190,10 +208,10 @@ export const types = $root.types = (() => {
         d.reason = "";
       }
       if (m.level != null && m.hasOwnProperty("level")) {
-        d.level = o.enums === String ? $root.types.ErrorLevel[m.level] : m.level;
+        d.level = o.enums === String ? $root.types.ErrorLevel[m.level] === undefined ? m.level : $root.types.ErrorLevel[m.level] : m.level;
       }
       if (m.code != null && m.hasOwnProperty("code")) {
-        d.code = o.enums === String ? $root.types.Code[m.code] : m.code;
+        d.code = o.enums === String ? $root.types.Code[m.code] === undefined ? m.code : $root.types.Code[m.code] : m.code;
       }
       if (m.reason != null && m.hasOwnProperty("reason")) {
         d.reason = m.reason;
@@ -202,6 +220,12 @@ export const types = $root.types = (() => {
     };
     Error.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    Error.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+      if (typeUrlPrefix === undefined) {
+        typeUrlPrefix = "type.googleapis.com";
+      }
+      return typeUrlPrefix + "/types.Error";
     };
     return Error;
   }();
@@ -264,14 +288,20 @@ export const types = $root.types = (() => {
         var t = r.uint32();
         switch (t >>> 3) {
           case 1:
-            m.clientType = r.int32();
-            break;
+            {
+              m.clientType = r.int32();
+              break;
+            }
           case 2:
-            m.id = r.string();
-            break;
+            {
+              m.id = r.string();
+              break;
+            }
           case 3:
-            m.name = r.string();
-            break;
+            {
+              m.name = r.string();
+              break;
+            }
           default:
             r.skipType(t & 7);
             break;
@@ -314,6 +344,12 @@ export const types = $root.types = (() => {
       if (d instanceof $root.types.ClientDetails) return d;
       var m = new $root.types.ClientDetails();
       switch (d.clientType) {
+        default:
+          if (typeof d.clientType === "number") {
+            m.clientType = d.clientType;
+            break;
+          }
+          break;
         case "UNKNOWN_CLIENT_TYPE":
         case 0:
           m.clientType = 0;
@@ -372,7 +408,7 @@ export const types = $root.types = (() => {
         d.name = "";
       }
       if (m.clientType != null && m.hasOwnProperty("clientType")) {
-        d.clientType = o.enums === String ? $root.types.ClientType[m.clientType] : m.clientType;
+        d.clientType = o.enums === String ? $root.types.ClientType[m.clientType] === undefined ? m.clientType : $root.types.ClientType[m.clientType] : m.clientType;
       }
       if (m.id != null && m.hasOwnProperty("id")) {
         d.id = m.id;
@@ -384,6 +420,12 @@ export const types = $root.types = (() => {
     };
     ClientDetails.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    ClientDetails.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+      if (typeUrlPrefix === undefined) {
+        typeUrlPrefix = "type.googleapis.com";
+      }
+      return typeUrlPrefix + "/types.ClientDetails";
     };
     return ClientDetails;
   }();
@@ -476,26 +518,40 @@ export const jibb = $root.jibb = (() => {
             var t = r.uint32();
             switch (t >>> 3) {
               case 1:
-                m.surfaceType = r.int32();
-                break;
+                {
+                  m.surfaceType = r.int32();
+                  break;
+                }
               case 3:
-                m.enableStabilization = r.int32();
-                break;
+                {
+                  m.enableStabilization = r.int32();
+                  break;
+                }
               case 4:
-                m.enableTransformation = r.int32();
-                break;
+                {
+                  m.enableTransformation = r.int32();
+                  break;
+                }
               case 5:
-                m.userId = r.string();
-                break;
+                {
+                  m.userId = r.string();
+                  break;
+                }
               case 7:
-                m.mbusTopicStatus = r.string();
-                break;
+                {
+                  m.mbusTopicStatus = r.string();
+                  break;
+                }
               case 8:
-                m.mbusTopicImage = r.string();
-                break;
+                {
+                  m.mbusTopicImage = r.string();
+                  break;
+                }
               case 10:
-                m.encoding = r.int32();
-                break;
+                {
+                  m.encoding = r.int32();
+                  break;
+                }
               default:
                 r.skipType(t & 7);
                 break;
@@ -565,6 +621,12 @@ export const jibb = $root.jibb = (() => {
           if (d instanceof $root.jibb.ipsa.v1.Config) return d;
           var m = new $root.jibb.ipsa.v1.Config();
           switch (d.surfaceType) {
+            default:
+              if (typeof d.surfaceType === "number") {
+                m.surfaceType = d.surfaceType;
+                break;
+              }
+              break;
             case "UNKNOWN":
             case 0:
               m.surfaceType = 0;
@@ -579,6 +641,12 @@ export const jibb = $root.jibb = (() => {
               break;
           }
           switch (d.enableStabilization) {
+            default:
+              if (typeof d.enableStabilization === "number") {
+                m.enableStabilization = d.enableStabilization;
+                break;
+              }
+              break;
             case "DEFAULT":
             case 0:
               m.enableStabilization = 0;
@@ -593,6 +661,12 @@ export const jibb = $root.jibb = (() => {
               break;
           }
           switch (d.enableTransformation) {
+            default:
+              if (typeof d.enableTransformation === "number") {
+                m.enableTransformation = d.enableTransformation;
+                break;
+              }
+              break;
             case "DEFAULT":
             case 0:
               m.enableTransformation = 0;
@@ -616,6 +690,12 @@ export const jibb = $root.jibb = (() => {
             m.mbusTopicImage = String(d.mbusTopicImage);
           }
           switch (d.encoding) {
+            default:
+              if (typeof d.encoding === "number") {
+                m.encoding = d.encoding;
+                break;
+              }
+              break;
             case "JPEG":
             case 0:
               m.encoding = 0;
@@ -648,13 +728,13 @@ export const jibb = $root.jibb = (() => {
             d.encoding = o.enums === String ? "JPEG" : 0;
           }
           if (m.surfaceType != null && m.hasOwnProperty("surfaceType")) {
-            d.surfaceType = o.enums === String ? $root.types.SurfaceType[m.surfaceType] : m.surfaceType;
+            d.surfaceType = o.enums === String ? $root.types.SurfaceType[m.surfaceType] === undefined ? m.surfaceType : $root.types.SurfaceType[m.surfaceType] : m.surfaceType;
           }
           if (m.enableStabilization != null && m.hasOwnProperty("enableStabilization")) {
-            d.enableStabilization = o.enums === String ? $root.types.TriState[m.enableStabilization] : m.enableStabilization;
+            d.enableStabilization = o.enums === String ? $root.types.TriState[m.enableStabilization] === undefined ? m.enableStabilization : $root.types.TriState[m.enableStabilization] : m.enableStabilization;
           }
           if (m.enableTransformation != null && m.hasOwnProperty("enableTransformation")) {
-            d.enableTransformation = o.enums === String ? $root.types.TriState[m.enableTransformation] : m.enableTransformation;
+            d.enableTransformation = o.enums === String ? $root.types.TriState[m.enableTransformation] === undefined ? m.enableTransformation : $root.types.TriState[m.enableTransformation] : m.enableTransformation;
           }
           if (m.userId != null && m.hasOwnProperty("userId")) {
             d.userId = m.userId;
@@ -666,12 +746,18 @@ export const jibb = $root.jibb = (() => {
             d.mbusTopicImage = m.mbusTopicImage;
           }
           if (m.encoding != null && m.hasOwnProperty("encoding")) {
-            d.encoding = o.enums === String ? $root.jibb.ipsa.v1.Encoding[m.encoding] : m.encoding;
+            d.encoding = o.enums === String ? $root.jibb.ipsa.v1.Encoding[m.encoding] === undefined ? m.encoding : $root.jibb.ipsa.v1.Encoding[m.encoding] : m.encoding;
           }
           return d;
         };
         Config.prototype.toJSON = function toJSON() {
           return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+        Config.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+          if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+          }
+          return typeUrlPrefix + "/jibb.ipsa.v1.Config";
         };
         return Config;
       }();
@@ -688,7 +774,6 @@ export const jibb = $root.jibb = (() => {
         RuntimeConfig.prototype.flipLeftRight = false;
         RuntimeConfig.prototype.enableEstimation = false;
         RuntimeConfig.prototype.inputRotation = 0;
-        RuntimeConfig.prototype.enableCeTorch = false;
         RuntimeConfig.create = function create(properties) {
           return new RuntimeConfig(properties);
         };
@@ -706,7 +791,6 @@ export const jibb = $root.jibb = (() => {
           if (m.flipLeftRight != null && Object.hasOwnProperty.call(m, "flipLeftRight")) w.uint32(48).bool(m.flipLeftRight);
           if (m.enableEstimation != null && Object.hasOwnProperty.call(m, "enableEstimation")) w.uint32(56).bool(m.enableEstimation);
           if (m.inputRotation != null && Object.hasOwnProperty.call(m, "inputRotation")) w.uint32(64).int32(m.inputRotation);
-          if (m.enableCeTorch != null && Object.hasOwnProperty.call(m, "enableCeTorch")) w.uint32(72).bool(m.enableCeTorch);
           return w;
         };
         RuntimeConfig.encodeDelimited = function encodeDelimited(message, writer) {
@@ -720,36 +804,49 @@ export const jibb = $root.jibb = (() => {
             var t = r.uint32();
             switch (t >>> 3) {
               case 1:
-                if (!(m.customCorners && m.customCorners.length)) m.customCorners = [];
-                if ((t & 7) === 2) {
-                  var c2 = r.uint32() + r.pos;
-                  while (r.pos < c2) m.customCorners.push(r.sint32());
-                } else m.customCorners.push(r.sint32());
-                break;
+                {
+                  if (!(m.customCorners && m.customCorners.length)) m.customCorners = [];
+                  if ((t & 7) === 2) {
+                    var c2 = r.uint32() + r.pos;
+                    while (r.pos < c2) m.customCorners.push(r.sint32());
+                  } else m.customCorners.push(r.sint32());
+                  break;
+                }
               case 2:
-                m.fixedCorners = r.bool();
-                break;
+                {
+                  m.fixedCorners = r.bool();
+                  break;
+                }
               case 3:
-                m.enableColor = r.bool();
-                break;
+                {
+                  m.enableColor = r.bool();
+                  break;
+                }
               case 4:
-                m.rotation = r.int32();
-                break;
+                {
+                  m.rotation = r.int32();
+                  break;
+                }
               case 5:
-                m.flipUpDown = r.bool();
-                break;
+                {
+                  m.flipUpDown = r.bool();
+                  break;
+                }
               case 6:
-                m.flipLeftRight = r.bool();
-                break;
+                {
+                  m.flipLeftRight = r.bool();
+                  break;
+                }
               case 7:
-                m.enableEstimation = r.bool();
-                break;
+                {
+                  m.enableEstimation = r.bool();
+                  break;
+                }
               case 8:
-                m.inputRotation = r.int32();
-                break;
-              case 9:
-                m.enableCeTorch = r.bool();
-                break;
+                {
+                  m.inputRotation = r.int32();
+                  break;
+                }
               default:
                 r.skipType(t & 7);
                 break;
@@ -806,9 +903,6 @@ export const jibb = $root.jibb = (() => {
                 break;
             }
           }
-          if (m.enableCeTorch != null && m.hasOwnProperty("enableCeTorch")) {
-            if (typeof m.enableCeTorch !== "boolean") return "enableCeTorch: boolean expected";
-          }
           return null;
         };
         RuntimeConfig.fromObject = function fromObject(d) {
@@ -828,6 +922,12 @@ export const jibb = $root.jibb = (() => {
             m.enableColor = Boolean(d.enableColor);
           }
           switch (d.rotation) {
+            default:
+              if (typeof d.rotation === "number") {
+                m.rotation = d.rotation;
+                break;
+              }
+              break;
             case "ROTATE_0":
             case 0:
               m.rotation = 0;
@@ -855,6 +955,12 @@ export const jibb = $root.jibb = (() => {
             m.enableEstimation = Boolean(d.enableEstimation);
           }
           switch (d.inputRotation) {
+            default:
+              if (typeof d.inputRotation === "number") {
+                m.inputRotation = d.inputRotation;
+                break;
+              }
+              break;
             case "ROTATE_0":
             case 0:
               m.inputRotation = 0;
@@ -872,9 +978,6 @@ export const jibb = $root.jibb = (() => {
               m.inputRotation = 3;
               break;
           }
-          if (d.enableCeTorch != null) {
-            m.enableCeTorch = Boolean(d.enableCeTorch);
-          }
           return m;
         };
         RuntimeConfig.toObject = function toObject(m, o) {
@@ -891,7 +994,6 @@ export const jibb = $root.jibb = (() => {
             d.flipLeftRight = false;
             d.enableEstimation = false;
             d.inputRotation = o.enums === String ? "ROTATE_0" : 0;
-            d.enableCeTorch = false;
           }
           if (m.customCorners && m.customCorners.length) {
             d.customCorners = [];
@@ -906,7 +1008,7 @@ export const jibb = $root.jibb = (() => {
             d.enableColor = m.enableColor;
           }
           if (m.rotation != null && m.hasOwnProperty("rotation")) {
-            d.rotation = o.enums === String ? $root.jibb.ipsa.v1.Rotation[m.rotation] : m.rotation;
+            d.rotation = o.enums === String ? $root.jibb.ipsa.v1.Rotation[m.rotation] === undefined ? m.rotation : $root.jibb.ipsa.v1.Rotation[m.rotation] : m.rotation;
           }
           if (m.flipUpDown != null && m.hasOwnProperty("flipUpDown")) {
             d.flipUpDown = m.flipUpDown;
@@ -918,15 +1020,18 @@ export const jibb = $root.jibb = (() => {
             d.enableEstimation = m.enableEstimation;
           }
           if (m.inputRotation != null && m.hasOwnProperty("inputRotation")) {
-            d.inputRotation = o.enums === String ? $root.jibb.ipsa.v1.Rotation[m.inputRotation] : m.inputRotation;
-          }
-          if (m.enableCeTorch != null && m.hasOwnProperty("enableCeTorch")) {
-            d.enableCeTorch = m.enableCeTorch;
+            d.inputRotation = o.enums === String ? $root.jibb.ipsa.v1.Rotation[m.inputRotation] === undefined ? m.inputRotation : $root.jibb.ipsa.v1.Rotation[m.inputRotation] : m.inputRotation;
           }
           return d;
         };
         RuntimeConfig.prototype.toJSON = function toJSON() {
           return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+        RuntimeConfig.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+          if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+          }
+          return typeUrlPrefix + "/jibb.ipsa.v1.RuntimeConfig";
         };
         return RuntimeConfig;
       }();
@@ -954,8 +1059,10 @@ export const jibb = $root.jibb = (() => {
             var t = r.uint32();
             switch (t >>> 3) {
               case 1:
-                m.version = r.string();
-                break;
+                {
+                  m.version = r.string();
+                  break;
+                }
               default:
                 r.skipType(t & 7);
                 break;
@@ -996,6 +1103,12 @@ export const jibb = $root.jibb = (() => {
         VersionResponse.prototype.toJSON = function toJSON() {
           return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
+        VersionResponse.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+          if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+          }
+          return typeUrlPrefix + "/jibb.ipsa.v1.VersionResponse";
+        };
         return VersionResponse;
       }();
       v1.SurfaceTransformationRequest = function () {
@@ -1024,11 +1137,15 @@ export const jibb = $root.jibb = (() => {
             var t = r.uint32();
             switch (t >>> 3) {
               case 1:
-                m.surfaceType = r.int32();
-                break;
+                {
+                  m.surfaceType = r.int32();
+                  break;
+                }
               case 2:
-                m.img = r.bytes();
-                break;
+                {
+                  m.img = r.bytes();
+                  break;
+                }
               default:
                 r.skipType(t & 7);
                 break;
@@ -1061,6 +1178,12 @@ export const jibb = $root.jibb = (() => {
           if (d instanceof $root.jibb.ipsa.v1.SurfaceTransformationRequest) return d;
           var m = new $root.jibb.ipsa.v1.SurfaceTransformationRequest();
           switch (d.surfaceType) {
+            default:
+              if (typeof d.surfaceType === "number") {
+                m.surfaceType = d.surfaceType;
+                break;
+              }
+              break;
             case "UNKNOWN":
             case 0:
               m.surfaceType = 0;
@@ -1075,7 +1198,7 @@ export const jibb = $root.jibb = (() => {
               break;
           }
           if (d.img != null) {
-            if (typeof d.img === "string") $util.base64.decode(d.img, m.img = $util.newBuffer($util.base64.length(d.img)), 0);else if (d.img.length) m.img = d.img;
+            if (typeof d.img === "string") $util.base64.decode(d.img, m.img = $util.newBuffer($util.base64.length(d.img)), 0);else if (d.img.length >= 0) m.img = d.img;
           }
           return m;
         };
@@ -1090,7 +1213,7 @@ export const jibb = $root.jibb = (() => {
             }
           }
           if (m.surfaceType != null && m.hasOwnProperty("surfaceType")) {
-            d.surfaceType = o.enums === String ? $root.types.SurfaceType[m.surfaceType] : m.surfaceType;
+            d.surfaceType = o.enums === String ? $root.types.SurfaceType[m.surfaceType] === undefined ? m.surfaceType : $root.types.SurfaceType[m.surfaceType] : m.surfaceType;
           }
           if (m.img != null && m.hasOwnProperty("img")) {
             d.img = o.bytes === String ? $util.base64.encode(m.img, 0, m.img.length) : o.bytes === Array ? Array.prototype.slice.call(m.img) : m.img;
@@ -1099,6 +1222,12 @@ export const jibb = $root.jibb = (() => {
         };
         SurfaceTransformationRequest.prototype.toJSON = function toJSON() {
           return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+        SurfaceTransformationRequest.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+          if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+          }
+          return typeUrlPrefix + "/jibb.ipsa.v1.SurfaceTransformationRequest";
         };
         return SurfaceTransformationRequest;
       }();
@@ -1126,8 +1255,10 @@ export const jibb = $root.jibb = (() => {
             var t = r.uint32();
             switch (t >>> 3) {
               case 1:
-                m.img = r.bytes();
-                break;
+                {
+                  m.img = r.bytes();
+                  break;
+                }
               default:
                 r.skipType(t & 7);
                 break;
@@ -1150,7 +1281,7 @@ export const jibb = $root.jibb = (() => {
           if (d instanceof $root.jibb.ipsa.v1.SurfaceTransformationResponse) return d;
           var m = new $root.jibb.ipsa.v1.SurfaceTransformationResponse();
           if (d.img != null) {
-            if (typeof d.img === "string") $util.base64.decode(d.img, m.img = $util.newBuffer($util.base64.length(d.img)), 0);else if (d.img.length) m.img = d.img;
+            if (typeof d.img === "string") $util.base64.decode(d.img, m.img = $util.newBuffer($util.base64.length(d.img)), 0);else if (d.img.length >= 0) m.img = d.img;
           }
           return m;
         };
@@ -1170,6 +1301,12 @@ export const jibb = $root.jibb = (() => {
         };
         SurfaceTransformationResponse.prototype.toJSON = function toJSON() {
           return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+        SurfaceTransformationResponse.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+          if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+          }
+          return typeUrlPrefix + "/jibb.ipsa.v1.SurfaceTransformationResponse";
         };
         return SurfaceTransformationResponse;
       }();
@@ -1201,14 +1338,20 @@ export const jibb = $root.jibb = (() => {
             var t = r.uint32();
             switch (t >>> 3) {
               case 1:
-                m.surfaceType = r.int32();
-                break;
+                {
+                  m.surfaceType = r.int32();
+                  break;
+                }
               case 2:
-                m.overlay = r.bool();
-                break;
+                {
+                  m.overlay = r.bool();
+                  break;
+                }
               case 3:
-                m.img = r.bytes();
-                break;
+                {
+                  m.img = r.bytes();
+                  break;
+                }
               default:
                 r.skipType(t & 7);
                 break;
@@ -1244,6 +1387,12 @@ export const jibb = $root.jibb = (() => {
           if (d instanceof $root.jibb.ipsa.v1.SurfaceSegmentationRequest) return d;
           var m = new $root.jibb.ipsa.v1.SurfaceSegmentationRequest();
           switch (d.surfaceType) {
+            default:
+              if (typeof d.surfaceType === "number") {
+                m.surfaceType = d.surfaceType;
+                break;
+              }
+              break;
             case "UNKNOWN":
             case 0:
               m.surfaceType = 0;
@@ -1261,7 +1410,7 @@ export const jibb = $root.jibb = (() => {
             m.overlay = Boolean(d.overlay);
           }
           if (d.img != null) {
-            if (typeof d.img === "string") $util.base64.decode(d.img, m.img = $util.newBuffer($util.base64.length(d.img)), 0);else if (d.img.length) m.img = d.img;
+            if (typeof d.img === "string") $util.base64.decode(d.img, m.img = $util.newBuffer($util.base64.length(d.img)), 0);else if (d.img.length >= 0) m.img = d.img;
           }
           return m;
         };
@@ -1277,7 +1426,7 @@ export const jibb = $root.jibb = (() => {
             }
           }
           if (m.surfaceType != null && m.hasOwnProperty("surfaceType")) {
-            d.surfaceType = o.enums === String ? $root.types.SurfaceType[m.surfaceType] : m.surfaceType;
+            d.surfaceType = o.enums === String ? $root.types.SurfaceType[m.surfaceType] === undefined ? m.surfaceType : $root.types.SurfaceType[m.surfaceType] : m.surfaceType;
           }
           if (m.overlay != null && m.hasOwnProperty("overlay")) {
             d.overlay = m.overlay;
@@ -1289,6 +1438,12 @@ export const jibb = $root.jibb = (() => {
         };
         SurfaceSegmentationRequest.prototype.toJSON = function toJSON() {
           return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+        SurfaceSegmentationRequest.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+          if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+          }
+          return typeUrlPrefix + "/jibb.ipsa.v1.SurfaceSegmentationRequest";
         };
         return SurfaceSegmentationRequest;
       }();
@@ -1316,8 +1471,10 @@ export const jibb = $root.jibb = (() => {
             var t = r.uint32();
             switch (t >>> 3) {
               case 1:
-                m.img = r.bytes();
-                break;
+                {
+                  m.img = r.bytes();
+                  break;
+                }
               default:
                 r.skipType(t & 7);
                 break;
@@ -1340,7 +1497,7 @@ export const jibb = $root.jibb = (() => {
           if (d instanceof $root.jibb.ipsa.v1.SurfaceSegmentationResponse) return d;
           var m = new $root.jibb.ipsa.v1.SurfaceSegmentationResponse();
           if (d.img != null) {
-            if (typeof d.img === "string") $util.base64.decode(d.img, m.img = $util.newBuffer($util.base64.length(d.img)), 0);else if (d.img.length) m.img = d.img;
+            if (typeof d.img === "string") $util.base64.decode(d.img, m.img = $util.newBuffer($util.base64.length(d.img)), 0);else if (d.img.length >= 0) m.img = d.img;
           }
           return m;
         };
@@ -1360,6 +1517,12 @@ export const jibb = $root.jibb = (() => {
         };
         SurfaceSegmentationResponse.prototype.toJSON = function toJSON() {
           return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+        SurfaceSegmentationResponse.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+          if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+          }
+          return typeUrlPrefix + "/jibb.ipsa.v1.SurfaceSegmentationResponse";
         };
         return SurfaceSegmentationResponse;
       }();
@@ -1391,14 +1554,20 @@ export const jibb = $root.jibb = (() => {
             var t = r.uint32();
             switch (t >>> 3) {
               case 1:
-                m.surfaceType = r.int32();
-                break;
+                {
+                  m.surfaceType = r.int32();
+                  break;
+                }
               case 2:
-                m.img = r.bytes();
-                break;
+                {
+                  m.img = r.bytes();
+                  break;
+                }
               case 3:
-                m.overlay = r.bool();
-                break;
+                {
+                  m.overlay = r.bool();
+                  break;
+                }
               default:
                 r.skipType(t & 7);
                 break;
@@ -1434,6 +1603,12 @@ export const jibb = $root.jibb = (() => {
           if (d instanceof $root.jibb.ipsa.v1.SurfaceDetectionRequest) return d;
           var m = new $root.jibb.ipsa.v1.SurfaceDetectionRequest();
           switch (d.surfaceType) {
+            default:
+              if (typeof d.surfaceType === "number") {
+                m.surfaceType = d.surfaceType;
+                break;
+              }
+              break;
             case "UNKNOWN":
             case 0:
               m.surfaceType = 0;
@@ -1448,7 +1623,7 @@ export const jibb = $root.jibb = (() => {
               break;
           }
           if (d.img != null) {
-            if (typeof d.img === "string") $util.base64.decode(d.img, m.img = $util.newBuffer($util.base64.length(d.img)), 0);else if (d.img.length) m.img = d.img;
+            if (typeof d.img === "string") $util.base64.decode(d.img, m.img = $util.newBuffer($util.base64.length(d.img)), 0);else if (d.img.length >= 0) m.img = d.img;
           }
           if (d.overlay != null) {
             m.overlay = Boolean(d.overlay);
@@ -1467,7 +1642,7 @@ export const jibb = $root.jibb = (() => {
             d.overlay = false;
           }
           if (m.surfaceType != null && m.hasOwnProperty("surfaceType")) {
-            d.surfaceType = o.enums === String ? $root.types.SurfaceType[m.surfaceType] : m.surfaceType;
+            d.surfaceType = o.enums === String ? $root.types.SurfaceType[m.surfaceType] === undefined ? m.surfaceType : $root.types.SurfaceType[m.surfaceType] : m.surfaceType;
           }
           if (m.img != null && m.hasOwnProperty("img")) {
             d.img = o.bytes === String ? $util.base64.encode(m.img, 0, m.img.length) : o.bytes === Array ? Array.prototype.slice.call(m.img) : m.img;
@@ -1479,6 +1654,12 @@ export const jibb = $root.jibb = (() => {
         };
         SurfaceDetectionRequest.prototype.toJSON = function toJSON() {
           return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+        SurfaceDetectionRequest.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+          if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+          }
+          return typeUrlPrefix + "/jibb.ipsa.v1.SurfaceDetectionRequest";
         };
         return SurfaceDetectionRequest;
       }();
@@ -1513,15 +1694,19 @@ export const jibb = $root.jibb = (() => {
             var t = r.uint32();
             switch (t >>> 3) {
               case 1:
-                m.img = r.bytes();
-                break;
+                {
+                  m.img = r.bytes();
+                  break;
+                }
               case 2:
-                if (!(m.corners && m.corners.length)) m.corners = [];
-                if ((t & 7) === 2) {
-                  var c2 = r.uint32() + r.pos;
-                  while (r.pos < c2) m.corners.push(r.sint32());
-                } else m.corners.push(r.sint32());
-                break;
+                {
+                  if (!(m.corners && m.corners.length)) m.corners = [];
+                  if ((t & 7) === 2) {
+                    var c2 = r.uint32() + r.pos;
+                    while (r.pos < c2) m.corners.push(r.sint32());
+                  } else m.corners.push(r.sint32());
+                  break;
+                }
               default:
                 r.skipType(t & 7);
                 break;
@@ -1550,7 +1735,7 @@ export const jibb = $root.jibb = (() => {
           if (d instanceof $root.jibb.ipsa.v1.SurfaceDetectionResponse) return d;
           var m = new $root.jibb.ipsa.v1.SurfaceDetectionResponse();
           if (d.img != null) {
-            if (typeof d.img === "string") $util.base64.decode(d.img, m.img = $util.newBuffer($util.base64.length(d.img)), 0);else if (d.img.length) m.img = d.img;
+            if (typeof d.img === "string") $util.base64.decode(d.img, m.img = $util.newBuffer($util.base64.length(d.img)), 0);else if (d.img.length >= 0) m.img = d.img;
           }
           if (d.corners) {
             if (!Array.isArray(d.corners)) throw TypeError(".jibb.ipsa.v1.SurfaceDetectionResponse.corners: array expected");
@@ -1587,6 +1772,12 @@ export const jibb = $root.jibb = (() => {
         SurfaceDetectionResponse.prototype.toJSON = function toJSON() {
           return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
+        SurfaceDetectionResponse.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+          if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+          }
+          return typeUrlPrefix + "/jibb.ipsa.v1.SurfaceDetectionResponse";
+        };
         return SurfaceDetectionResponse;
       }();
       v1.ObjectRemovalRequest = function () {
@@ -1619,17 +1810,25 @@ export const jibb = $root.jibb = (() => {
             var t = r.uint32();
             switch (t >>> 3) {
               case 1:
-                m.surfaceType = r.int32();
-                break;
+                {
+                  m.surfaceType = r.int32();
+                  break;
+                }
               case 2:
-                m.overlay = r.bool();
-                break;
+                {
+                  m.overlay = r.bool();
+                  break;
+                }
               case 3:
-                m.enableTransformation = r.bool();
-                break;
+                {
+                  m.enableTransformation = r.bool();
+                  break;
+                }
               case 4:
-                m.img = r.bytes();
-                break;
+                {
+                  m.img = r.bytes();
+                  break;
+                }
               default:
                 r.skipType(t & 7);
                 break;
@@ -1668,6 +1867,12 @@ export const jibb = $root.jibb = (() => {
           if (d instanceof $root.jibb.ipsa.v1.ObjectRemovalRequest) return d;
           var m = new $root.jibb.ipsa.v1.ObjectRemovalRequest();
           switch (d.surfaceType) {
+            default:
+              if (typeof d.surfaceType === "number") {
+                m.surfaceType = d.surfaceType;
+                break;
+              }
+              break;
             case "UNKNOWN":
             case 0:
               m.surfaceType = 0;
@@ -1688,7 +1893,7 @@ export const jibb = $root.jibb = (() => {
             m.enableTransformation = Boolean(d.enableTransformation);
           }
           if (d.img != null) {
-            if (typeof d.img === "string") $util.base64.decode(d.img, m.img = $util.newBuffer($util.base64.length(d.img)), 0);else if (d.img.length) m.img = d.img;
+            if (typeof d.img === "string") $util.base64.decode(d.img, m.img = $util.newBuffer($util.base64.length(d.img)), 0);else if (d.img.length >= 0) m.img = d.img;
           }
           return m;
         };
@@ -1705,7 +1910,7 @@ export const jibb = $root.jibb = (() => {
             }
           }
           if (m.surfaceType != null && m.hasOwnProperty("surfaceType")) {
-            d.surfaceType = o.enums === String ? $root.types.SurfaceType[m.surfaceType] : m.surfaceType;
+            d.surfaceType = o.enums === String ? $root.types.SurfaceType[m.surfaceType] === undefined ? m.surfaceType : $root.types.SurfaceType[m.surfaceType] : m.surfaceType;
           }
           if (m.overlay != null && m.hasOwnProperty("overlay")) {
             d.overlay = m.overlay;
@@ -1720,6 +1925,12 @@ export const jibb = $root.jibb = (() => {
         };
         ObjectRemovalRequest.prototype.toJSON = function toJSON() {
           return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+        ObjectRemovalRequest.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+          if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+          }
+          return typeUrlPrefix + "/jibb.ipsa.v1.ObjectRemovalRequest";
         };
         return ObjectRemovalRequest;
       }();
@@ -1747,8 +1958,10 @@ export const jibb = $root.jibb = (() => {
             var t = r.uint32();
             switch (t >>> 3) {
               case 1:
-                m.img = r.bytes();
-                break;
+                {
+                  m.img = r.bytes();
+                  break;
+                }
               default:
                 r.skipType(t & 7);
                 break;
@@ -1771,7 +1984,7 @@ export const jibb = $root.jibb = (() => {
           if (d instanceof $root.jibb.ipsa.v1.ObjectRemovalResponse) return d;
           var m = new $root.jibb.ipsa.v1.ObjectRemovalResponse();
           if (d.img != null) {
-            if (typeof d.img === "string") $util.base64.decode(d.img, m.img = $util.newBuffer($util.base64.length(d.img)), 0);else if (d.img.length) m.img = d.img;
+            if (typeof d.img === "string") $util.base64.decode(d.img, m.img = $util.newBuffer($util.base64.length(d.img)), 0);else if (d.img.length >= 0) m.img = d.img;
           }
           return m;
         };
@@ -1791,6 +2004,12 @@ export const jibb = $root.jibb = (() => {
         };
         ObjectRemovalResponse.prototype.toJSON = function toJSON() {
           return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+        ObjectRemovalResponse.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+          if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+          }
+          return typeUrlPrefix + "/jibb.ipsa.v1.ObjectRemovalResponse";
         };
         return ObjectRemovalResponse;
       }();
@@ -1824,17 +2043,25 @@ export const jibb = $root.jibb = (() => {
             var t = r.uint32();
             switch (t >>> 3) {
               case 1:
-                m.surfaceType = r.int32();
-                break;
+                {
+                  m.surfaceType = r.int32();
+                  break;
+                }
               case 2:
-                m.enableTransformation = r.bool();
-                break;
+                {
+                  m.enableTransformation = r.bool();
+                  break;
+                }
               case 4:
-                m.enableColor = r.bool();
-                break;
+                {
+                  m.enableColor = r.bool();
+                  break;
+                }
               case 3:
-                m.img = r.bytes();
-                break;
+                {
+                  m.img = r.bytes();
+                  break;
+                }
               default:
                 r.skipType(t & 7);
                 break;
@@ -1873,6 +2100,12 @@ export const jibb = $root.jibb = (() => {
           if (d instanceof $root.jibb.ipsa.v1.ContentExtractionRequest) return d;
           var m = new $root.jibb.ipsa.v1.ContentExtractionRequest();
           switch (d.surfaceType) {
+            default:
+              if (typeof d.surfaceType === "number") {
+                m.surfaceType = d.surfaceType;
+                break;
+              }
+              break;
             case "UNKNOWN":
             case 0:
               m.surfaceType = 0;
@@ -1893,7 +2126,7 @@ export const jibb = $root.jibb = (() => {
             m.enableColor = Boolean(d.enableColor);
           }
           if (d.img != null) {
-            if (typeof d.img === "string") $util.base64.decode(d.img, m.img = $util.newBuffer($util.base64.length(d.img)), 0);else if (d.img.length) m.img = d.img;
+            if (typeof d.img === "string") $util.base64.decode(d.img, m.img = $util.newBuffer($util.base64.length(d.img)), 0);else if (d.img.length >= 0) m.img = d.img;
           }
           return m;
         };
@@ -1910,7 +2143,7 @@ export const jibb = $root.jibb = (() => {
             d.enableColor = false;
           }
           if (m.surfaceType != null && m.hasOwnProperty("surfaceType")) {
-            d.surfaceType = o.enums === String ? $root.types.SurfaceType[m.surfaceType] : m.surfaceType;
+            d.surfaceType = o.enums === String ? $root.types.SurfaceType[m.surfaceType] === undefined ? m.surfaceType : $root.types.SurfaceType[m.surfaceType] : m.surfaceType;
           }
           if (m.enableTransformation != null && m.hasOwnProperty("enableTransformation")) {
             d.enableTransformation = m.enableTransformation;
@@ -1925,6 +2158,12 @@ export const jibb = $root.jibb = (() => {
         };
         ContentExtractionRequest.prototype.toJSON = function toJSON() {
           return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+        ContentExtractionRequest.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+          if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+          }
+          return typeUrlPrefix + "/jibb.ipsa.v1.ContentExtractionRequest";
         };
         return ContentExtractionRequest;
       }();
@@ -1954,11 +2193,15 @@ export const jibb = $root.jibb = (() => {
             var t = r.uint32();
             switch (t >>> 3) {
               case 1:
-                m.img = r.bytes();
-                break;
+                {
+                  m.img = r.bytes();
+                  break;
+                }
               case 2:
-                m.transformedImg = r.bytes();
-                break;
+                {
+                  m.transformedImg = r.bytes();
+                  break;
+                }
               default:
                 r.skipType(t & 7);
                 break;
@@ -1984,10 +2227,10 @@ export const jibb = $root.jibb = (() => {
           if (d instanceof $root.jibb.ipsa.v1.ContentExtractionResponse) return d;
           var m = new $root.jibb.ipsa.v1.ContentExtractionResponse();
           if (d.img != null) {
-            if (typeof d.img === "string") $util.base64.decode(d.img, m.img = $util.newBuffer($util.base64.length(d.img)), 0);else if (d.img.length) m.img = d.img;
+            if (typeof d.img === "string") $util.base64.decode(d.img, m.img = $util.newBuffer($util.base64.length(d.img)), 0);else if (d.img.length >= 0) m.img = d.img;
           }
           if (d.transformedImg != null) {
-            if (typeof d.transformedImg === "string") $util.base64.decode(d.transformedImg, m.transformedImg = $util.newBuffer($util.base64.length(d.transformedImg)), 0);else if (d.transformedImg.length) m.transformedImg = d.transformedImg;
+            if (typeof d.transformedImg === "string") $util.base64.decode(d.transformedImg, m.transformedImg = $util.newBuffer($util.base64.length(d.transformedImg)), 0);else if (d.transformedImg.length >= 0) m.transformedImg = d.transformedImg;
           }
           return m;
         };
@@ -2014,6 +2257,12 @@ export const jibb = $root.jibb = (() => {
         };
         ContentExtractionResponse.prototype.toJSON = function toJSON() {
           return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+        ContentExtractionResponse.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+          if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+          }
+          return typeUrlPrefix + "/jibb.ipsa.v1.ContentExtractionResponse";
         };
         return ContentExtractionResponse;
       }();
@@ -2045,14 +2294,20 @@ export const jibb = $root.jibb = (() => {
             var t = r.uint32();
             switch (t >>> 3) {
               case 1:
-                m.newImage = r.bytes();
-                break;
+                {
+                  m.newImage = r.bytes();
+                  break;
+                }
               case 2:
-                m.prevImage = r.bytes();
-                break;
+                {
+                  m.prevImage = r.bytes();
+                  break;
+                }
               case 3:
-                m.level = r.int32();
-                break;
+                {
+                  m.level = r.int32();
+                  break;
+                }
               default:
                 r.skipType(t & 7);
                 break;
@@ -2088,12 +2343,18 @@ export const jibb = $root.jibb = (() => {
           if (d instanceof $root.jibb.ipsa.v1.GetSimilarityRequest) return d;
           var m = new $root.jibb.ipsa.v1.GetSimilarityRequest();
           if (d.newImage != null) {
-            if (typeof d.newImage === "string") $util.base64.decode(d.newImage, m.newImage = $util.newBuffer($util.base64.length(d.newImage)), 0);else if (d.newImage.length) m.newImage = d.newImage;
+            if (typeof d.newImage === "string") $util.base64.decode(d.newImage, m.newImage = $util.newBuffer($util.base64.length(d.newImage)), 0);else if (d.newImage.length >= 0) m.newImage = d.newImage;
           }
           if (d.prevImage != null) {
-            if (typeof d.prevImage === "string") $util.base64.decode(d.prevImage, m.prevImage = $util.newBuffer($util.base64.length(d.prevImage)), 0);else if (d.prevImage.length) m.prevImage = d.prevImage;
+            if (typeof d.prevImage === "string") $util.base64.decode(d.prevImage, m.prevImage = $util.newBuffer($util.base64.length(d.prevImage)), 0);else if (d.prevImage.length >= 0) m.prevImage = d.prevImage;
           }
           switch (d.level) {
+            default:
+              if (typeof d.level === "number") {
+                m.level = d.level;
+                break;
+              }
+              break;
             case "NORMAL":
             case 0:
               m.level = 0;
@@ -2130,12 +2391,18 @@ export const jibb = $root.jibb = (() => {
             d.prevImage = o.bytes === String ? $util.base64.encode(m.prevImage, 0, m.prevImage.length) : o.bytes === Array ? Array.prototype.slice.call(m.prevImage) : m.prevImage;
           }
           if (m.level != null && m.hasOwnProperty("level")) {
-            d.level = o.enums === String ? $root.jibb.ipsa.v1.GetSimilarityRequest.SensivityLevel[m.level] : m.level;
+            d.level = o.enums === String ? $root.jibb.ipsa.v1.GetSimilarityRequest.SensivityLevel[m.level] === undefined ? m.level : $root.jibb.ipsa.v1.GetSimilarityRequest.SensivityLevel[m.level] : m.level;
           }
           return d;
         };
         GetSimilarityRequest.prototype.toJSON = function toJSON() {
           return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+        GetSimilarityRequest.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+          if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+          }
+          return typeUrlPrefix + "/jibb.ipsa.v1.GetSimilarityRequest";
         };
         GetSimilarityRequest.SensivityLevel = function () {
           const valuesById = {},
@@ -2173,11 +2440,15 @@ export const jibb = $root.jibb = (() => {
             var t = r.uint32();
             switch (t >>> 3) {
               case 1:
-                m.isSimilar = r.bool();
-                break;
+                {
+                  m.isSimilar = r.bool();
+                  break;
+                }
               case 2:
-                m.addedContentCount = r.int32();
-                break;
+                {
+                  m.addedContentCount = r.int32();
+                  break;
+                }
               default:
                 r.skipType(t & 7);
                 break;
@@ -2228,6 +2499,12 @@ export const jibb = $root.jibb = (() => {
         GetSimilarityResponse.prototype.toJSON = function toJSON() {
           return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
+        GetSimilarityResponse.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+          if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+          }
+          return typeUrlPrefix + "/jibb.ipsa.v1.GetSimilarityResponse";
+        };
         return GetSimilarityResponse;
       }();
       v1.Ipsa = function () {
@@ -2254,8 +2531,10 @@ export const jibb = $root.jibb = (() => {
             var t = r.uint32();
             switch (t >>> 3) {
               case 1:
-                m.data = r.bytes();
-                break;
+                {
+                  m.data = r.bytes();
+                  break;
+                }
               default:
                 r.skipType(t & 7);
                 break;
@@ -2278,7 +2557,7 @@ export const jibb = $root.jibb = (() => {
           if (d instanceof $root.jibb.ipsa.v1.Ipsa) return d;
           var m = new $root.jibb.ipsa.v1.Ipsa();
           if (d.data != null) {
-            if (typeof d.data === "string") $util.base64.decode(d.data, m.data = $util.newBuffer($util.base64.length(d.data)), 0);else if (d.data.length) m.data = d.data;
+            if (typeof d.data === "string") $util.base64.decode(d.data, m.data = $util.newBuffer($util.base64.length(d.data)), 0);else if (d.data.length >= 0) m.data = d.data;
           }
           return m;
         };
@@ -2298,6 +2577,12 @@ export const jibb = $root.jibb = (() => {
         };
         Ipsa.prototype.toJSON = function toJSON() {
           return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+        Ipsa.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+          if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+          }
+          return typeUrlPrefix + "/jibb.ipsa.v1.Ipsa";
         };
         return Ipsa;
       }();
@@ -2342,26 +2627,40 @@ export const jibb = $root.jibb = (() => {
             var t = r.uint32();
             switch (t >>> 3) {
               case 1:
-                m.id = r.int32();
-                break;
+                {
+                  m.id = r.int32();
+                  break;
+                }
               case 2:
-                m.config = $root.jibb.ipsa.v1.Config.decode(r, r.uint32());
-                break;
+                {
+                  m.config = $root.jibb.ipsa.v1.Config.decode(r, r.uint32());
+                  break;
+                }
               case 3:
-                m.ipsa = $root.jibb.ipsa.v1.Ipsa.decode(r, r.uint32());
-                break;
+                {
+                  m.ipsa = $root.jibb.ipsa.v1.Ipsa.decode(r, r.uint32());
+                  break;
+                }
               case 4:
-                m.resetSession = $root.google.protobuf.Empty.decode(r, r.uint32());
-                break;
+                {
+                  m.resetSession = $root.google.protobuf.Empty.decode(r, r.uint32());
+                  break;
+                }
               case 5:
-                m.recalibrate = $root.google.protobuf.Empty.decode(r, r.uint32());
-                break;
+                {
+                  m.recalibrate = $root.google.protobuf.Empty.decode(r, r.uint32());
+                  break;
+                }
               case 6:
-                m.runtimeConfig = $root.jibb.ipsa.v1.RuntimeConfig.decode(r, r.uint32());
-                break;
+                {
+                  m.runtimeConfig = $root.jibb.ipsa.v1.RuntimeConfig.decode(r, r.uint32());
+                  break;
+                }
               case 7:
-                m.dummy = $root.google.protobuf.Empty.decode(r, r.uint32());
-                break;
+                {
+                  m.dummy = $root.google.protobuf.Empty.decode(r, r.uint32());
+                  break;
+                }
               default:
                 r.skipType(t & 7);
                 break;
@@ -2498,6 +2797,12 @@ export const jibb = $root.jibb = (() => {
         Request.prototype.toJSON = function toJSON() {
           return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
+        Request.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+          if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+          }
+          return typeUrlPrefix + "/jibb.ipsa.v1.Request";
+        };
         return Request;
       }();
       v1.Status = function () {
@@ -2544,31 +2849,43 @@ export const jibb = $root.jibb = (() => {
             var t = r.uint32();
             switch (t >>> 3) {
               case 1:
-                m.userId = r.string();
-                break;
+                {
+                  m.userId = r.string();
+                  break;
+                }
               case 2:
-                if (!(m.corners && m.corners.length)) m.corners = [];
-                if ((t & 7) === 2) {
-                  var c2 = r.uint32() + r.pos;
-                  while (r.pos < c2) m.corners.push(r.float());
-                } else m.corners.push(r.float());
-                break;
+                {
+                  if (!(m.corners && m.corners.length)) m.corners = [];
+                  if ((t & 7) === 2) {
+                    var c2 = r.uint32() + r.pos;
+                    while (r.pos < c2) m.corners.push(r.float());
+                  } else m.corners.push(r.float());
+                  break;
+                }
               case 3:
-                if (!(m.codes && m.codes.length)) m.codes = [];
-                if ((t & 7) === 2) {
-                  var c2 = r.uint32() + r.pos;
-                  while (r.pos < c2) m.codes.push(r.int32());
-                } else m.codes.push(r.int32());
-                break;
+                {
+                  if (!(m.codes && m.codes.length)) m.codes = [];
+                  if ((t & 7) === 2) {
+                    var c2 = r.uint32() + r.pos;
+                    while (r.pos < c2) m.codes.push(r.int32());
+                  } else m.codes.push(r.int32());
+                  break;
+                }
               case 4:
-                m.processingTime = r.int32();
-                break;
+                {
+                  m.processingTime = r.int32();
+                  break;
+                }
               case 5:
-                m.upsampling = r.float();
-                break;
+                {
+                  m.upsampling = r.float();
+                  break;
+                }
               case 6:
-                m.paperDetectionConfidence = r.int32();
-                break;
+                {
+                  m.paperDetectionConfidence = r.int32();
+                  break;
+                }
               default:
                 r.skipType(t & 7);
                 break;
@@ -2645,6 +2962,10 @@ export const jibb = $root.jibb = (() => {
             for (var i = 0; i < d.codes.length; ++i) {
               switch (d.codes[i]) {
                 default:
+                  if (typeof d.codes[i] === "number") {
+                    m.codes[i] = d.codes[i];
+                    break;
+                  }
                 case "SUCCESS":
                 case 0:
                   m.codes[i] = 0;
@@ -2740,7 +3061,7 @@ export const jibb = $root.jibb = (() => {
           if (m.codes && m.codes.length) {
             d.codes = [];
             for (var j = 0; j < m.codes.length; ++j) {
-              d.codes[j] = o.enums === String ? $root.jibb.ipsa.v1.StatusCode[m.codes[j]] : m.codes[j];
+              d.codes[j] = o.enums === String ? $root.jibb.ipsa.v1.StatusCode[m.codes[j]] === undefined ? m.codes[j] : $root.jibb.ipsa.v1.StatusCode[m.codes[j]] : m.codes[j];
             }
           }
           if (m.processingTime != null && m.hasOwnProperty("processingTime")) {
@@ -2756,6 +3077,12 @@ export const jibb = $root.jibb = (() => {
         };
         Status.prototype.toJSON = function toJSON() {
           return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+        Status.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+          if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+          }
+          return typeUrlPrefix + "/jibb.ipsa.v1.Status";
         };
         return Status;
       }();
@@ -2785,11 +3112,15 @@ export const jibb = $root.jibb = (() => {
             var t = r.uint32();
             switch (t >>> 3) {
               case 1:
-                m.userId = r.string();
-                break;
+                {
+                  m.userId = r.string();
+                  break;
+                }
               case 2:
-                m.data = r.bytes();
-                break;
+                {
+                  m.data = r.bytes();
+                  break;
+                }
               default:
                 r.skipType(t & 7);
                 break;
@@ -2818,7 +3149,7 @@ export const jibb = $root.jibb = (() => {
             m.userId = String(d.userId);
           }
           if (d.data != null) {
-            if (typeof d.data === "string") $util.base64.decode(d.data, m.data = $util.newBuffer($util.base64.length(d.data)), 0);else if (d.data.length) m.data = d.data;
+            if (typeof d.data === "string") $util.base64.decode(d.data, m.data = $util.newBuffer($util.base64.length(d.data)), 0);else if (d.data.length >= 0) m.data = d.data;
           }
           return m;
         };
@@ -2842,6 +3173,12 @@ export const jibb = $root.jibb = (() => {
         };
         Image.prototype.toJSON = function toJSON() {
           return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+        Image.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+          if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+          }
+          return typeUrlPrefix + "/jibb.ipsa.v1.Image";
         };
         return Image;
       }();
@@ -2873,14 +3210,20 @@ export const jibb = $root.jibb = (() => {
             var t = r.uint32();
             switch (t >>> 3) {
               case 1:
-                m.id = r.int32();
-                break;
+                {
+                  m.id = r.int32();
+                  break;
+                }
               case 5:
-                m.image = r.bytes();
-                break;
+                {
+                  m.image = r.bytes();
+                  break;
+                }
               case 8:
-                m.status = $root.jibb.ipsa.v1.Status.decode(r, r.uint32());
-                break;
+                {
+                  m.status = $root.jibb.ipsa.v1.Status.decode(r, r.uint32());
+                  break;
+                }
               default:
                 r.skipType(t & 7);
                 break;
@@ -2915,7 +3258,7 @@ export const jibb = $root.jibb = (() => {
             m.id = d.id | 0;
           }
           if (d.image != null) {
-            if (typeof d.image === "string") $util.base64.decode(d.image, m.image = $util.newBuffer($util.base64.length(d.image)), 0);else if (d.image.length) m.image = d.image;
+            if (typeof d.image === "string") $util.base64.decode(d.image, m.image = $util.newBuffer($util.base64.length(d.image)), 0);else if (d.image.length >= 0) m.image = d.image;
           }
           if (d.status != null) {
             if (typeof d.status !== "object") throw TypeError(".jibb.ipsa.v1.Response.status: object expected");
@@ -2947,6 +3290,12 @@ export const jibb = $root.jibb = (() => {
         };
         Response.prototype.toJSON = function toJSON() {
           return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+        Response.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+          if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+          }
+          return typeUrlPrefix + "/jibb.ipsa.v1.Response";
         };
         return Response;
       }();
@@ -2996,6 +3345,12 @@ export const jibb = $root.jibb = (() => {
         Started.prototype.toJSON = function toJSON() {
           return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
+        Started.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+          if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+          }
+          return typeUrlPrefix + "/jibb.ipsa.v1.Started";
+        };
         return Started;
       }();
       v1.Stopped = function () {
@@ -3044,149 +3399,13 @@ export const jibb = $root.jibb = (() => {
         Stopped.prototype.toJSON = function toJSON() {
           return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
+        Stopped.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+          if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+          }
+          return typeUrlPrefix + "/jibb.ipsa.v1.Stopped";
+        };
         return Stopped;
-      }();
-      v1.ConvertHeicToJpegRequest = function () {
-        function ConvertHeicToJpegRequest(p) {
-          if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
-        }
-        ConvertHeicToJpegRequest.prototype.heic = $util.newBuffer([]);
-        ConvertHeicToJpegRequest.create = function create(properties) {
-          return new ConvertHeicToJpegRequest(properties);
-        };
-        ConvertHeicToJpegRequest.encode = function encode(m, w) {
-          if (!w) w = $Writer.create();
-          if (m.heic != null && Object.hasOwnProperty.call(m, "heic")) w.uint32(10).bytes(m.heic);
-          return w;
-        };
-        ConvertHeicToJpegRequest.encodeDelimited = function encodeDelimited(message, writer) {
-          return this.encode(message, writer).ldelim();
-        };
-        ConvertHeicToJpegRequest.decode = function decode(r, l) {
-          if (!(r instanceof $Reader)) r = $Reader.create(r);
-          var c = l === undefined ? r.len : r.pos + l,
-            m = new $root.jibb.ipsa.v1.ConvertHeicToJpegRequest();
-          while (r.pos < c) {
-            var t = r.uint32();
-            switch (t >>> 3) {
-              case 1:
-                m.heic = r.bytes();
-                break;
-              default:
-                r.skipType(t & 7);
-                break;
-            }
-          }
-          return m;
-        };
-        ConvertHeicToJpegRequest.decodeDelimited = function decodeDelimited(reader) {
-          if (!(reader instanceof $Reader)) reader = new $Reader(reader);
-          return this.decode(reader, reader.uint32());
-        };
-        ConvertHeicToJpegRequest.verify = function verify(m) {
-          if (typeof m !== "object" || m === null) return "object expected";
-          if (m.heic != null && m.hasOwnProperty("heic")) {
-            if (!(m.heic && typeof m.heic.length === "number" || $util.isString(m.heic))) return "heic: buffer expected";
-          }
-          return null;
-        };
-        ConvertHeicToJpegRequest.fromObject = function fromObject(d) {
-          if (d instanceof $root.jibb.ipsa.v1.ConvertHeicToJpegRequest) return d;
-          var m = new $root.jibb.ipsa.v1.ConvertHeicToJpegRequest();
-          if (d.heic != null) {
-            if (typeof d.heic === "string") $util.base64.decode(d.heic, m.heic = $util.newBuffer($util.base64.length(d.heic)), 0);else if (d.heic.length) m.heic = d.heic;
-          }
-          return m;
-        };
-        ConvertHeicToJpegRequest.toObject = function toObject(m, o) {
-          if (!o) o = {};
-          var d = {};
-          if (o.defaults) {
-            if (o.bytes === String) d.heic = "";else {
-              d.heic = [];
-              if (o.bytes !== Array) d.heic = $util.newBuffer(d.heic);
-            }
-          }
-          if (m.heic != null && m.hasOwnProperty("heic")) {
-            d.heic = o.bytes === String ? $util.base64.encode(m.heic, 0, m.heic.length) : o.bytes === Array ? Array.prototype.slice.call(m.heic) : m.heic;
-          }
-          return d;
-        };
-        ConvertHeicToJpegRequest.prototype.toJSON = function toJSON() {
-          return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-        };
-        return ConvertHeicToJpegRequest;
-      }();
-      v1.ConvertHeicToJpegResponse = function () {
-        function ConvertHeicToJpegResponse(p) {
-          if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
-        }
-        ConvertHeicToJpegResponse.prototype.jpeg = $util.newBuffer([]);
-        ConvertHeicToJpegResponse.create = function create(properties) {
-          return new ConvertHeicToJpegResponse(properties);
-        };
-        ConvertHeicToJpegResponse.encode = function encode(m, w) {
-          if (!w) w = $Writer.create();
-          if (m.jpeg != null && Object.hasOwnProperty.call(m, "jpeg")) w.uint32(10).bytes(m.jpeg);
-          return w;
-        };
-        ConvertHeicToJpegResponse.encodeDelimited = function encodeDelimited(message, writer) {
-          return this.encode(message, writer).ldelim();
-        };
-        ConvertHeicToJpegResponse.decode = function decode(r, l) {
-          if (!(r instanceof $Reader)) r = $Reader.create(r);
-          var c = l === undefined ? r.len : r.pos + l,
-            m = new $root.jibb.ipsa.v1.ConvertHeicToJpegResponse();
-          while (r.pos < c) {
-            var t = r.uint32();
-            switch (t >>> 3) {
-              case 1:
-                m.jpeg = r.bytes();
-                break;
-              default:
-                r.skipType(t & 7);
-                break;
-            }
-          }
-          return m;
-        };
-        ConvertHeicToJpegResponse.decodeDelimited = function decodeDelimited(reader) {
-          if (!(reader instanceof $Reader)) reader = new $Reader(reader);
-          return this.decode(reader, reader.uint32());
-        };
-        ConvertHeicToJpegResponse.verify = function verify(m) {
-          if (typeof m !== "object" || m === null) return "object expected";
-          if (m.jpeg != null && m.hasOwnProperty("jpeg")) {
-            if (!(m.jpeg && typeof m.jpeg.length === "number" || $util.isString(m.jpeg))) return "jpeg: buffer expected";
-          }
-          return null;
-        };
-        ConvertHeicToJpegResponse.fromObject = function fromObject(d) {
-          if (d instanceof $root.jibb.ipsa.v1.ConvertHeicToJpegResponse) return d;
-          var m = new $root.jibb.ipsa.v1.ConvertHeicToJpegResponse();
-          if (d.jpeg != null) {
-            if (typeof d.jpeg === "string") $util.base64.decode(d.jpeg, m.jpeg = $util.newBuffer($util.base64.length(d.jpeg)), 0);else if (d.jpeg.length) m.jpeg = d.jpeg;
-          }
-          return m;
-        };
-        ConvertHeicToJpegResponse.toObject = function toObject(m, o) {
-          if (!o) o = {};
-          var d = {};
-          if (o.defaults) {
-            if (o.bytes === String) d.jpeg = "";else {
-              d.jpeg = [];
-              if (o.bytes !== Array) d.jpeg = $util.newBuffer(d.jpeg);
-            }
-          }
-          if (m.jpeg != null && m.hasOwnProperty("jpeg")) {
-            d.jpeg = o.bytes === String ? $util.base64.encode(m.jpeg, 0, m.jpeg.length) : o.bytes === Array ? Array.prototype.slice.call(m.jpeg) : m.jpeg;
-          }
-          return d;
-        };
-        ConvertHeicToJpegResponse.prototype.toJSON = function toJSON() {
-          return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-        };
-        return ConvertHeicToJpegResponse;
       }();
       return v1;
     }();
@@ -3265,35 +3484,55 @@ export const user = $root.user = (() => {
         var t = r.uint32();
         switch (t >>> 3) {
           case 2:
-            m.organizationName = r.string();
-            break;
+            {
+              m.organizationName = r.string();
+              break;
+            }
           case 3:
-            m.level = r.int32();
-            break;
+            {
+              m.level = r.int32();
+              break;
+            }
           case 4:
-            m.firstName = r.string();
-            break;
+            {
+              m.firstName = r.string();
+              break;
+            }
           case 5:
-            m.lastName = r.string();
-            break;
+            {
+              m.lastName = r.string();
+              break;
+            }
           case 6:
-            m.organizationId = r.int32();
-            break;
+            {
+              m.organizationId = r.int32();
+              break;
+            }
           case 7:
-            m.userType = r.int32();
-            break;
+            {
+              m.userType = r.int32();
+              break;
+            }
           case 8:
-            m.activated = r.bool();
-            break;
+            {
+              m.activated = r.bool();
+              break;
+            }
           case 9:
-            m.userId = r.string();
-            break;
+            {
+              m.userId = r.string();
+              break;
+            }
           case 10:
-            m.email = r.string();
-            break;
+            {
+              m.email = r.string();
+              break;
+            }
           case 11:
-            m.lastLogin = $root.google.protobuf.Timestamp.decode(r, r.uint32());
-            break;
+            {
+              m.lastLogin = $root.google.protobuf.Timestamp.decode(r, r.uint32());
+              break;
+            }
           default:
             r.skipType(t & 7);
             break;
@@ -3366,6 +3605,12 @@ export const user = $root.user = (() => {
         m.organizationName = String(d.organizationName);
       }
       switch (d.level) {
+        default:
+          if (typeof d.level === "number") {
+            m.level = d.level;
+            break;
+          }
+          break;
         case "FREE":
         case 0:
           m.level = 0;
@@ -3397,6 +3642,12 @@ export const user = $root.user = (() => {
         m.organizationId = d.organizationId | 0;
       }
       switch (d.userType) {
+        default:
+          if (typeof d.userType === "number") {
+            m.userType = d.userType;
+            break;
+          }
+          break;
         case "UNKNOWN":
         case 0:
           m.userType = 0;
@@ -3448,7 +3699,7 @@ export const user = $root.user = (() => {
         d.organizationName = m.organizationName;
       }
       if (m.level != null && m.hasOwnProperty("level")) {
-        d.level = o.enums === String ? $root.user.Level[m.level] : m.level;
+        d.level = o.enums === String ? $root.user.Level[m.level] === undefined ? m.level : $root.user.Level[m.level] : m.level;
       }
       if (m.firstName != null && m.hasOwnProperty("firstName")) {
         d.firstName = m.firstName;
@@ -3460,7 +3711,7 @@ export const user = $root.user = (() => {
         d.organizationId = m.organizationId;
       }
       if (m.userType != null && m.hasOwnProperty("userType")) {
-        d.userType = o.enums === String ? $root.user.UserType[m.userType] : m.userType;
+        d.userType = o.enums === String ? $root.user.UserType[m.userType] === undefined ? m.userType : $root.user.UserType[m.userType] : m.userType;
       }
       if (m.activated != null && m.hasOwnProperty("activated")) {
         d.activated = m.activated;
@@ -3479,7 +3730,208 @@ export const user = $root.user = (() => {
     UserDetails.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
     };
+    UserDetails.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+      if (typeUrlPrefix === undefined) {
+        typeUrlPrefix = "type.googleapis.com";
+      }
+      return typeUrlPrefix + "/user.UserDetails";
+    };
     return UserDetails;
+  }();
+  user.UserClaims = function () {
+    function UserClaims(p) {
+      if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
+    }
+    UserClaims.prototype.level = 0;
+    UserClaims.prototype.organizationId = 0;
+    UserClaims.prototype.email = "";
+    UserClaims.prototype.organizationName = "";
+    UserClaims.prototype.userId = "";
+    UserClaims.prototype.isDevice = false;
+    UserClaims.create = function create(properties) {
+      return new UserClaims(properties);
+    };
+    UserClaims.encode = function encode(m, w) {
+      if (!w) w = $Writer.create();
+      if (m.level != null && Object.hasOwnProperty.call(m, "level")) w.uint32(16).int32(m.level);
+      if (m.organizationId != null && Object.hasOwnProperty.call(m, "organizationId")) w.uint32(24).int32(m.organizationId);
+      if (m.email != null && Object.hasOwnProperty.call(m, "email")) w.uint32(34).string(m.email);
+      if (m.organizationName != null && Object.hasOwnProperty.call(m, "organizationName")) w.uint32(42).string(m.organizationName);
+      if (m.userId != null && Object.hasOwnProperty.call(m, "userId")) w.uint32(50).string(m.userId);
+      if (m.isDevice != null && Object.hasOwnProperty.call(m, "isDevice")) w.uint32(56).bool(m.isDevice);
+      return w;
+    };
+    UserClaims.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim();
+    };
+    UserClaims.decode = function decode(r, l) {
+      if (!(r instanceof $Reader)) r = $Reader.create(r);
+      var c = l === undefined ? r.len : r.pos + l,
+        m = new $root.user.UserClaims();
+      while (r.pos < c) {
+        var t = r.uint32();
+        switch (t >>> 3) {
+          case 2:
+            {
+              m.level = r.int32();
+              break;
+            }
+          case 3:
+            {
+              m.organizationId = r.int32();
+              break;
+            }
+          case 4:
+            {
+              m.email = r.string();
+              break;
+            }
+          case 5:
+            {
+              m.organizationName = r.string();
+              break;
+            }
+          case 6:
+            {
+              m.userId = r.string();
+              break;
+            }
+          case 7:
+            {
+              m.isDevice = r.bool();
+              break;
+            }
+          default:
+            r.skipType(t & 7);
+            break;
+        }
+      }
+      return m;
+    };
+    UserClaims.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+      return this.decode(reader, reader.uint32());
+    };
+    UserClaims.verify = function verify(m) {
+      if (typeof m !== "object" || m === null) return "object expected";
+      if (m.level != null && m.hasOwnProperty("level")) {
+        switch (m.level) {
+          default:
+            return "level: enum value expected";
+          case 0:
+          case 1:
+          case 3:
+          case 4:
+          case 5:
+            break;
+        }
+      }
+      if (m.organizationId != null && m.hasOwnProperty("organizationId")) {
+        if (!$util.isInteger(m.organizationId)) return "organizationId: integer expected";
+      }
+      if (m.email != null && m.hasOwnProperty("email")) {
+        if (!$util.isString(m.email)) return "email: string expected";
+      }
+      if (m.organizationName != null && m.hasOwnProperty("organizationName")) {
+        if (!$util.isString(m.organizationName)) return "organizationName: string expected";
+      }
+      if (m.userId != null && m.hasOwnProperty("userId")) {
+        if (!$util.isString(m.userId)) return "userId: string expected";
+      }
+      if (m.isDevice != null && m.hasOwnProperty("isDevice")) {
+        if (typeof m.isDevice !== "boolean") return "isDevice: boolean expected";
+      }
+      return null;
+    };
+    UserClaims.fromObject = function fromObject(d) {
+      if (d instanceof $root.user.UserClaims) return d;
+      var m = new $root.user.UserClaims();
+      switch (d.level) {
+        default:
+          if (typeof d.level === "number") {
+            m.level = d.level;
+            break;
+          }
+          break;
+        case "FREE":
+        case 0:
+          m.level = 0;
+          break;
+        case "BASIC":
+        case 1:
+          m.level = 1;
+          break;
+        case "PRO":
+        case 3:
+          m.level = 3;
+          break;
+        case "BUSINESS":
+        case 4:
+          m.level = 4;
+          break;
+        case "ENTERPRISE":
+        case 5:
+          m.level = 5;
+          break;
+      }
+      if (d.organizationId != null) {
+        m.organizationId = d.organizationId | 0;
+      }
+      if (d.email != null) {
+        m.email = String(d.email);
+      }
+      if (d.organizationName != null) {
+        m.organizationName = String(d.organizationName);
+      }
+      if (d.userId != null) {
+        m.userId = String(d.userId);
+      }
+      if (d.isDevice != null) {
+        m.isDevice = Boolean(d.isDevice);
+      }
+      return m;
+    };
+    UserClaims.toObject = function toObject(m, o) {
+      if (!o) o = {};
+      var d = {};
+      if (o.defaults) {
+        d.level = o.enums === String ? "FREE" : 0;
+        d.organizationId = 0;
+        d.email = "";
+        d.organizationName = "";
+        d.userId = "";
+        d.isDevice = false;
+      }
+      if (m.level != null && m.hasOwnProperty("level")) {
+        d.level = o.enums === String ? $root.user.Level[m.level] === undefined ? m.level : $root.user.Level[m.level] : m.level;
+      }
+      if (m.organizationId != null && m.hasOwnProperty("organizationId")) {
+        d.organizationId = m.organizationId;
+      }
+      if (m.email != null && m.hasOwnProperty("email")) {
+        d.email = m.email;
+      }
+      if (m.organizationName != null && m.hasOwnProperty("organizationName")) {
+        d.organizationName = m.organizationName;
+      }
+      if (m.userId != null && m.hasOwnProperty("userId")) {
+        d.userId = m.userId;
+      }
+      if (m.isDevice != null && m.hasOwnProperty("isDevice")) {
+        d.isDevice = m.isDevice;
+      }
+      return d;
+    };
+    UserClaims.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    UserClaims.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+      if (typeUrlPrefix === undefined) {
+        typeUrlPrefix = "type.googleapis.com";
+      }
+      return typeUrlPrefix + "/user.UserClaims";
+    };
+    return UserClaims;
   }();
   user.OrganizationDetails = function () {
     function OrganizationDetails(p) {
@@ -3529,44 +3981,70 @@ export const user = $root.user = (() => {
         var t = r.uint32();
         switch (t >>> 3) {
           case 1:
-            m.name = r.string();
-            break;
+            {
+              m.name = r.string();
+              break;
+            }
           case 2:
-            m.ownerEmail = r.string();
-            break;
+            {
+              m.ownerEmail = r.string();
+              break;
+            }
           case 3:
-            m.level = r.int32();
-            break;
+            {
+              m.level = r.int32();
+              break;
+            }
           case 4:
-            m.licenseCount = r.int32();
-            break;
+            {
+              m.licenseCount = r.int32();
+              break;
+            }
           case 5:
-            m.usersCount = r.int32();
-            break;
+            {
+              m.usersCount = r.int32();
+              break;
+            }
           case 6:
-            m.creationDate = $root.google.protobuf.Timestamp.decode(r, r.uint32());
-            break;
+            {
+              m.creationDate = $root.google.protobuf.Timestamp.decode(r, r.uint32());
+              break;
+            }
           case 12:
-            m.startDate = $root.google.protobuf.Timestamp.decode(r, r.uint32());
-            break;
+            {
+              m.startDate = $root.google.protobuf.Timestamp.decode(r, r.uint32());
+              break;
+            }
           case 7:
-            m.expiryDate = $root.google.protobuf.Timestamp.decode(r, r.uint32());
-            break;
+            {
+              m.expiryDate = $root.google.protobuf.Timestamp.decode(r, r.uint32());
+              break;
+            }
           case 8:
-            m.organizationId = r.int32();
-            break;
+            {
+              m.organizationId = r.int32();
+              break;
+            }
           case 9:
-            m.subdomainName = r.string();
-            break;
+            {
+              m.subdomainName = r.string();
+              break;
+            }
           case 10:
-            m.deviceLicenseCount = r.int32();
-            break;
+            {
+              m.deviceLicenseCount = r.int32();
+              break;
+            }
           case 11:
-            m.devicesCount = r.int32();
-            break;
+            {
+              m.devicesCount = r.int32();
+              break;
+            }
           case 14:
-            m.imageCollection = r.bool();
-            break;
+            {
+              m.imageCollection = r.bool();
+              break;
+            }
           default:
             r.skipType(t & 7);
             break;
@@ -3649,6 +4127,12 @@ export const user = $root.user = (() => {
         m.ownerEmail = String(d.ownerEmail);
       }
       switch (d.level) {
+        default:
+          if (typeof d.level === "number") {
+            m.level = d.level;
+            break;
+          }
+          break;
         case "FREE":
         case 0:
           m.level = 0;
@@ -3730,7 +4214,7 @@ export const user = $root.user = (() => {
         d.ownerEmail = m.ownerEmail;
       }
       if (m.level != null && m.hasOwnProperty("level")) {
-        d.level = o.enums === String ? $root.user.Level[m.level] : m.level;
+        d.level = o.enums === String ? $root.user.Level[m.level] === undefined ? m.level : $root.user.Level[m.level] : m.level;
       }
       if (m.licenseCount != null && m.hasOwnProperty("licenseCount")) {
         d.licenseCount = m.licenseCount;
@@ -3766,6 +4250,12 @@ export const user = $root.user = (() => {
     };
     OrganizationDetails.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    OrganizationDetails.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+      if (typeUrlPrefix === undefined) {
+        typeUrlPrefix = "type.googleapis.com";
+      }
+      return typeUrlPrefix + "/user.OrganizationDetails";
     };
     return OrganizationDetails;
   }();
@@ -3821,6 +4311,12 @@ export const google = $root.google = (() => {
       Empty.prototype.toJSON = function toJSON() {
         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
       };
+      Empty.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        if (typeUrlPrefix === undefined) {
+          typeUrlPrefix = "type.googleapis.com";
+        }
+        return typeUrlPrefix + "/google.protobuf.Empty";
+      };
       return Empty;
     }();
     protobuf.Timestamp = function () {
@@ -3849,11 +4345,15 @@ export const google = $root.google = (() => {
           var t = r.uint32();
           switch (t >>> 3) {
             case 1:
-              m.seconds = r.int64();
-              break;
+              {
+                m.seconds = r.int64();
+                break;
+              }
             case 2:
-              m.nanos = r.int32();
-              break;
+              {
+                m.nanos = r.int32();
+                break;
+              }
             default:
               r.skipType(t & 7);
               break;
@@ -3907,6 +4407,12 @@ export const google = $root.google = (() => {
       Timestamp.prototype.toJSON = function toJSON() {
         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
       };
+      Timestamp.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        if (typeUrlPrefix === undefined) {
+          typeUrlPrefix = "type.googleapis.com";
+        }
+        return typeUrlPrefix + "/google.protobuf.Timestamp";
+      };
       return Timestamp;
     }();
     return protobuf;
@@ -3945,17 +4451,25 @@ export const meeting = $root.meeting = (() => {
         var t = r.uint32();
         switch (t >>> 3) {
           case 1:
-            m.id = r.int32();
-            break;
+            {
+              m.id = r.int32();
+              break;
+            }
           case 2:
-            m.userId = r.string();
-            break;
+            {
+              m.userId = r.string();
+              break;
+            }
           case 3:
-            m.email = r.string();
-            break;
+            {
+              m.email = r.string();
+              break;
+            }
           case 4:
-            m.title = r.string();
-            break;
+            {
+              m.title = r.string();
+              break;
+            }
           default:
             r.skipType(t & 7);
             break;
@@ -4026,6 +4540,12 @@ export const meeting = $root.meeting = (() => {
     Participant.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
     };
+    Participant.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+      if (typeUrlPrefix === undefined) {
+        typeUrlPrefix = "type.googleapis.com";
+      }
+      return typeUrlPrefix + "/meeting.Participant";
+    };
     return Participant;
   }();
   meeting.Update = function () {
@@ -4054,11 +4574,15 @@ export const meeting = $root.meeting = (() => {
         var t = r.uint32();
         switch (t >>> 3) {
           case 2:
-            m.userId = r.string();
-            break;
+            {
+              m.userId = r.string();
+              break;
+            }
           case 5:
-            m.image = r.bytes();
-            break;
+            {
+              m.image = r.bytes();
+              break;
+            }
           default:
             r.skipType(t & 7);
             break;
@@ -4087,7 +4611,7 @@ export const meeting = $root.meeting = (() => {
         m.userId = String(d.userId);
       }
       if (d.image != null) {
-        if (typeof d.image === "string") $util.base64.decode(d.image, m.image = $util.newBuffer($util.base64.length(d.image)), 0);else if (d.image.length) m.image = d.image;
+        if (typeof d.image === "string") $util.base64.decode(d.image, m.image = $util.newBuffer($util.base64.length(d.image)), 0);else if (d.image.length >= 0) m.image = d.image;
       }
       return m;
     };
@@ -4111,6 +4635,12 @@ export const meeting = $root.meeting = (() => {
     };
     Update.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    Update.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+      if (typeUrlPrefix === undefined) {
+        typeUrlPrefix = "type.googleapis.com";
+      }
+      return typeUrlPrefix + "/meeting.Update";
     };
     return Update;
   }();
@@ -4140,11 +4670,15 @@ export const meeting = $root.meeting = (() => {
         var t = r.uint32();
         switch (t >>> 3) {
           case 2:
-            m.userId = r.string();
-            break;
+            {
+              m.userId = r.string();
+              break;
+            }
           case 4:
-            m.data = r.string();
-            break;
+            {
+              m.data = r.string();
+              break;
+            }
           default:
             r.skipType(t & 7);
             break;
@@ -4195,6 +4729,12 @@ export const meeting = $root.meeting = (() => {
     Drawing.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
     };
+    Drawing.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+      if (typeUrlPrefix === undefined) {
+        typeUrlPrefix = "type.googleapis.com";
+      }
+      return typeUrlPrefix + "/meeting.Drawing";
+    };
     return Drawing;
   }();
   meeting.MousePointer = function () {
@@ -4227,17 +4767,25 @@ export const meeting = $root.meeting = (() => {
         var t = r.uint32();
         switch (t >>> 3) {
           case 2:
-            m.userId = r.string();
-            break;
+            {
+              m.userId = r.string();
+              break;
+            }
           case 4:
-            m.x = r.int32();
-            break;
+            {
+              m.x = r.int32();
+              break;
+            }
           case 5:
-            m.y = r.int32();
-            break;
+            {
+              m.y = r.int32();
+              break;
+            }
           case 6:
-            m.email = r.string();
-            break;
+            {
+              m.email = r.string();
+              break;
+            }
           default:
             r.skipType(t & 7);
             break;
@@ -4308,6 +4856,12 @@ export const meeting = $root.meeting = (() => {
     MousePointer.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
     };
+    MousePointer.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+      if (typeUrlPrefix === undefined) {
+        typeUrlPrefix = "type.googleapis.com";
+      }
+      return typeUrlPrefix + "/meeting.MousePointer";
+    };
     return MousePointer;
   }();
   meeting.IndexPointer = function () {
@@ -4340,17 +4894,25 @@ export const meeting = $root.meeting = (() => {
         var t = r.uint32();
         switch (t >>> 3) {
           case 2:
-            m.userId = r.string();
-            break;
+            {
+              m.userId = r.string();
+              break;
+            }
           case 4:
-            m.x = r.int32();
-            break;
+            {
+              m.x = r.int32();
+              break;
+            }
           case 5:
-            m.y = r.int32();
-            break;
+            {
+              m.y = r.int32();
+              break;
+            }
           case 6:
-            m.email = r.string();
-            break;
+            {
+              m.email = r.string();
+              break;
+            }
           default:
             r.skipType(t & 7);
             break;
@@ -4421,6 +4983,12 @@ export const meeting = $root.meeting = (() => {
     IndexPointer.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
     };
+    IndexPointer.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+      if (typeUrlPrefix === undefined) {
+        typeUrlPrefix = "type.googleapis.com";
+      }
+      return typeUrlPrefix + "/meeting.IndexPointer";
+    };
     return IndexPointer;
   }();
   meeting.ImageAck = function () {
@@ -4447,8 +5015,10 @@ export const meeting = $root.meeting = (() => {
         var t = r.uint32();
         switch (t >>> 3) {
           case 2:
-            m.userId = r.string();
-            break;
+            {
+              m.userId = r.string();
+              break;
+            }
           default:
             r.skipType(t & 7);
             break;
@@ -4488,6 +5058,12 @@ export const meeting = $root.meeting = (() => {
     };
     ImageAck.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    ImageAck.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+      if (typeUrlPrefix === undefined) {
+        typeUrlPrefix = "type.googleapis.com";
+      }
+      return typeUrlPrefix + "/meeting.ImageAck";
     };
     return ImageAck;
   }();
@@ -4532,26 +5108,40 @@ export const meeting = $root.meeting = (() => {
         var t = r.uint32();
         switch (t >>> 3) {
           case 1:
-            m.join = $root.meeting.Participant.decode(r, r.uint32());
-            break;
+            {
+              m.join = $root.meeting.Participant.decode(r, r.uint32());
+              break;
+            }
           case 2:
-            m.leave = $root.meeting.Participant.decode(r, r.uint32());
-            break;
+            {
+              m.leave = $root.meeting.Participant.decode(r, r.uint32());
+              break;
+            }
           case 3:
-            m.update = $root.meeting.Update.decode(r, r.uint32());
-            break;
+            {
+              m.update = $root.meeting.Update.decode(r, r.uint32());
+              break;
+            }
           case 6:
-            m.drawing = $root.meeting.Drawing.decode(r, r.uint32());
-            break;
+            {
+              m.drawing = $root.meeting.Drawing.decode(r, r.uint32());
+              break;
+            }
           case 7:
-            m.mousePointer = $root.meeting.MousePointer.decode(r, r.uint32());
-            break;
+            {
+              m.mousePointer = $root.meeting.MousePointer.decode(r, r.uint32());
+              break;
+            }
           case 8:
-            m.imageAck = $root.meeting.ImageAck.decode(r, r.uint32());
-            break;
+            {
+              m.imageAck = $root.meeting.ImageAck.decode(r, r.uint32());
+              break;
+            }
           case 9:
-            m.indexPointer = $root.meeting.IndexPointer.decode(r, r.uint32());
-            break;
+            {
+              m.indexPointer = $root.meeting.IndexPointer.decode(r, r.uint32());
+              break;
+            }
           default:
             r.skipType(t & 7);
             break;
@@ -4692,6 +5282,12 @@ export const meeting = $root.meeting = (() => {
     Message.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
     };
+    Message.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+      if (typeUrlPrefix === undefined) {
+        typeUrlPrefix = "type.googleapis.com";
+      }
+      return typeUrlPrefix + "/meeting.Message";
+    };
     return Message;
   }();
   meeting.SharePermission = function () {
@@ -4751,23 +5347,35 @@ export const meeting = $root.meeting = (() => {
         var t = r.uint32();
         switch (t >>> 3) {
           case 1:
-            m.id = r.string();
-            break;
+            {
+              m.id = r.string();
+              break;
+            }
           case 2:
-            m.title = r.string();
-            break;
+            {
+              m.title = r.string();
+              break;
+            }
           case 6:
-            m.ownerId = r.string();
-            break;
+            {
+              m.ownerId = r.string();
+              break;
+            }
           case 7:
-            m.creationTime = r.int64();
-            break;
+            {
+              m.creationTime = r.int64();
+              break;
+            }
           case 8:
-            m.capacity = r.int32();
-            break;
+            {
+              m.capacity = r.int32();
+              break;
+            }
           case 9:
-            m.isTemporary = r.bool();
-            break;
+            {
+              m.isTemporary = r.bool();
+              break;
+            }
           default:
             r.skipType(t & 7);
             break;
@@ -4861,6 +5469,12 @@ export const meeting = $root.meeting = (() => {
     Meeting.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
     };
+    Meeting.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+      if (typeUrlPrefix === undefined) {
+        typeUrlPrefix = "type.googleapis.com";
+      }
+      return typeUrlPrefix + "/meeting.Meeting";
+    };
     return Meeting;
   }();
   meeting.SharedMeeting = function () {
@@ -4895,20 +5509,30 @@ export const meeting = $root.meeting = (() => {
         var t = r.uint32();
         switch (t >>> 3) {
           case 1:
-            m.id = r.int32();
-            break;
+            {
+              m.id = r.int32();
+              break;
+            }
           case 2:
-            m.userId = r.string();
-            break;
+            {
+              m.userId = r.string();
+              break;
+            }
           case 3:
-            m.meetingId = r.int32();
-            break;
+            {
+              m.meetingId = r.int32();
+              break;
+            }
           case 4:
-            m.email = r.string();
-            break;
+            {
+              m.email = r.string();
+              break;
+            }
           case 5:
-            m.permission = r.int32();
-            break;
+            {
+              m.permission = r.int32();
+              break;
+            }
           default:
             r.skipType(t & 7);
             break;
@@ -4962,6 +5586,12 @@ export const meeting = $root.meeting = (() => {
         m.email = String(d.email);
       }
       switch (d.permission) {
+        default:
+          if (typeof d.permission === "number") {
+            m.permission = d.permission;
+            break;
+          }
+          break;
         case "UNKNOWN_SHARE_TYPE":
         case 0:
           m.permission = 0;
@@ -5000,14 +5630,237 @@ export const meeting = $root.meeting = (() => {
         d.email = m.email;
       }
       if (m.permission != null && m.hasOwnProperty("permission")) {
-        d.permission = o.enums === String ? $root.meeting.SharePermission[m.permission] : m.permission;
+        d.permission = o.enums === String ? $root.meeting.SharePermission[m.permission] === undefined ? m.permission : $root.meeting.SharePermission[m.permission] : m.permission;
       }
       return d;
     };
     SharedMeeting.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
     };
+    SharedMeeting.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+      if (typeUrlPrefix === undefined) {
+        typeUrlPrefix = "type.googleapis.com";
+      }
+      return typeUrlPrefix + "/meeting.SharedMeeting";
+    };
     return SharedMeeting;
+  }();
+  meeting.MeetingClaims = function () {
+    function MeetingClaims(p) {
+      this.auxilary = {};
+      if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
+    }
+    MeetingClaims.prototype.meetingId = "";
+    MeetingClaims.prototype.ownerId = "";
+    MeetingClaims.prototype.capacity = 0;
+    MeetingClaims.prototype.auxilary = $util.emptyObject;
+    MeetingClaims.prototype.title = "";
+    MeetingClaims.prototype.isTemporary = false;
+    MeetingClaims.prototype.permission = 0;
+    MeetingClaims.create = function create(properties) {
+      return new MeetingClaims(properties);
+    };
+    MeetingClaims.encode = function encode(m, w) {
+      if (!w) w = $Writer.create();
+      if (m.meetingId != null && Object.hasOwnProperty.call(m, "meetingId")) w.uint32(10).string(m.meetingId);
+      if (m.ownerId != null && Object.hasOwnProperty.call(m, "ownerId")) w.uint32(26).string(m.ownerId);
+      if (m.capacity != null && Object.hasOwnProperty.call(m, "capacity")) w.uint32(32).int32(m.capacity);
+      if (m.auxilary != null && Object.hasOwnProperty.call(m, "auxilary")) {
+        for (var ks = Object.keys(m.auxilary), i = 0; i < ks.length; ++i) {
+          w.uint32(42).fork().uint32(10).string(ks[i]).uint32(18).string(m.auxilary[ks[i]]).ldelim();
+        }
+      }
+      if (m.title != null && Object.hasOwnProperty.call(m, "title")) w.uint32(50).string(m.title);
+      if (m.isTemporary != null && Object.hasOwnProperty.call(m, "isTemporary")) w.uint32(56).bool(m.isTemporary);
+      if (m.permission != null && Object.hasOwnProperty.call(m, "permission")) w.uint32(72).uint32(m.permission);
+      return w;
+    };
+    MeetingClaims.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim();
+    };
+    MeetingClaims.decode = function decode(r, l) {
+      if (!(r instanceof $Reader)) r = $Reader.create(r);
+      var c = l === undefined ? r.len : r.pos + l,
+        m = new $root.meeting.MeetingClaims(),
+        k,
+        value;
+      while (r.pos < c) {
+        var t = r.uint32();
+        switch (t >>> 3) {
+          case 1:
+            {
+              m.meetingId = r.string();
+              break;
+            }
+          case 3:
+            {
+              m.ownerId = r.string();
+              break;
+            }
+          case 4:
+            {
+              m.capacity = r.int32();
+              break;
+            }
+          case 5:
+            {
+              if (m.auxilary === $util.emptyObject) m.auxilary = {};
+              var c2 = r.uint32() + r.pos;
+              k = "";
+              value = "";
+              while (r.pos < c2) {
+                var tag2 = r.uint32();
+                switch (tag2 >>> 3) {
+                  case 1:
+                    k = r.string();
+                    break;
+                  case 2:
+                    value = r.string();
+                    break;
+                  default:
+                    r.skipType(tag2 & 7);
+                    break;
+                }
+              }
+              m.auxilary[k] = value;
+              break;
+            }
+          case 6:
+            {
+              m.title = r.string();
+              break;
+            }
+          case 7:
+            {
+              m.isTemporary = r.bool();
+              break;
+            }
+          case 9:
+            {
+              m.permission = r.uint32();
+              break;
+            }
+          default:
+            r.skipType(t & 7);
+            break;
+        }
+      }
+      return m;
+    };
+    MeetingClaims.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+      return this.decode(reader, reader.uint32());
+    };
+    MeetingClaims.verify = function verify(m) {
+      if (typeof m !== "object" || m === null) return "object expected";
+      if (m.meetingId != null && m.hasOwnProperty("meetingId")) {
+        if (!$util.isString(m.meetingId)) return "meetingId: string expected";
+      }
+      if (m.ownerId != null && m.hasOwnProperty("ownerId")) {
+        if (!$util.isString(m.ownerId)) return "ownerId: string expected";
+      }
+      if (m.capacity != null && m.hasOwnProperty("capacity")) {
+        if (!$util.isInteger(m.capacity)) return "capacity: integer expected";
+      }
+      if (m.auxilary != null && m.hasOwnProperty("auxilary")) {
+        if (!$util.isObject(m.auxilary)) return "auxilary: object expected";
+        var k = Object.keys(m.auxilary);
+        for (var i = 0; i < k.length; ++i) {
+          if (!$util.isString(m.auxilary[k[i]])) return "auxilary: string{k:string} expected";
+        }
+      }
+      if (m.title != null && m.hasOwnProperty("title")) {
+        if (!$util.isString(m.title)) return "title: string expected";
+      }
+      if (m.isTemporary != null && m.hasOwnProperty("isTemporary")) {
+        if (typeof m.isTemporary !== "boolean") return "isTemporary: boolean expected";
+      }
+      if (m.permission != null && m.hasOwnProperty("permission")) {
+        if (!$util.isInteger(m.permission)) return "permission: integer expected";
+      }
+      return null;
+    };
+    MeetingClaims.fromObject = function fromObject(d) {
+      if (d instanceof $root.meeting.MeetingClaims) return d;
+      var m = new $root.meeting.MeetingClaims();
+      if (d.meetingId != null) {
+        m.meetingId = String(d.meetingId);
+      }
+      if (d.ownerId != null) {
+        m.ownerId = String(d.ownerId);
+      }
+      if (d.capacity != null) {
+        m.capacity = d.capacity | 0;
+      }
+      if (d.auxilary) {
+        if (typeof d.auxilary !== "object") throw TypeError(".meeting.MeetingClaims.auxilary: object expected");
+        m.auxilary = {};
+        for (var ks = Object.keys(d.auxilary), i = 0; i < ks.length; ++i) {
+          m.auxilary[ks[i]] = String(d.auxilary[ks[i]]);
+        }
+      }
+      if (d.title != null) {
+        m.title = String(d.title);
+      }
+      if (d.isTemporary != null) {
+        m.isTemporary = Boolean(d.isTemporary);
+      }
+      if (d.permission != null) {
+        m.permission = d.permission >>> 0;
+      }
+      return m;
+    };
+    MeetingClaims.toObject = function toObject(m, o) {
+      if (!o) o = {};
+      var d = {};
+      if (o.objects || o.defaults) {
+        d.auxilary = {};
+      }
+      if (o.defaults) {
+        d.meetingId = "";
+        d.ownerId = "";
+        d.capacity = 0;
+        d.title = "";
+        d.isTemporary = false;
+        d.permission = 0;
+      }
+      if (m.meetingId != null && m.hasOwnProperty("meetingId")) {
+        d.meetingId = m.meetingId;
+      }
+      if (m.ownerId != null && m.hasOwnProperty("ownerId")) {
+        d.ownerId = m.ownerId;
+      }
+      if (m.capacity != null && m.hasOwnProperty("capacity")) {
+        d.capacity = m.capacity;
+      }
+      var ks2;
+      if (m.auxilary && (ks2 = Object.keys(m.auxilary)).length) {
+        d.auxilary = {};
+        for (var j = 0; j < ks2.length; ++j) {
+          d.auxilary[ks2[j]] = m.auxilary[ks2[j]];
+        }
+      }
+      if (m.title != null && m.hasOwnProperty("title")) {
+        d.title = m.title;
+      }
+      if (m.isTemporary != null && m.hasOwnProperty("isTemporary")) {
+        d.isTemporary = m.isTemporary;
+      }
+      if (m.permission != null && m.hasOwnProperty("permission")) {
+        d.permission = m.permission;
+      }
+      return d;
+    };
+    MeetingClaims.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    MeetingClaims.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+      if (typeUrlPrefix === undefined) {
+        typeUrlPrefix = "type.googleapis.com";
+      }
+      return typeUrlPrefix + "/meeting.MeetingClaims";
+    };
+    return MeetingClaims;
   }();
   meeting.ShortUrlDetails = function () {
     function ShortUrlDetails(p) {
@@ -5035,11 +5888,15 @@ export const meeting = $root.meeting = (() => {
         var t = r.uint32();
         switch (t >>> 3) {
           case 1:
-            m.fullUrl = r.string();
-            break;
+            {
+              m.fullUrl = r.string();
+              break;
+            }
           case 2:
-            m.password = r.string();
-            break;
+            {
+              m.password = r.string();
+              break;
+            }
           default:
             r.skipType(t & 7);
             break;
@@ -5090,6 +5947,12 @@ export const meeting = $root.meeting = (() => {
     ShortUrlDetails.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
     };
+    ShortUrlDetails.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+      if (typeUrlPrefix === undefined) {
+        typeUrlPrefix = "type.googleapis.com";
+      }
+      return typeUrlPrefix + "/meeting.ShortUrlDetails";
+    };
     return ShortUrlDetails;
   }();
   return meeting;
@@ -5122,11 +5985,15 @@ export const cilix = $root.cilix = (() => {
         var t = r.uint32();
         switch (t >>> 3) {
           case 1:
-            m.id = r.string();
-            break;
+            {
+              m.id = r.string();
+              break;
+            }
           case 2:
-            m.name = r.string();
-            break;
+            {
+              m.name = r.string();
+              break;
+            }
           default:
             r.skipType(t & 7);
             break;
@@ -5177,6 +6044,12 @@ export const cilix = $root.cilix = (() => {
     CameraDescription.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
     };
+    CameraDescription.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+      if (typeUrlPrefix === undefined) {
+        typeUrlPrefix = "type.googleapis.com";
+      }
+      return typeUrlPrefix + "/cilix.CameraDescription";
+    };
     return CameraDescription;
   }();
   cilix.StartRequest = function () {
@@ -5209,17 +6082,25 @@ export const cilix = $root.cilix = (() => {
         var t = r.uint32();
         switch (t >>> 3) {
           case 2:
-            m.config = $root.jibb.ipsa.v1.Config.decode(r, r.uint32());
-            break;
+            {
+              m.config = $root.jibb.ipsa.v1.Config.decode(r, r.uint32());
+              break;
+            }
           case 4:
-            m.runtimeConfig = $root.jibb.ipsa.v1.RuntimeConfig.decode(r, r.uint32());
-            break;
+            {
+              m.runtimeConfig = $root.jibb.ipsa.v1.RuntimeConfig.decode(r, r.uint32());
+              break;
+            }
           case 5:
-            m.camera = $root.cilix.CameraDescription.decode(r, r.uint32());
-            break;
+            {
+              m.camera = $root.cilix.CameraDescription.decode(r, r.uint32());
+              break;
+            }
           case 6:
-            m.meetingToken = r.string();
-            break;
+            {
+              m.meetingToken = r.string();
+              break;
+            }
           default:
             r.skipType(t & 7);
             break;
@@ -5302,6 +6183,12 @@ export const cilix = $root.cilix = (() => {
     StartRequest.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
     };
+    StartRequest.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+      if (typeUrlPrefix === undefined) {
+        typeUrlPrefix = "type.googleapis.com";
+      }
+      return typeUrlPrefix + "/cilix.StartRequest";
+    };
     return StartRequest;
   }();
   cilix.PreviewRequest = function () {
@@ -5328,8 +6215,10 @@ export const cilix = $root.cilix = (() => {
         var t = r.uint32();
         switch (t >>> 3) {
           case 2:
-            m.source = $root.cilix.CameraDescription.decode(r, r.uint32());
-            break;
+            {
+              m.source = $root.cilix.CameraDescription.decode(r, r.uint32());
+              break;
+            }
           default:
             r.skipType(t & 7);
             break;
@@ -5374,6 +6263,12 @@ export const cilix = $root.cilix = (() => {
     PreviewRequest.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
     };
+    PreviewRequest.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+      if (typeUrlPrefix === undefined) {
+        typeUrlPrefix = "type.googleapis.com";
+      }
+      return typeUrlPrefix + "/cilix.PreviewRequest";
+    };
     return PreviewRequest;
   }();
   cilix.PreviewResponse = function () {
@@ -5400,8 +6295,10 @@ export const cilix = $root.cilix = (() => {
         var t = r.uint32();
         switch (t >>> 3) {
           case 1:
-            m.image = r.bytes();
-            break;
+            {
+              m.image = r.bytes();
+              break;
+            }
           default:
             r.skipType(t & 7);
             break;
@@ -5424,7 +6321,7 @@ export const cilix = $root.cilix = (() => {
       if (d instanceof $root.cilix.PreviewResponse) return d;
       var m = new $root.cilix.PreviewResponse();
       if (d.image != null) {
-        if (typeof d.image === "string") $util.base64.decode(d.image, m.image = $util.newBuffer($util.base64.length(d.image)), 0);else if (d.image.length) m.image = d.image;
+        if (typeof d.image === "string") $util.base64.decode(d.image, m.image = $util.newBuffer($util.base64.length(d.image)), 0);else if (d.image.length >= 0) m.image = d.image;
       }
       return m;
     };
@@ -5444,6 +6341,12 @@ export const cilix = $root.cilix = (() => {
     };
     PreviewResponse.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    PreviewResponse.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+      if (typeUrlPrefix === undefined) {
+        typeUrlPrefix = "type.googleapis.com";
+      }
+      return typeUrlPrefix + "/cilix.PreviewResponse";
     };
     return PreviewResponse;
   }();
@@ -5474,9 +6377,11 @@ export const cilix = $root.cilix = (() => {
         var t = r.uint32();
         switch (t >>> 3) {
           case 1:
-            if (!(m.items && m.items.length)) m.items = [];
-            m.items.push($root.cilix.CameraDescription.decode(r, r.uint32()));
-            break;
+            {
+              if (!(m.items && m.items.length)) m.items = [];
+              m.items.push($root.cilix.CameraDescription.decode(r, r.uint32()));
+              break;
+            }
           default:
             r.skipType(t & 7);
             break;
@@ -5531,6 +6436,12 @@ export const cilix = $root.cilix = (() => {
     GetCameraListResponse.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
     };
+    GetCameraListResponse.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+      if (typeUrlPrefix === undefined) {
+        typeUrlPrefix = "type.googleapis.com";
+      }
+      return typeUrlPrefix + "/cilix.GetCameraListResponse";
+    };
     return GetCameraListResponse;
   }();
   cilix.GetClientStatusListResponse = function () {
@@ -5560,9 +6471,11 @@ export const cilix = $root.cilix = (() => {
         var t = r.uint32();
         switch (t >>> 3) {
           case 1:
-            if (!(m.clients && m.clients.length)) m.clients = [];
-            m.clients.push($root.types.ClientDetails.decode(r, r.uint32()));
-            break;
+            {
+              if (!(m.clients && m.clients.length)) m.clients = [];
+              m.clients.push($root.types.ClientDetails.decode(r, r.uint32()));
+              break;
+            }
           default:
             r.skipType(t & 7);
             break;
@@ -5616,6 +6529,12 @@ export const cilix = $root.cilix = (() => {
     };
     GetClientStatusListResponse.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    GetClientStatusListResponse.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+      if (typeUrlPrefix === undefined) {
+        typeUrlPrefix = "type.googleapis.com";
+      }
+      return typeUrlPrefix + "/cilix.GetClientStatusListResponse";
     };
     return GetClientStatusListResponse;
   }();
@@ -5682,59 +6601,95 @@ export const cilix = $root.cilix = (() => {
         var t = r.uint32();
         switch (t >>> 3) {
           case 2:
-            m.clientConnected = $root.google.protobuf.Empty.decode(r, r.uint32());
-            break;
+            {
+              m.clientConnected = $root.google.protobuf.Empty.decode(r, r.uint32());
+              break;
+            }
           case 3:
-            m.clientDisconnected = $root.google.protobuf.Empty.decode(r, r.uint32());
-            break;
+            {
+              m.clientDisconnected = $root.google.protobuf.Empty.decode(r, r.uint32());
+              break;
+            }
           case 4:
-            m.tooManyPublishers = $root.google.protobuf.Empty.decode(r, r.uint32());
-            break;
+            {
+              m.tooManyPublishers = $root.google.protobuf.Empty.decode(r, r.uint32());
+              break;
+            }
           case 6:
-            m.ipsaResponse = $root.jibb.ipsa.v1.Response.decode(r, r.uint32());
-            break;
+            {
+              m.ipsaResponse = $root.jibb.ipsa.v1.Response.decode(r, r.uint32());
+              break;
+            }
           case 50:
-            m.startRequest = $root.cilix.StartRequest.decode(r, r.uint32());
-            break;
+            {
+              m.startRequest = $root.cilix.StartRequest.decode(r, r.uint32());
+              break;
+            }
           case 51:
-            m.stopRequest = $root.google.protobuf.Empty.decode(r, r.uint32());
-            break;
+            {
+              m.stopRequest = $root.google.protobuf.Empty.decode(r, r.uint32());
+              break;
+            }
           case 52:
-            m.newPageRequest = $root.google.protobuf.Empty.decode(r, r.uint32());
-            break;
+            {
+              m.newPageRequest = $root.google.protobuf.Empty.decode(r, r.uint32());
+              break;
+            }
           case 53:
-            m.previewRequest = $root.cilix.PreviewRequest.decode(r, r.uint32());
-            break;
+            {
+              m.previewRequest = $root.cilix.PreviewRequest.decode(r, r.uint32());
+              break;
+            }
           case 54:
-            m.previewResponse = $root.cilix.PreviewResponse.decode(r, r.uint32());
-            break;
+            {
+              m.previewResponse = $root.cilix.PreviewResponse.decode(r, r.uint32());
+              break;
+            }
           case 55:
-            m.cameraListRequest = $root.google.protobuf.Empty.decode(r, r.uint32());
-            break;
+            {
+              m.cameraListRequest = $root.google.protobuf.Empty.decode(r, r.uint32());
+              break;
+            }
           case 56:
-            m.cameraListResponse = $root.cilix.GetCameraListResponse.decode(r, r.uint32());
-            break;
+            {
+              m.cameraListResponse = $root.cilix.GetCameraListResponse.decode(r, r.uint32());
+              break;
+            }
           case 57:
-            m.runtimeConfigRequest = $root.jibb.ipsa.v1.RuntimeConfig.decode(r, r.uint32());
-            break;
+            {
+              m.runtimeConfigRequest = $root.jibb.ipsa.v1.RuntimeConfig.decode(r, r.uint32());
+              break;
+            }
           case 58:
-            m.clientStatusRequest = $root.google.protobuf.Empty.decode(r, r.uint32());
-            break;
+            {
+              m.clientStatusRequest = $root.google.protobuf.Empty.decode(r, r.uint32());
+              break;
+            }
           case 59:
-            m.recordingStarted = $root.google.protobuf.Empty.decode(r, r.uint32());
-            break;
+            {
+              m.recordingStarted = $root.google.protobuf.Empty.decode(r, r.uint32());
+              break;
+            }
           case 60:
-            m.recordingStopped = $root.google.protobuf.Empty.decode(r, r.uint32());
-            break;
+            {
+              m.recordingStopped = $root.google.protobuf.Empty.decode(r, r.uint32());
+              break;
+            }
           case 100:
-            m.error = r.int32();
-            break;
+            {
+              m.error = r.int32();
+              break;
+            }
           case 30:
-            m.src = $root.types.ClientDetails.decode(r, r.uint32());
-            break;
+            {
+              m.src = $root.types.ClientDetails.decode(r, r.uint32());
+              break;
+            }
           case 31:
-            m.dst = $root.types.ClientDetails.decode(r, r.uint32());
-            break;
+            {
+              m.dst = $root.types.ClientDetails.decode(r, r.uint32());
+              break;
+            }
           default:
             r.skipType(t & 7);
             break;
@@ -5964,6 +6919,12 @@ export const cilix = $root.cilix = (() => {
         m.recordingStopped = $root.google.protobuf.Empty.fromObject(d.recordingStopped);
       }
       switch (d.error) {
+        default:
+          if (typeof d.error === "number") {
+            m.error = d.error;
+            break;
+          }
+          break;
         case "SUCCESS":
         case 0:
           m.error = 0;
@@ -6085,13 +7046,19 @@ export const cilix = $root.cilix = (() => {
         if (o.oneofs) d.messageType = "recordingStopped";
       }
       if (m.error != null && m.hasOwnProperty("error")) {
-        d.error = o.enums === String ? $root.types.Code[m.error] : m.error;
+        d.error = o.enums === String ? $root.types.Code[m.error] === undefined ? m.error : $root.types.Code[m.error] : m.error;
         if (o.oneofs) d.messageType = "error";
       }
       return d;
     };
     BusMessage.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    BusMessage.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+      if (typeUrlPrefix === undefined) {
+        typeUrlPrefix = "type.googleapis.com";
+      }
+      return typeUrlPrefix + "/cilix.BusMessage";
     };
     return BusMessage;
   }();
