@@ -3199,10 +3199,9 @@ export const user = $root.user = (() => {
   user.Level = function () {
     const valuesById = {},
       values = Object.create(valuesById);
-    values[valuesById[0] = "FREE"] = 0;
-    values[valuesById[1] = "BASIC"] = 1;
-    values[valuesById[3] = "PRO"] = 3;
-    values[valuesById[4] = "BUSINESS"] = 4;
+    values[valuesById[0] = "UNKNOWN_USER"] = 0;
+    values[valuesById[1] = "PRO"] = 1;
+    values[valuesById[2] = "BUSINESS"] = 2;
     values[valuesById[5] = "ENTERPRISE"] = 5;
     return values;
   }();
@@ -3223,6 +3222,20 @@ export const user = $root.user = (() => {
     values[valuesById[2] = "CLOUD"] = 2;
     return values;
   }();
+  user.SubscriptionStatus = function () {
+    const valuesById = {},
+      values = Object.create(valuesById);
+    values[valuesById[0] = "UNKNOWN_STATUS"] = 0;
+    values[valuesById[1] = "TRIALING"] = 1;
+    values[valuesById[2] = "ACTIVE"] = 2;
+    values[valuesById[3] = "INCOMPLETE"] = 3;
+    values[valuesById[4] = "INCOMPLETE_EXPIRED"] = 4;
+    values[valuesById[5] = "PAST_DUE"] = 5;
+    values[valuesById[6] = "CANCELED"] = 6;
+    values[valuesById[7] = "UNPAID"] = 7;
+    values[valuesById[8] = "PAUSED"] = 8;
+    return values;
+  }();
   user.UserDetails = function () {
     function UserDetails(p) {
       if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
@@ -3237,6 +3250,7 @@ export const user = $root.user = (() => {
     UserDetails.prototype.userId = "";
     UserDetails.prototype.email = "";
     UserDetails.prototype.lastLogin = null;
+    UserDetails.prototype.fileManagerEnabled = false;
     UserDetails.create = function create(properties) {
       return new UserDetails(properties);
     };
@@ -3252,6 +3266,7 @@ export const user = $root.user = (() => {
       if (m.userId != null && Object.hasOwnProperty.call(m, "userId")) w.uint32(74).string(m.userId);
       if (m.email != null && Object.hasOwnProperty.call(m, "email")) w.uint32(82).string(m.email);
       if (m.lastLogin != null && Object.hasOwnProperty.call(m, "lastLogin")) $root.google.protobuf.Timestamp.encode(m.lastLogin, w.uint32(90).fork()).ldelim();
+      if (m.fileManagerEnabled != null && Object.hasOwnProperty.call(m, "fileManagerEnabled")) w.uint32(96).bool(m.fileManagerEnabled);
       return w;
     };
     UserDetails.encodeDelimited = function encodeDelimited(message, writer) {
@@ -3294,6 +3309,9 @@ export const user = $root.user = (() => {
           case 11:
             m.lastLogin = $root.google.protobuf.Timestamp.decode(r, r.uint32());
             break;
+          case 12:
+            m.fileManagerEnabled = r.bool();
+            break;
           default:
             r.skipType(t & 7);
             break;
@@ -3316,8 +3334,7 @@ export const user = $root.user = (() => {
             return "level: enum value expected";
           case 0:
           case 1:
-          case 3:
-          case 4:
+          case 2:
           case 5:
             break;
         }
@@ -3357,6 +3374,9 @@ export const user = $root.user = (() => {
           if (e) return "lastLogin." + e;
         }
       }
+      if (m.fileManagerEnabled != null && m.hasOwnProperty("fileManagerEnabled")) {
+        if (typeof m.fileManagerEnabled !== "boolean") return "fileManagerEnabled: boolean expected";
+      }
       return null;
     };
     UserDetails.fromObject = function fromObject(d) {
@@ -3366,21 +3386,17 @@ export const user = $root.user = (() => {
         m.organizationName = String(d.organizationName);
       }
       switch (d.level) {
-        case "FREE":
+        case "UNKNOWN_USER":
         case 0:
           m.level = 0;
           break;
-        case "BASIC":
+        case "PRO":
         case 1:
           m.level = 1;
           break;
-        case "PRO":
-        case 3:
-          m.level = 3;
-          break;
         case "BUSINESS":
-        case 4:
-          m.level = 4;
+        case 2:
+          m.level = 2;
           break;
         case "ENTERPRISE":
         case 5:
@@ -3427,6 +3443,9 @@ export const user = $root.user = (() => {
         if (typeof d.lastLogin !== "object") throw TypeError(".user.UserDetails.lastLogin: object expected");
         m.lastLogin = $root.google.protobuf.Timestamp.fromObject(d.lastLogin);
       }
+      if (d.fileManagerEnabled != null) {
+        m.fileManagerEnabled = Boolean(d.fileManagerEnabled);
+      }
       return m;
     };
     UserDetails.toObject = function toObject(m, o) {
@@ -3434,7 +3453,7 @@ export const user = $root.user = (() => {
       var d = {};
       if (o.defaults) {
         d.organizationName = "";
-        d.level = o.enums === String ? "FREE" : 0;
+        d.level = o.enums === String ? "UNKNOWN_USER" : 0;
         d.firstName = "";
         d.lastName = "";
         d.organizationId = 0;
@@ -3443,6 +3462,7 @@ export const user = $root.user = (() => {
         d.userId = "";
         d.email = "";
         d.lastLogin = null;
+        d.fileManagerEnabled = false;
       }
       if (m.organizationName != null && m.hasOwnProperty("organizationName")) {
         d.organizationName = m.organizationName;
@@ -3474,6 +3494,9 @@ export const user = $root.user = (() => {
       if (m.lastLogin != null && m.hasOwnProperty("lastLogin")) {
         d.lastLogin = $root.google.protobuf.Timestamp.toObject(m.lastLogin, o);
       }
+      if (m.fileManagerEnabled != null && m.hasOwnProperty("fileManagerEnabled")) {
+        d.fileManagerEnabled = m.fileManagerEnabled;
+      }
       return d;
     };
     UserDetails.prototype.toJSON = function toJSON() {
@@ -3498,6 +3521,7 @@ export const user = $root.user = (() => {
     OrganizationDetails.prototype.deviceLicenseCount = 0;
     OrganizationDetails.prototype.devicesCount = 0;
     OrganizationDetails.prototype.imageCollection = false;
+    OrganizationDetails.prototype.fileManagerEnabled = false;
     OrganizationDetails.create = function create(properties) {
       return new OrganizationDetails(properties);
     };
@@ -3516,6 +3540,7 @@ export const user = $root.user = (() => {
       if (m.devicesCount != null && Object.hasOwnProperty.call(m, "devicesCount")) w.uint32(88).int32(m.devicesCount);
       if (m.startDate != null && Object.hasOwnProperty.call(m, "startDate")) $root.google.protobuf.Timestamp.encode(m.startDate, w.uint32(98).fork()).ldelim();
       if (m.imageCollection != null && Object.hasOwnProperty.call(m, "imageCollection")) w.uint32(112).bool(m.imageCollection);
+      if (m.fileManagerEnabled != null && Object.hasOwnProperty.call(m, "fileManagerEnabled")) w.uint32(120).bool(m.fileManagerEnabled);
       return w;
     };
     OrganizationDetails.encodeDelimited = function encodeDelimited(message, writer) {
@@ -3567,6 +3592,9 @@ export const user = $root.user = (() => {
           case 14:
             m.imageCollection = r.bool();
             break;
+          case 15:
+            m.fileManagerEnabled = r.bool();
+            break;
           default:
             r.skipType(t & 7);
             break;
@@ -3592,8 +3620,7 @@ export const user = $root.user = (() => {
             return "level: enum value expected";
           case 0:
           case 1:
-          case 3:
-          case 4:
+          case 2:
           case 5:
             break;
         }
@@ -3637,6 +3664,9 @@ export const user = $root.user = (() => {
       if (m.imageCollection != null && m.hasOwnProperty("imageCollection")) {
         if (typeof m.imageCollection !== "boolean") return "imageCollection: boolean expected";
       }
+      if (m.fileManagerEnabled != null && m.hasOwnProperty("fileManagerEnabled")) {
+        if (typeof m.fileManagerEnabled !== "boolean") return "fileManagerEnabled: boolean expected";
+      }
       return null;
     };
     OrganizationDetails.fromObject = function fromObject(d) {
@@ -3649,21 +3679,17 @@ export const user = $root.user = (() => {
         m.ownerEmail = String(d.ownerEmail);
       }
       switch (d.level) {
-        case "FREE":
+        case "UNKNOWN_USER":
         case 0:
           m.level = 0;
           break;
-        case "BASIC":
+        case "PRO":
         case 1:
           m.level = 1;
           break;
-        case "PRO":
-        case 3:
-          m.level = 3;
-          break;
         case "BUSINESS":
-        case 4:
-          m.level = 4;
+        case 2:
+          m.level = 2;
           break;
         case "ENTERPRISE":
         case 5:
@@ -3703,6 +3729,9 @@ export const user = $root.user = (() => {
       if (d.imageCollection != null) {
         m.imageCollection = Boolean(d.imageCollection);
       }
+      if (d.fileManagerEnabled != null) {
+        m.fileManagerEnabled = Boolean(d.fileManagerEnabled);
+      }
       return m;
     };
     OrganizationDetails.toObject = function toObject(m, o) {
@@ -3711,7 +3740,7 @@ export const user = $root.user = (() => {
       if (o.defaults) {
         d.name = "";
         d.ownerEmail = "";
-        d.level = o.enums === String ? "FREE" : 0;
+        d.level = o.enums === String ? "UNKNOWN_USER" : 0;
         d.licenseCount = 0;
         d.usersCount = 0;
         d.creationDate = null;
@@ -3722,6 +3751,7 @@ export const user = $root.user = (() => {
         d.devicesCount = 0;
         d.startDate = null;
         d.imageCollection = false;
+        d.fileManagerEnabled = false;
       }
       if (m.name != null && m.hasOwnProperty("name")) {
         d.name = m.name;
@@ -3762,12 +3792,714 @@ export const user = $root.user = (() => {
       if (m.imageCollection != null && m.hasOwnProperty("imageCollection")) {
         d.imageCollection = m.imageCollection;
       }
+      if (m.fileManagerEnabled != null && m.hasOwnProperty("fileManagerEnabled")) {
+        d.fileManagerEnabled = m.fileManagerEnabled;
+      }
       return d;
     };
     OrganizationDetails.prototype.toJSON = function toJSON() {
       return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
     };
     return OrganizationDetails;
+  }();
+  user.Plan = function () {
+    function Plan(p) {
+      this.prices = [];
+      if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
+    }
+    Plan.prototype.id = "";
+    Plan.prototype.name = "";
+    Plan.prototype.prices = $util.emptyArray;
+    Plan.create = function create(properties) {
+      return new Plan(properties);
+    };
+    Plan.encode = function encode(m, w) {
+      if (!w) w = $Writer.create();
+      if (m.id != null && Object.hasOwnProperty.call(m, "id")) w.uint32(10).string(m.id);
+      if (m.name != null && Object.hasOwnProperty.call(m, "name")) w.uint32(18).string(m.name);
+      if (m.prices != null && m.prices.length) {
+        for (var i = 0; i < m.prices.length; ++i) $root.user.PriceItem.encode(m.prices[i], w.uint32(26).fork()).ldelim();
+      }
+      return w;
+    };
+    Plan.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim();
+    };
+    Plan.decode = function decode(r, l) {
+      if (!(r instanceof $Reader)) r = $Reader.create(r);
+      var c = l === undefined ? r.len : r.pos + l,
+        m = new $root.user.Plan();
+      while (r.pos < c) {
+        var t = r.uint32();
+        switch (t >>> 3) {
+          case 1:
+            m.id = r.string();
+            break;
+          case 2:
+            m.name = r.string();
+            break;
+          case 3:
+            if (!(m.prices && m.prices.length)) m.prices = [];
+            m.prices.push($root.user.PriceItem.decode(r, r.uint32()));
+            break;
+          default:
+            r.skipType(t & 7);
+            break;
+        }
+      }
+      return m;
+    };
+    Plan.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+      return this.decode(reader, reader.uint32());
+    };
+    Plan.verify = function verify(m) {
+      if (typeof m !== "object" || m === null) return "object expected";
+      if (m.id != null && m.hasOwnProperty("id")) {
+        if (!$util.isString(m.id)) return "id: string expected";
+      }
+      if (m.name != null && m.hasOwnProperty("name")) {
+        if (!$util.isString(m.name)) return "name: string expected";
+      }
+      if (m.prices != null && m.hasOwnProperty("prices")) {
+        if (!Array.isArray(m.prices)) return "prices: array expected";
+        for (var i = 0; i < m.prices.length; ++i) {
+          {
+            var e = $root.user.PriceItem.verify(m.prices[i]);
+            if (e) return "prices." + e;
+          }
+        }
+      }
+      return null;
+    };
+    Plan.fromObject = function fromObject(d) {
+      if (d instanceof $root.user.Plan) return d;
+      var m = new $root.user.Plan();
+      if (d.id != null) {
+        m.id = String(d.id);
+      }
+      if (d.name != null) {
+        m.name = String(d.name);
+      }
+      if (d.prices) {
+        if (!Array.isArray(d.prices)) throw TypeError(".user.Plan.prices: array expected");
+        m.prices = [];
+        for (var i = 0; i < d.prices.length; ++i) {
+          if (typeof d.prices[i] !== "object") throw TypeError(".user.Plan.prices: object expected");
+          m.prices[i] = $root.user.PriceItem.fromObject(d.prices[i]);
+        }
+      }
+      return m;
+    };
+    Plan.toObject = function toObject(m, o) {
+      if (!o) o = {};
+      var d = {};
+      if (o.arrays || o.defaults) {
+        d.prices = [];
+      }
+      if (o.defaults) {
+        d.id = "";
+        d.name = "";
+      }
+      if (m.id != null && m.hasOwnProperty("id")) {
+        d.id = m.id;
+      }
+      if (m.name != null && m.hasOwnProperty("name")) {
+        d.name = m.name;
+      }
+      if (m.prices && m.prices.length) {
+        d.prices = [];
+        for (var j = 0; j < m.prices.length; ++j) {
+          d.prices[j] = $root.user.PriceItem.toObject(m.prices[j], o);
+        }
+      }
+      return d;
+    };
+    Plan.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    return Plan;
+  }();
+  user.PriceItem = function () {
+    function PriceItem(p) {
+      if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
+    }
+    PriceItem.prototype.id = "";
+    PriceItem.prototype.amount = $util.Long ? $util.Long.fromBits(0, 0, false) : 0;
+    PriceItem.prototype.interval = "";
+    PriceItem.prototype.intervalCount = $util.Long ? $util.Long.fromBits(0, 0, false) : 0;
+    PriceItem.prototype.trialPeriodDays = $util.Long ? $util.Long.fromBits(0, 0, false) : 0;
+    PriceItem.create = function create(properties) {
+      return new PriceItem(properties);
+    };
+    PriceItem.encode = function encode(m, w) {
+      if (!w) w = $Writer.create();
+      if (m.id != null && Object.hasOwnProperty.call(m, "id")) w.uint32(10).string(m.id);
+      if (m.amount != null && Object.hasOwnProperty.call(m, "amount")) w.uint32(16).int64(m.amount);
+      if (m.interval != null && Object.hasOwnProperty.call(m, "interval")) w.uint32(26).string(m.interval);
+      if (m.intervalCount != null && Object.hasOwnProperty.call(m, "intervalCount")) w.uint32(32).int64(m.intervalCount);
+      if (m.trialPeriodDays != null && Object.hasOwnProperty.call(m, "trialPeriodDays")) w.uint32(40).int64(m.trialPeriodDays);
+      return w;
+    };
+    PriceItem.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim();
+    };
+    PriceItem.decode = function decode(r, l) {
+      if (!(r instanceof $Reader)) r = $Reader.create(r);
+      var c = l === undefined ? r.len : r.pos + l,
+        m = new $root.user.PriceItem();
+      while (r.pos < c) {
+        var t = r.uint32();
+        switch (t >>> 3) {
+          case 1:
+            m.id = r.string();
+            break;
+          case 2:
+            m.amount = r.int64();
+            break;
+          case 3:
+            m.interval = r.string();
+            break;
+          case 4:
+            m.intervalCount = r.int64();
+            break;
+          case 5:
+            m.trialPeriodDays = r.int64();
+            break;
+          default:
+            r.skipType(t & 7);
+            break;
+        }
+      }
+      return m;
+    };
+    PriceItem.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+      return this.decode(reader, reader.uint32());
+    };
+    PriceItem.verify = function verify(m) {
+      if (typeof m !== "object" || m === null) return "object expected";
+      if (m.id != null && m.hasOwnProperty("id")) {
+        if (!$util.isString(m.id)) return "id: string expected";
+      }
+      if (m.amount != null && m.hasOwnProperty("amount")) {
+        if (!$util.isInteger(m.amount) && !(m.amount && $util.isInteger(m.amount.low) && $util.isInteger(m.amount.high))) return "amount: integer|Long expected";
+      }
+      if (m.interval != null && m.hasOwnProperty("interval")) {
+        if (!$util.isString(m.interval)) return "interval: string expected";
+      }
+      if (m.intervalCount != null && m.hasOwnProperty("intervalCount")) {
+        if (!$util.isInteger(m.intervalCount) && !(m.intervalCount && $util.isInteger(m.intervalCount.low) && $util.isInteger(m.intervalCount.high))) return "intervalCount: integer|Long expected";
+      }
+      if (m.trialPeriodDays != null && m.hasOwnProperty("trialPeriodDays")) {
+        if (!$util.isInteger(m.trialPeriodDays) && !(m.trialPeriodDays && $util.isInteger(m.trialPeriodDays.low) && $util.isInteger(m.trialPeriodDays.high))) return "trialPeriodDays: integer|Long expected";
+      }
+      return null;
+    };
+    PriceItem.fromObject = function fromObject(d) {
+      if (d instanceof $root.user.PriceItem) return d;
+      var m = new $root.user.PriceItem();
+      if (d.id != null) {
+        m.id = String(d.id);
+      }
+      if (d.amount != null) {
+        if ($util.Long) (m.amount = $util.Long.fromValue(d.amount)).unsigned = false;else if (typeof d.amount === "string") m.amount = parseInt(d.amount, 10);else if (typeof d.amount === "number") m.amount = d.amount;else if (typeof d.amount === "object") m.amount = new $util.LongBits(d.amount.low >>> 0, d.amount.high >>> 0).toNumber();
+      }
+      if (d.interval != null) {
+        m.interval = String(d.interval);
+      }
+      if (d.intervalCount != null) {
+        if ($util.Long) (m.intervalCount = $util.Long.fromValue(d.intervalCount)).unsigned = false;else if (typeof d.intervalCount === "string") m.intervalCount = parseInt(d.intervalCount, 10);else if (typeof d.intervalCount === "number") m.intervalCount = d.intervalCount;else if (typeof d.intervalCount === "object") m.intervalCount = new $util.LongBits(d.intervalCount.low >>> 0, d.intervalCount.high >>> 0).toNumber();
+      }
+      if (d.trialPeriodDays != null) {
+        if ($util.Long) (m.trialPeriodDays = $util.Long.fromValue(d.trialPeriodDays)).unsigned = false;else if (typeof d.trialPeriodDays === "string") m.trialPeriodDays = parseInt(d.trialPeriodDays, 10);else if (typeof d.trialPeriodDays === "number") m.trialPeriodDays = d.trialPeriodDays;else if (typeof d.trialPeriodDays === "object") m.trialPeriodDays = new $util.LongBits(d.trialPeriodDays.low >>> 0, d.trialPeriodDays.high >>> 0).toNumber();
+      }
+      return m;
+    };
+    PriceItem.toObject = function toObject(m, o) {
+      if (!o) o = {};
+      var d = {};
+      if (o.defaults) {
+        d.id = "";
+        if ($util.Long) {
+          var n = new $util.Long(0, 0, false);
+          d.amount = o.longs === String ? n.toString() : o.longs === Number ? n.toNumber() : n;
+        } else d.amount = o.longs === String ? "0" : 0;
+        d.interval = "";
+        if ($util.Long) {
+          var n = new $util.Long(0, 0, false);
+          d.intervalCount = o.longs === String ? n.toString() : o.longs === Number ? n.toNumber() : n;
+        } else d.intervalCount = o.longs === String ? "0" : 0;
+        if ($util.Long) {
+          var n = new $util.Long(0, 0, false);
+          d.trialPeriodDays = o.longs === String ? n.toString() : o.longs === Number ? n.toNumber() : n;
+        } else d.trialPeriodDays = o.longs === String ? "0" : 0;
+      }
+      if (m.id != null && m.hasOwnProperty("id")) {
+        d.id = m.id;
+      }
+      if (m.amount != null && m.hasOwnProperty("amount")) {
+        if (typeof m.amount === "number") d.amount = o.longs === String ? String(m.amount) : m.amount;else d.amount = o.longs === String ? $util.Long.prototype.toString.call(m.amount) : o.longs === Number ? new $util.LongBits(m.amount.low >>> 0, m.amount.high >>> 0).toNumber() : m.amount;
+      }
+      if (m.interval != null && m.hasOwnProperty("interval")) {
+        d.interval = m.interval;
+      }
+      if (m.intervalCount != null && m.hasOwnProperty("intervalCount")) {
+        if (typeof m.intervalCount === "number") d.intervalCount = o.longs === String ? String(m.intervalCount) : m.intervalCount;else d.intervalCount = o.longs === String ? $util.Long.prototype.toString.call(m.intervalCount) : o.longs === Number ? new $util.LongBits(m.intervalCount.low >>> 0, m.intervalCount.high >>> 0).toNumber() : m.intervalCount;
+      }
+      if (m.trialPeriodDays != null && m.hasOwnProperty("trialPeriodDays")) {
+        if (typeof m.trialPeriodDays === "number") d.trialPeriodDays = o.longs === String ? String(m.trialPeriodDays) : m.trialPeriodDays;else d.trialPeriodDays = o.longs === String ? $util.Long.prototype.toString.call(m.trialPeriodDays) : o.longs === Number ? new $util.LongBits(m.trialPeriodDays.low >>> 0, m.trialPeriodDays.high >>> 0).toNumber() : m.trialPeriodDays;
+      }
+      return d;
+    };
+    PriceItem.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    return PriceItem;
+  }();
+  user.Subscription = function () {
+    function Subscription(p) {
+      this.items = [];
+      if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
+    }
+    Subscription.prototype.stripeCustomerId = "";
+    Subscription.prototype.stripeSubscriptionId = "";
+    Subscription.prototype.planName = "";
+    Subscription.prototype.status = 0;
+    Subscription.prototype.currentPeriodStart = null;
+    Subscription.prototype.currentPeriodEnd = null;
+    Subscription.prototype.trialEnd = null;
+    Subscription.prototype.cancelAtPeriodEnd = false;
+    Subscription.prototype.items = $util.emptyArray;
+    Subscription.prototype.interval = "";
+    Subscription.prototype.intervalCount = $util.Long ? $util.Long.fromBits(0, 0, false) : 0;
+    let $oneOfFields;
+    Object.defineProperty(Subscription.prototype, "_trialEnd", {
+      get: $util.oneOfGetter($oneOfFields = ["trialEnd"]),
+      set: $util.oneOfSetter($oneOfFields)
+    });
+    Subscription.create = function create(properties) {
+      return new Subscription(properties);
+    };
+    Subscription.encode = function encode(m, w) {
+      if (!w) w = $Writer.create();
+      if (m.stripeCustomerId != null && Object.hasOwnProperty.call(m, "stripeCustomerId")) w.uint32(10).string(m.stripeCustomerId);
+      if (m.stripeSubscriptionId != null && Object.hasOwnProperty.call(m, "stripeSubscriptionId")) w.uint32(18).string(m.stripeSubscriptionId);
+      if (m.planName != null && Object.hasOwnProperty.call(m, "planName")) w.uint32(26).string(m.planName);
+      if (m.status != null && Object.hasOwnProperty.call(m, "status")) w.uint32(32).int32(m.status);
+      if (m.currentPeriodStart != null && Object.hasOwnProperty.call(m, "currentPeriodStart")) $root.google.protobuf.Timestamp.encode(m.currentPeriodStart, w.uint32(42).fork()).ldelim();
+      if (m.currentPeriodEnd != null && Object.hasOwnProperty.call(m, "currentPeriodEnd")) $root.google.protobuf.Timestamp.encode(m.currentPeriodEnd, w.uint32(50).fork()).ldelim();
+      if (m.trialEnd != null && Object.hasOwnProperty.call(m, "trialEnd")) $root.google.protobuf.Timestamp.encode(m.trialEnd, w.uint32(58).fork()).ldelim();
+      if (m.cancelAtPeriodEnd != null && Object.hasOwnProperty.call(m, "cancelAtPeriodEnd")) w.uint32(64).bool(m.cancelAtPeriodEnd);
+      if (m.items != null && m.items.length) {
+        for (var i = 0; i < m.items.length; ++i) $root.user.SubscriptionItem.encode(m.items[i], w.uint32(74).fork()).ldelim();
+      }
+      if (m.interval != null && Object.hasOwnProperty.call(m, "interval")) w.uint32(82).string(m.interval);
+      if (m.intervalCount != null && Object.hasOwnProperty.call(m, "intervalCount")) w.uint32(88).int64(m.intervalCount);
+      return w;
+    };
+    Subscription.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim();
+    };
+    Subscription.decode = function decode(r, l) {
+      if (!(r instanceof $Reader)) r = $Reader.create(r);
+      var c = l === undefined ? r.len : r.pos + l,
+        m = new $root.user.Subscription();
+      while (r.pos < c) {
+        var t = r.uint32();
+        switch (t >>> 3) {
+          case 1:
+            m.stripeCustomerId = r.string();
+            break;
+          case 2:
+            m.stripeSubscriptionId = r.string();
+            break;
+          case 3:
+            m.planName = r.string();
+            break;
+          case 4:
+            m.status = r.int32();
+            break;
+          case 5:
+            m.currentPeriodStart = $root.google.protobuf.Timestamp.decode(r, r.uint32());
+            break;
+          case 6:
+            m.currentPeriodEnd = $root.google.protobuf.Timestamp.decode(r, r.uint32());
+            break;
+          case 7:
+            m.trialEnd = $root.google.protobuf.Timestamp.decode(r, r.uint32());
+            break;
+          case 8:
+            m.cancelAtPeriodEnd = r.bool();
+            break;
+          case 9:
+            if (!(m.items && m.items.length)) m.items = [];
+            m.items.push($root.user.SubscriptionItem.decode(r, r.uint32()));
+            break;
+          case 10:
+            m.interval = r.string();
+            break;
+          case 11:
+            m.intervalCount = r.int64();
+            break;
+          default:
+            r.skipType(t & 7);
+            break;
+        }
+      }
+      return m;
+    };
+    Subscription.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+      return this.decode(reader, reader.uint32());
+    };
+    Subscription.verify = function verify(m) {
+      if (typeof m !== "object" || m === null) return "object expected";
+      var p = {};
+      if (m.stripeCustomerId != null && m.hasOwnProperty("stripeCustomerId")) {
+        if (!$util.isString(m.stripeCustomerId)) return "stripeCustomerId: string expected";
+      }
+      if (m.stripeSubscriptionId != null && m.hasOwnProperty("stripeSubscriptionId")) {
+        if (!$util.isString(m.stripeSubscriptionId)) return "stripeSubscriptionId: string expected";
+      }
+      if (m.planName != null && m.hasOwnProperty("planName")) {
+        if (!$util.isString(m.planName)) return "planName: string expected";
+      }
+      if (m.status != null && m.hasOwnProperty("status")) {
+        switch (m.status) {
+          default:
+            return "status: enum value expected";
+          case 0:
+          case 1:
+          case 2:
+          case 3:
+          case 4:
+          case 5:
+          case 6:
+          case 7:
+          case 8:
+            break;
+        }
+      }
+      if (m.currentPeriodStart != null && m.hasOwnProperty("currentPeriodStart")) {
+        {
+          var e = $root.google.protobuf.Timestamp.verify(m.currentPeriodStart);
+          if (e) return "currentPeriodStart." + e;
+        }
+      }
+      if (m.currentPeriodEnd != null && m.hasOwnProperty("currentPeriodEnd")) {
+        {
+          var e = $root.google.protobuf.Timestamp.verify(m.currentPeriodEnd);
+          if (e) return "currentPeriodEnd." + e;
+        }
+      }
+      if (m.trialEnd != null && m.hasOwnProperty("trialEnd")) {
+        p._trialEnd = 1;
+        {
+          var e = $root.google.protobuf.Timestamp.verify(m.trialEnd);
+          if (e) return "trialEnd." + e;
+        }
+      }
+      if (m.cancelAtPeriodEnd != null && m.hasOwnProperty("cancelAtPeriodEnd")) {
+        if (typeof m.cancelAtPeriodEnd !== "boolean") return "cancelAtPeriodEnd: boolean expected";
+      }
+      if (m.items != null && m.hasOwnProperty("items")) {
+        if (!Array.isArray(m.items)) return "items: array expected";
+        for (var i = 0; i < m.items.length; ++i) {
+          {
+            var e = $root.user.SubscriptionItem.verify(m.items[i]);
+            if (e) return "items." + e;
+          }
+        }
+      }
+      if (m.interval != null && m.hasOwnProperty("interval")) {
+        if (!$util.isString(m.interval)) return "interval: string expected";
+      }
+      if (m.intervalCount != null && m.hasOwnProperty("intervalCount")) {
+        if (!$util.isInteger(m.intervalCount) && !(m.intervalCount && $util.isInteger(m.intervalCount.low) && $util.isInteger(m.intervalCount.high))) return "intervalCount: integer|Long expected";
+      }
+      return null;
+    };
+    Subscription.fromObject = function fromObject(d) {
+      if (d instanceof $root.user.Subscription) return d;
+      var m = new $root.user.Subscription();
+      if (d.stripeCustomerId != null) {
+        m.stripeCustomerId = String(d.stripeCustomerId);
+      }
+      if (d.stripeSubscriptionId != null) {
+        m.stripeSubscriptionId = String(d.stripeSubscriptionId);
+      }
+      if (d.planName != null) {
+        m.planName = String(d.planName);
+      }
+      switch (d.status) {
+        case "UNKNOWN_STATUS":
+        case 0:
+          m.status = 0;
+          break;
+        case "TRIALING":
+        case 1:
+          m.status = 1;
+          break;
+        case "ACTIVE":
+        case 2:
+          m.status = 2;
+          break;
+        case "INCOMPLETE":
+        case 3:
+          m.status = 3;
+          break;
+        case "INCOMPLETE_EXPIRED":
+        case 4:
+          m.status = 4;
+          break;
+        case "PAST_DUE":
+        case 5:
+          m.status = 5;
+          break;
+        case "CANCELED":
+        case 6:
+          m.status = 6;
+          break;
+        case "UNPAID":
+        case 7:
+          m.status = 7;
+          break;
+        case "PAUSED":
+        case 8:
+          m.status = 8;
+          break;
+      }
+      if (d.currentPeriodStart != null) {
+        if (typeof d.currentPeriodStart !== "object") throw TypeError(".user.Subscription.currentPeriodStart: object expected");
+        m.currentPeriodStart = $root.google.protobuf.Timestamp.fromObject(d.currentPeriodStart);
+      }
+      if (d.currentPeriodEnd != null) {
+        if (typeof d.currentPeriodEnd !== "object") throw TypeError(".user.Subscription.currentPeriodEnd: object expected");
+        m.currentPeriodEnd = $root.google.protobuf.Timestamp.fromObject(d.currentPeriodEnd);
+      }
+      if (d.trialEnd != null) {
+        if (typeof d.trialEnd !== "object") throw TypeError(".user.Subscription.trialEnd: object expected");
+        m.trialEnd = $root.google.protobuf.Timestamp.fromObject(d.trialEnd);
+      }
+      if (d.cancelAtPeriodEnd != null) {
+        m.cancelAtPeriodEnd = Boolean(d.cancelAtPeriodEnd);
+      }
+      if (d.items) {
+        if (!Array.isArray(d.items)) throw TypeError(".user.Subscription.items: array expected");
+        m.items = [];
+        for (var i = 0; i < d.items.length; ++i) {
+          if (typeof d.items[i] !== "object") throw TypeError(".user.Subscription.items: object expected");
+          m.items[i] = $root.user.SubscriptionItem.fromObject(d.items[i]);
+        }
+      }
+      if (d.interval != null) {
+        m.interval = String(d.interval);
+      }
+      if (d.intervalCount != null) {
+        if ($util.Long) (m.intervalCount = $util.Long.fromValue(d.intervalCount)).unsigned = false;else if (typeof d.intervalCount === "string") m.intervalCount = parseInt(d.intervalCount, 10);else if (typeof d.intervalCount === "number") m.intervalCount = d.intervalCount;else if (typeof d.intervalCount === "object") m.intervalCount = new $util.LongBits(d.intervalCount.low >>> 0, d.intervalCount.high >>> 0).toNumber();
+      }
+      return m;
+    };
+    Subscription.toObject = function toObject(m, o) {
+      if (!o) o = {};
+      var d = {};
+      if (o.arrays || o.defaults) {
+        d.items = [];
+      }
+      if (o.defaults) {
+        d.stripeCustomerId = "";
+        d.stripeSubscriptionId = "";
+        d.planName = "";
+        d.status = o.enums === String ? "UNKNOWN_STATUS" : 0;
+        d.currentPeriodStart = null;
+        d.currentPeriodEnd = null;
+        d.cancelAtPeriodEnd = false;
+        d.interval = "";
+        if ($util.Long) {
+          var n = new $util.Long(0, 0, false);
+          d.intervalCount = o.longs === String ? n.toString() : o.longs === Number ? n.toNumber() : n;
+        } else d.intervalCount = o.longs === String ? "0" : 0;
+      }
+      if (m.stripeCustomerId != null && m.hasOwnProperty("stripeCustomerId")) {
+        d.stripeCustomerId = m.stripeCustomerId;
+      }
+      if (m.stripeSubscriptionId != null && m.hasOwnProperty("stripeSubscriptionId")) {
+        d.stripeSubscriptionId = m.stripeSubscriptionId;
+      }
+      if (m.planName != null && m.hasOwnProperty("planName")) {
+        d.planName = m.planName;
+      }
+      if (m.status != null && m.hasOwnProperty("status")) {
+        d.status = o.enums === String ? $root.user.SubscriptionStatus[m.status] : m.status;
+      }
+      if (m.currentPeriodStart != null && m.hasOwnProperty("currentPeriodStart")) {
+        d.currentPeriodStart = $root.google.protobuf.Timestamp.toObject(m.currentPeriodStart, o);
+      }
+      if (m.currentPeriodEnd != null && m.hasOwnProperty("currentPeriodEnd")) {
+        d.currentPeriodEnd = $root.google.protobuf.Timestamp.toObject(m.currentPeriodEnd, o);
+      }
+      if (m.trialEnd != null && m.hasOwnProperty("trialEnd")) {
+        d.trialEnd = $root.google.protobuf.Timestamp.toObject(m.trialEnd, o);
+        if (o.oneofs) d._trialEnd = "trialEnd";
+      }
+      if (m.cancelAtPeriodEnd != null && m.hasOwnProperty("cancelAtPeriodEnd")) {
+        d.cancelAtPeriodEnd = m.cancelAtPeriodEnd;
+      }
+      if (m.items && m.items.length) {
+        d.items = [];
+        for (var j = 0; j < m.items.length; ++j) {
+          d.items[j] = $root.user.SubscriptionItem.toObject(m.items[j], o);
+        }
+      }
+      if (m.interval != null && m.hasOwnProperty("interval")) {
+        d.interval = m.interval;
+      }
+      if (m.intervalCount != null && m.hasOwnProperty("intervalCount")) {
+        if (typeof m.intervalCount === "number") d.intervalCount = o.longs === String ? String(m.intervalCount) : m.intervalCount;else d.intervalCount = o.longs === String ? $util.Long.prototype.toString.call(m.intervalCount) : o.longs === Number ? new $util.LongBits(m.intervalCount.low >>> 0, m.intervalCount.high >>> 0).toNumber() : m.intervalCount;
+      }
+      return d;
+    };
+    Subscription.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    return Subscription;
+  }();
+  user.SubscriptionItem = function () {
+    function SubscriptionItem(p) {
+      if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
+    }
+    SubscriptionItem.prototype.stripeItemId = "";
+    SubscriptionItem.prototype.priceId = "";
+    SubscriptionItem.prototype.quantity = 0;
+    SubscriptionItem.prototype.createdAt = null;
+    SubscriptionItem.prototype.updatedAt = null;
+    SubscriptionItem.create = function create(properties) {
+      return new SubscriptionItem(properties);
+    };
+    SubscriptionItem.encode = function encode(m, w) {
+      if (!w) w = $Writer.create();
+      if (m.stripeItemId != null && Object.hasOwnProperty.call(m, "stripeItemId")) w.uint32(10).string(m.stripeItemId);
+      if (m.priceId != null && Object.hasOwnProperty.call(m, "priceId")) w.uint32(18).string(m.priceId);
+      if (m.quantity != null && Object.hasOwnProperty.call(m, "quantity")) w.uint32(24).int32(m.quantity);
+      if (m.createdAt != null && Object.hasOwnProperty.call(m, "createdAt")) $root.google.protobuf.Timestamp.encode(m.createdAt, w.uint32(34).fork()).ldelim();
+      if (m.updatedAt != null && Object.hasOwnProperty.call(m, "updatedAt")) $root.google.protobuf.Timestamp.encode(m.updatedAt, w.uint32(42).fork()).ldelim();
+      return w;
+    };
+    SubscriptionItem.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim();
+    };
+    SubscriptionItem.decode = function decode(r, l) {
+      if (!(r instanceof $Reader)) r = $Reader.create(r);
+      var c = l === undefined ? r.len : r.pos + l,
+        m = new $root.user.SubscriptionItem();
+      while (r.pos < c) {
+        var t = r.uint32();
+        switch (t >>> 3) {
+          case 1:
+            m.stripeItemId = r.string();
+            break;
+          case 2:
+            m.priceId = r.string();
+            break;
+          case 3:
+            m.quantity = r.int32();
+            break;
+          case 4:
+            m.createdAt = $root.google.protobuf.Timestamp.decode(r, r.uint32());
+            break;
+          case 5:
+            m.updatedAt = $root.google.protobuf.Timestamp.decode(r, r.uint32());
+            break;
+          default:
+            r.skipType(t & 7);
+            break;
+        }
+      }
+      return m;
+    };
+    SubscriptionItem.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+      return this.decode(reader, reader.uint32());
+    };
+    SubscriptionItem.verify = function verify(m) {
+      if (typeof m !== "object" || m === null) return "object expected";
+      if (m.stripeItemId != null && m.hasOwnProperty("stripeItemId")) {
+        if (!$util.isString(m.stripeItemId)) return "stripeItemId: string expected";
+      }
+      if (m.priceId != null && m.hasOwnProperty("priceId")) {
+        if (!$util.isString(m.priceId)) return "priceId: string expected";
+      }
+      if (m.quantity != null && m.hasOwnProperty("quantity")) {
+        if (!$util.isInteger(m.quantity)) return "quantity: integer expected";
+      }
+      if (m.createdAt != null && m.hasOwnProperty("createdAt")) {
+        {
+          var e = $root.google.protobuf.Timestamp.verify(m.createdAt);
+          if (e) return "createdAt." + e;
+        }
+      }
+      if (m.updatedAt != null && m.hasOwnProperty("updatedAt")) {
+        {
+          var e = $root.google.protobuf.Timestamp.verify(m.updatedAt);
+          if (e) return "updatedAt." + e;
+        }
+      }
+      return null;
+    };
+    SubscriptionItem.fromObject = function fromObject(d) {
+      if (d instanceof $root.user.SubscriptionItem) return d;
+      var m = new $root.user.SubscriptionItem();
+      if (d.stripeItemId != null) {
+        m.stripeItemId = String(d.stripeItemId);
+      }
+      if (d.priceId != null) {
+        m.priceId = String(d.priceId);
+      }
+      if (d.quantity != null) {
+        m.quantity = d.quantity | 0;
+      }
+      if (d.createdAt != null) {
+        if (typeof d.createdAt !== "object") throw TypeError(".user.SubscriptionItem.createdAt: object expected");
+        m.createdAt = $root.google.protobuf.Timestamp.fromObject(d.createdAt);
+      }
+      if (d.updatedAt != null) {
+        if (typeof d.updatedAt !== "object") throw TypeError(".user.SubscriptionItem.updatedAt: object expected");
+        m.updatedAt = $root.google.protobuf.Timestamp.fromObject(d.updatedAt);
+      }
+      return m;
+    };
+    SubscriptionItem.toObject = function toObject(m, o) {
+      if (!o) o = {};
+      var d = {};
+      if (o.defaults) {
+        d.stripeItemId = "";
+        d.priceId = "";
+        d.quantity = 0;
+        d.createdAt = null;
+        d.updatedAt = null;
+      }
+      if (m.stripeItemId != null && m.hasOwnProperty("stripeItemId")) {
+        d.stripeItemId = m.stripeItemId;
+      }
+      if (m.priceId != null && m.hasOwnProperty("priceId")) {
+        d.priceId = m.priceId;
+      }
+      if (m.quantity != null && m.hasOwnProperty("quantity")) {
+        d.quantity = m.quantity;
+      }
+      if (m.createdAt != null && m.hasOwnProperty("createdAt")) {
+        d.createdAt = $root.google.protobuf.Timestamp.toObject(m.createdAt, o);
+      }
+      if (m.updatedAt != null && m.hasOwnProperty("updatedAt")) {
+        d.updatedAt = $root.google.protobuf.Timestamp.toObject(m.updatedAt, o);
+      }
+      return d;
+    };
+    SubscriptionItem.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    return SubscriptionItem;
   }();
   return user;
 })();
