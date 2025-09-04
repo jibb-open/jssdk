@@ -3200,8 +3200,9 @@ export const user = $root.user = (() => {
     const valuesById = {},
       values = Object.create(valuesById);
     values[valuesById[0] = "UNKNOWN_USER"] = 0;
-    values[valuesById[1] = "PRO"] = 1;
-    values[valuesById[2] = "BUSINESS"] = 2;
+    values[valuesById[1] = "TRIAL"] = 1;
+    values[valuesById[2] = "PRO"] = 2;
+    values[valuesById[3] = "BUSINESS"] = 3;
     values[valuesById[5] = "ENTERPRISE"] = 5;
     return values;
   }();
@@ -3335,6 +3336,7 @@ export const user = $root.user = (() => {
           case 0:
           case 1:
           case 2:
+          case 3:
           case 5:
             break;
         }
@@ -3390,13 +3392,17 @@ export const user = $root.user = (() => {
         case 0:
           m.level = 0;
           break;
-        case "PRO":
+        case "TRIAL":
         case 1:
           m.level = 1;
           break;
-        case "BUSINESS":
+        case "PRO":
         case 2:
           m.level = 2;
+          break;
+        case "BUSINESS":
+        case 3:
+          m.level = 3;
           break;
         case "ENTERPRISE":
         case 5:
@@ -3621,6 +3627,7 @@ export const user = $root.user = (() => {
           case 0:
           case 1:
           case 2:
+          case 3:
           case 5:
             break;
         }
@@ -3683,13 +3690,17 @@ export const user = $root.user = (() => {
         case 0:
           m.level = 0;
           break;
-        case "PRO":
+        case "TRIAL":
         case 1:
           m.level = 1;
           break;
-        case "BUSINESS":
+        case "PRO":
         case 2:
           m.level = 2;
+          break;
+        case "BUSINESS":
+        case 3:
+          m.level = 3;
           break;
         case "ENTERPRISE":
         case 5:
@@ -4166,20 +4177,7 @@ export const user = $root.user = (() => {
         if (!$util.isString(m.planName)) return "planName: string expected";
       }
       if (m.status != null && m.hasOwnProperty("status")) {
-        switch (m.status) {
-          default:
-            return "status: enum value expected";
-          case 0:
-          case 1:
-          case 2:
-          case 3:
-          case 4:
-          case 5:
-          case 6:
-          case 7:
-          case 8:
-            break;
-        }
+        if (!$util.isInteger(m.status)) return "status: integer expected";
       }
       if (m.currentPeriodStart != null && m.hasOwnProperty("currentPeriodStart")) {
         {
@@ -4232,43 +4230,8 @@ export const user = $root.user = (() => {
       if (d.planName != null) {
         m.planName = String(d.planName);
       }
-      switch (d.status) {
-        case "UNKNOWN_STATUS":
-        case 0:
-          m.status = 0;
-          break;
-        case "TRIALING":
-        case 1:
-          m.status = 1;
-          break;
-        case "ACTIVE":
-        case 2:
-          m.status = 2;
-          break;
-        case "INCOMPLETE":
-        case 3:
-          m.status = 3;
-          break;
-        case "INCOMPLETE_EXPIRED":
-        case 4:
-          m.status = 4;
-          break;
-        case "PAST_DUE":
-        case 5:
-          m.status = 5;
-          break;
-        case "CANCELED":
-        case 6:
-          m.status = 6;
-          break;
-        case "UNPAID":
-        case 7:
-          m.status = 7;
-          break;
-        case "PAUSED":
-        case 8:
-          m.status = 8;
-          break;
+      if (d.status != null) {
+        m.status = d.status | 0;
       }
       if (d.currentPeriodStart != null) {
         if (typeof d.currentPeriodStart !== "object") throw TypeError(".user.Subscription.currentPeriodStart: object expected");
@@ -4311,7 +4274,7 @@ export const user = $root.user = (() => {
         d.stripeCustomerId = "";
         d.stripeSubscriptionId = "";
         d.planName = "";
-        d.status = o.enums === String ? "UNKNOWN_STATUS" : 0;
+        d.status = 0;
         d.currentPeriodStart = null;
         d.currentPeriodEnd = null;
         d.cancelAtPeriodEnd = false;
@@ -4331,7 +4294,7 @@ export const user = $root.user = (() => {
         d.planName = m.planName;
       }
       if (m.status != null && m.hasOwnProperty("status")) {
-        d.status = o.enums === String ? $root.user.SubscriptionStatus[m.status] : m.status;
+        d.status = m.status;
       }
       if (m.currentPeriodStart != null && m.hasOwnProperty("currentPeriodStart")) {
         d.currentPeriodStart = $root.google.protobuf.Timestamp.toObject(m.currentPeriodStart, o);
