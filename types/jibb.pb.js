@@ -3936,7 +3936,7 @@ export const user = $root.user = (() => {
       if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
     }
     PriceItem.prototype.id = "";
-    PriceItem.prototype.amount = $util.Long ? $util.Long.fromBits(0, 0, false) : 0;
+    PriceItem.prototype.amount = "";
     PriceItem.prototype.interval = "";
     PriceItem.prototype.intervalCount = $util.Long ? $util.Long.fromBits(0, 0, false) : 0;
     PriceItem.prototype.trialPeriodDays = $util.Long ? $util.Long.fromBits(0, 0, false) : 0;
@@ -3946,7 +3946,7 @@ export const user = $root.user = (() => {
     PriceItem.encode = function encode(m, w) {
       if (!w) w = $Writer.create();
       if (m.id != null && Object.hasOwnProperty.call(m, "id")) w.uint32(10).string(m.id);
-      if (m.amount != null && Object.hasOwnProperty.call(m, "amount")) w.uint32(16).int64(m.amount);
+      if (m.amount != null && Object.hasOwnProperty.call(m, "amount")) w.uint32(18).string(m.amount);
       if (m.interval != null && Object.hasOwnProperty.call(m, "interval")) w.uint32(26).string(m.interval);
       if (m.intervalCount != null && Object.hasOwnProperty.call(m, "intervalCount")) w.uint32(32).int64(m.intervalCount);
       if (m.trialPeriodDays != null && Object.hasOwnProperty.call(m, "trialPeriodDays")) w.uint32(40).int64(m.trialPeriodDays);
@@ -3966,7 +3966,7 @@ export const user = $root.user = (() => {
             m.id = r.string();
             break;
           case 2:
-            m.amount = r.int64();
+            m.amount = r.string();
             break;
           case 3:
             m.interval = r.string();
@@ -3994,7 +3994,7 @@ export const user = $root.user = (() => {
         if (!$util.isString(m.id)) return "id: string expected";
       }
       if (m.amount != null && m.hasOwnProperty("amount")) {
-        if (!$util.isInteger(m.amount) && !(m.amount && $util.isInteger(m.amount.low) && $util.isInteger(m.amount.high))) return "amount: integer|Long expected";
+        if (!$util.isString(m.amount)) return "amount: string expected";
       }
       if (m.interval != null && m.hasOwnProperty("interval")) {
         if (!$util.isString(m.interval)) return "interval: string expected";
@@ -4014,7 +4014,7 @@ export const user = $root.user = (() => {
         m.id = String(d.id);
       }
       if (d.amount != null) {
-        if ($util.Long) (m.amount = $util.Long.fromValue(d.amount)).unsigned = false;else if (typeof d.amount === "string") m.amount = parseInt(d.amount, 10);else if (typeof d.amount === "number") m.amount = d.amount;else if (typeof d.amount === "object") m.amount = new $util.LongBits(d.amount.low >>> 0, d.amount.high >>> 0).toNumber();
+        m.amount = String(d.amount);
       }
       if (d.interval != null) {
         m.interval = String(d.interval);
@@ -4032,10 +4032,7 @@ export const user = $root.user = (() => {
       var d = {};
       if (o.defaults) {
         d.id = "";
-        if ($util.Long) {
-          var n = new $util.Long(0, 0, false);
-          d.amount = o.longs === String ? n.toString() : o.longs === Number ? n.toNumber() : n;
-        } else d.amount = o.longs === String ? "0" : 0;
+        d.amount = "";
         d.interval = "";
         if ($util.Long) {
           var n = new $util.Long(0, 0, false);
@@ -4050,7 +4047,7 @@ export const user = $root.user = (() => {
         d.id = m.id;
       }
       if (m.amount != null && m.hasOwnProperty("amount")) {
-        if (typeof m.amount === "number") d.amount = o.longs === String ? String(m.amount) : m.amount;else d.amount = o.longs === String ? $util.Long.prototype.toString.call(m.amount) : o.longs === Number ? new $util.LongBits(m.amount.low >>> 0, m.amount.high >>> 0).toNumber() : m.amount;
+        d.amount = m.amount;
       }
       if (m.interval != null && m.hasOwnProperty("interval")) {
         d.interval = m.interval;
@@ -6791,5 +6788,1085 @@ export const cilix = $root.cilix = (() => {
     return BusMessage;
   }();
   return cilix;
+})();
+export const webex = $root.webex = (() => {
+  const webex = {};
+  webex.ShareMeetingStatus = function () {
+    const valuesById = {},
+      values = Object.create(valuesById);
+    values[valuesById[0] = "UNKNOWN_SHARE_MEETING_STATUS"] = 0;
+    values[valuesById[1] = "SENT"] = 1;
+    values[valuesById[2] = "PENDING_BOT"] = 2;
+    values[valuesById[3] = "CURRENT_MEETING_NOT_FOUND"] = 3;
+    values[valuesById[4] = "MICROSOFT_TEAM_NOT_CONNECTED"] = 4;
+    return values;
+  }();
+  webex.SaveTokensRequest = function () {
+    function SaveTokensRequest(p) {
+      if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
+    }
+    SaveTokensRequest.prototype.organizationId = 0;
+    SaveTokensRequest.prototype.accessToken = "";
+    SaveTokensRequest.prototype.refreshToken = "";
+    SaveTokensRequest.prototype.accessTokenExpiresIn = $util.Long ? $util.Long.fromBits(0, 0, false) : 0;
+    SaveTokensRequest.prototype.refreshTokenExpiresIn = $util.Long ? $util.Long.fromBits(0, 0, false) : 0;
+    SaveTokensRequest.create = function create(properties) {
+      return new SaveTokensRequest(properties);
+    };
+    SaveTokensRequest.encode = function encode(m, w) {
+      if (!w) w = $Writer.create();
+      if (m.organizationId != null && Object.hasOwnProperty.call(m, "organizationId")) w.uint32(8).int32(m.organizationId);
+      if (m.accessToken != null && Object.hasOwnProperty.call(m, "accessToken")) w.uint32(18).string(m.accessToken);
+      if (m.refreshToken != null && Object.hasOwnProperty.call(m, "refreshToken")) w.uint32(26).string(m.refreshToken);
+      if (m.accessTokenExpiresIn != null && Object.hasOwnProperty.call(m, "accessTokenExpiresIn")) w.uint32(32).int64(m.accessTokenExpiresIn);
+      if (m.refreshTokenExpiresIn != null && Object.hasOwnProperty.call(m, "refreshTokenExpiresIn")) w.uint32(40).int64(m.refreshTokenExpiresIn);
+      return w;
+    };
+    SaveTokensRequest.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim();
+    };
+    SaveTokensRequest.decode = function decode(r, l) {
+      if (!(r instanceof $Reader)) r = $Reader.create(r);
+      var c = l === undefined ? r.len : r.pos + l,
+        m = new $root.webex.SaveTokensRequest();
+      while (r.pos < c) {
+        var t = r.uint32();
+        switch (t >>> 3) {
+          case 1:
+            m.organizationId = r.int32();
+            break;
+          case 2:
+            m.accessToken = r.string();
+            break;
+          case 3:
+            m.refreshToken = r.string();
+            break;
+          case 4:
+            m.accessTokenExpiresIn = r.int64();
+            break;
+          case 5:
+            m.refreshTokenExpiresIn = r.int64();
+            break;
+          default:
+            r.skipType(t & 7);
+            break;
+        }
+      }
+      return m;
+    };
+    SaveTokensRequest.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+      return this.decode(reader, reader.uint32());
+    };
+    SaveTokensRequest.verify = function verify(m) {
+      if (typeof m !== "object" || m === null) return "object expected";
+      if (m.organizationId != null && m.hasOwnProperty("organizationId")) {
+        if (!$util.isInteger(m.organizationId)) return "organizationId: integer expected";
+      }
+      if (m.accessToken != null && m.hasOwnProperty("accessToken")) {
+        if (!$util.isString(m.accessToken)) return "accessToken: string expected";
+      }
+      if (m.refreshToken != null && m.hasOwnProperty("refreshToken")) {
+        if (!$util.isString(m.refreshToken)) return "refreshToken: string expected";
+      }
+      if (m.accessTokenExpiresIn != null && m.hasOwnProperty("accessTokenExpiresIn")) {
+        if (!$util.isInteger(m.accessTokenExpiresIn) && !(m.accessTokenExpiresIn && $util.isInteger(m.accessTokenExpiresIn.low) && $util.isInteger(m.accessTokenExpiresIn.high))) return "accessTokenExpiresIn: integer|Long expected";
+      }
+      if (m.refreshTokenExpiresIn != null && m.hasOwnProperty("refreshTokenExpiresIn")) {
+        if (!$util.isInteger(m.refreshTokenExpiresIn) && !(m.refreshTokenExpiresIn && $util.isInteger(m.refreshTokenExpiresIn.low) && $util.isInteger(m.refreshTokenExpiresIn.high))) return "refreshTokenExpiresIn: integer|Long expected";
+      }
+      return null;
+    };
+    SaveTokensRequest.fromObject = function fromObject(d) {
+      if (d instanceof $root.webex.SaveTokensRequest) return d;
+      var m = new $root.webex.SaveTokensRequest();
+      if (d.organizationId != null) {
+        m.organizationId = d.organizationId | 0;
+      }
+      if (d.accessToken != null) {
+        m.accessToken = String(d.accessToken);
+      }
+      if (d.refreshToken != null) {
+        m.refreshToken = String(d.refreshToken);
+      }
+      if (d.accessTokenExpiresIn != null) {
+        if ($util.Long) (m.accessTokenExpiresIn = $util.Long.fromValue(d.accessTokenExpiresIn)).unsigned = false;else if (typeof d.accessTokenExpiresIn === "string") m.accessTokenExpiresIn = parseInt(d.accessTokenExpiresIn, 10);else if (typeof d.accessTokenExpiresIn === "number") m.accessTokenExpiresIn = d.accessTokenExpiresIn;else if (typeof d.accessTokenExpiresIn === "object") m.accessTokenExpiresIn = new $util.LongBits(d.accessTokenExpiresIn.low >>> 0, d.accessTokenExpiresIn.high >>> 0).toNumber();
+      }
+      if (d.refreshTokenExpiresIn != null) {
+        if ($util.Long) (m.refreshTokenExpiresIn = $util.Long.fromValue(d.refreshTokenExpiresIn)).unsigned = false;else if (typeof d.refreshTokenExpiresIn === "string") m.refreshTokenExpiresIn = parseInt(d.refreshTokenExpiresIn, 10);else if (typeof d.refreshTokenExpiresIn === "number") m.refreshTokenExpiresIn = d.refreshTokenExpiresIn;else if (typeof d.refreshTokenExpiresIn === "object") m.refreshTokenExpiresIn = new $util.LongBits(d.refreshTokenExpiresIn.low >>> 0, d.refreshTokenExpiresIn.high >>> 0).toNumber();
+      }
+      return m;
+    };
+    SaveTokensRequest.toObject = function toObject(m, o) {
+      if (!o) o = {};
+      var d = {};
+      if (o.defaults) {
+        d.organizationId = 0;
+        d.accessToken = "";
+        d.refreshToken = "";
+        if ($util.Long) {
+          var n = new $util.Long(0, 0, false);
+          d.accessTokenExpiresIn = o.longs === String ? n.toString() : o.longs === Number ? n.toNumber() : n;
+        } else d.accessTokenExpiresIn = o.longs === String ? "0" : 0;
+        if ($util.Long) {
+          var n = new $util.Long(0, 0, false);
+          d.refreshTokenExpiresIn = o.longs === String ? n.toString() : o.longs === Number ? n.toNumber() : n;
+        } else d.refreshTokenExpiresIn = o.longs === String ? "0" : 0;
+      }
+      if (m.organizationId != null && m.hasOwnProperty("organizationId")) {
+        d.organizationId = m.organizationId;
+      }
+      if (m.accessToken != null && m.hasOwnProperty("accessToken")) {
+        d.accessToken = m.accessToken;
+      }
+      if (m.refreshToken != null && m.hasOwnProperty("refreshToken")) {
+        d.refreshToken = m.refreshToken;
+      }
+      if (m.accessTokenExpiresIn != null && m.hasOwnProperty("accessTokenExpiresIn")) {
+        if (typeof m.accessTokenExpiresIn === "number") d.accessTokenExpiresIn = o.longs === String ? String(m.accessTokenExpiresIn) : m.accessTokenExpiresIn;else d.accessTokenExpiresIn = o.longs === String ? $util.Long.prototype.toString.call(m.accessTokenExpiresIn) : o.longs === Number ? new $util.LongBits(m.accessTokenExpiresIn.low >>> 0, m.accessTokenExpiresIn.high >>> 0).toNumber() : m.accessTokenExpiresIn;
+      }
+      if (m.refreshTokenExpiresIn != null && m.hasOwnProperty("refreshTokenExpiresIn")) {
+        if (typeof m.refreshTokenExpiresIn === "number") d.refreshTokenExpiresIn = o.longs === String ? String(m.refreshTokenExpiresIn) : m.refreshTokenExpiresIn;else d.refreshTokenExpiresIn = o.longs === String ? $util.Long.prototype.toString.call(m.refreshTokenExpiresIn) : o.longs === Number ? new $util.LongBits(m.refreshTokenExpiresIn.low >>> 0, m.refreshTokenExpiresIn.high >>> 0).toNumber() : m.refreshTokenExpiresIn;
+      }
+      return d;
+    };
+    SaveTokensRequest.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    return SaveTokensRequest;
+  }();
+  webex.ListMeetingParticipantsRequest = function () {
+    function ListMeetingParticipantsRequest(p) {
+      if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
+    }
+    ListMeetingParticipantsRequest.prototype.organizationId = 0;
+    ListMeetingParticipantsRequest.prototype.webexMeetingNumber = "";
+    ListMeetingParticipantsRequest.create = function create(properties) {
+      return new ListMeetingParticipantsRequest(properties);
+    };
+    ListMeetingParticipantsRequest.encode = function encode(m, w) {
+      if (!w) w = $Writer.create();
+      if (m.organizationId != null && Object.hasOwnProperty.call(m, "organizationId")) w.uint32(8).int32(m.organizationId);
+      if (m.webexMeetingNumber != null && Object.hasOwnProperty.call(m, "webexMeetingNumber")) w.uint32(18).string(m.webexMeetingNumber);
+      return w;
+    };
+    ListMeetingParticipantsRequest.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim();
+    };
+    ListMeetingParticipantsRequest.decode = function decode(r, l) {
+      if (!(r instanceof $Reader)) r = $Reader.create(r);
+      var c = l === undefined ? r.len : r.pos + l,
+        m = new $root.webex.ListMeetingParticipantsRequest();
+      while (r.pos < c) {
+        var t = r.uint32();
+        switch (t >>> 3) {
+          case 1:
+            m.organizationId = r.int32();
+            break;
+          case 2:
+            m.webexMeetingNumber = r.string();
+            break;
+          default:
+            r.skipType(t & 7);
+            break;
+        }
+      }
+      return m;
+    };
+    ListMeetingParticipantsRequest.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+      return this.decode(reader, reader.uint32());
+    };
+    ListMeetingParticipantsRequest.verify = function verify(m) {
+      if (typeof m !== "object" || m === null) return "object expected";
+      if (m.organizationId != null && m.hasOwnProperty("organizationId")) {
+        if (!$util.isInteger(m.organizationId)) return "organizationId: integer expected";
+      }
+      if (m.webexMeetingNumber != null && m.hasOwnProperty("webexMeetingNumber")) {
+        if (!$util.isString(m.webexMeetingNumber)) return "webexMeetingNumber: string expected";
+      }
+      return null;
+    };
+    ListMeetingParticipantsRequest.fromObject = function fromObject(d) {
+      if (d instanceof $root.webex.ListMeetingParticipantsRequest) return d;
+      var m = new $root.webex.ListMeetingParticipantsRequest();
+      if (d.organizationId != null) {
+        m.organizationId = d.organizationId | 0;
+      }
+      if (d.webexMeetingNumber != null) {
+        m.webexMeetingNumber = String(d.webexMeetingNumber);
+      }
+      return m;
+    };
+    ListMeetingParticipantsRequest.toObject = function toObject(m, o) {
+      if (!o) o = {};
+      var d = {};
+      if (o.defaults) {
+        d.organizationId = 0;
+        d.webexMeetingNumber = "";
+      }
+      if (m.organizationId != null && m.hasOwnProperty("organizationId")) {
+        d.organizationId = m.organizationId;
+      }
+      if (m.webexMeetingNumber != null && m.hasOwnProperty("webexMeetingNumber")) {
+        d.webexMeetingNumber = m.webexMeetingNumber;
+      }
+      return d;
+    };
+    ListMeetingParticipantsRequest.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    return ListMeetingParticipantsRequest;
+  }();
+  webex.ListMeetingParticipantsResponse = function () {
+    function ListMeetingParticipantsResponse(p) {
+      this.participants = [];
+      if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
+    }
+    ListMeetingParticipantsResponse.prototype.participants = $util.emptyArray;
+    ListMeetingParticipantsResponse.create = function create(properties) {
+      return new ListMeetingParticipantsResponse(properties);
+    };
+    ListMeetingParticipantsResponse.encode = function encode(m, w) {
+      if (!w) w = $Writer.create();
+      if (m.participants != null && m.participants.length) {
+        for (var i = 0; i < m.participants.length; ++i) w.uint32(10).string(m.participants[i]);
+      }
+      return w;
+    };
+    ListMeetingParticipantsResponse.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim();
+    };
+    ListMeetingParticipantsResponse.decode = function decode(r, l) {
+      if (!(r instanceof $Reader)) r = $Reader.create(r);
+      var c = l === undefined ? r.len : r.pos + l,
+        m = new $root.webex.ListMeetingParticipantsResponse();
+      while (r.pos < c) {
+        var t = r.uint32();
+        switch (t >>> 3) {
+          case 1:
+            if (!(m.participants && m.participants.length)) m.participants = [];
+            m.participants.push(r.string());
+            break;
+          default:
+            r.skipType(t & 7);
+            break;
+        }
+      }
+      return m;
+    };
+    ListMeetingParticipantsResponse.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+      return this.decode(reader, reader.uint32());
+    };
+    ListMeetingParticipantsResponse.verify = function verify(m) {
+      if (typeof m !== "object" || m === null) return "object expected";
+      if (m.participants != null && m.hasOwnProperty("participants")) {
+        if (!Array.isArray(m.participants)) return "participants: array expected";
+        for (var i = 0; i < m.participants.length; ++i) {
+          if (!$util.isString(m.participants[i])) return "participants: string[] expected";
+        }
+      }
+      return null;
+    };
+    ListMeetingParticipantsResponse.fromObject = function fromObject(d) {
+      if (d instanceof $root.webex.ListMeetingParticipantsResponse) return d;
+      var m = new $root.webex.ListMeetingParticipantsResponse();
+      if (d.participants) {
+        if (!Array.isArray(d.participants)) throw TypeError(".webex.ListMeetingParticipantsResponse.participants: array expected");
+        m.participants = [];
+        for (var i = 0; i < d.participants.length; ++i) {
+          m.participants[i] = String(d.participants[i]);
+        }
+      }
+      return m;
+    };
+    ListMeetingParticipantsResponse.toObject = function toObject(m, o) {
+      if (!o) o = {};
+      var d = {};
+      if (o.arrays || o.defaults) {
+        d.participants = [];
+      }
+      if (m.participants && m.participants.length) {
+        d.participants = [];
+        for (var j = 0; j < m.participants.length; ++j) {
+          d.participants[j] = m.participants[j];
+        }
+      }
+      return d;
+    };
+    ListMeetingParticipantsResponse.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    return ListMeetingParticipantsResponse;
+  }();
+  webex.GetHostEmailRequest = function () {
+    function GetHostEmailRequest(p) {
+      if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
+    }
+    GetHostEmailRequest.prototype.organizationId = 0;
+    GetHostEmailRequest.prototype.webexMeetingNumber = null;
+    GetHostEmailRequest.prototype.webLink = null;
+    let $oneOfFields;
+    Object.defineProperty(GetHostEmailRequest.prototype, "_webexMeetingNumber", {
+      get: $util.oneOfGetter($oneOfFields = ["webexMeetingNumber"]),
+      set: $util.oneOfSetter($oneOfFields)
+    });
+    Object.defineProperty(GetHostEmailRequest.prototype, "_webLink", {
+      get: $util.oneOfGetter($oneOfFields = ["webLink"]),
+      set: $util.oneOfSetter($oneOfFields)
+    });
+    GetHostEmailRequest.create = function create(properties) {
+      return new GetHostEmailRequest(properties);
+    };
+    GetHostEmailRequest.encode = function encode(m, w) {
+      if (!w) w = $Writer.create();
+      if (m.organizationId != null && Object.hasOwnProperty.call(m, "organizationId")) w.uint32(8).int32(m.organizationId);
+      if (m.webexMeetingNumber != null && Object.hasOwnProperty.call(m, "webexMeetingNumber")) w.uint32(18).string(m.webexMeetingNumber);
+      if (m.webLink != null && Object.hasOwnProperty.call(m, "webLink")) w.uint32(26).string(m.webLink);
+      return w;
+    };
+    GetHostEmailRequest.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim();
+    };
+    GetHostEmailRequest.decode = function decode(r, l) {
+      if (!(r instanceof $Reader)) r = $Reader.create(r);
+      var c = l === undefined ? r.len : r.pos + l,
+        m = new $root.webex.GetHostEmailRequest();
+      while (r.pos < c) {
+        var t = r.uint32();
+        switch (t >>> 3) {
+          case 1:
+            m.organizationId = r.int32();
+            break;
+          case 2:
+            m.webexMeetingNumber = r.string();
+            break;
+          case 3:
+            m.webLink = r.string();
+            break;
+          default:
+            r.skipType(t & 7);
+            break;
+        }
+      }
+      return m;
+    };
+    GetHostEmailRequest.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+      return this.decode(reader, reader.uint32());
+    };
+    GetHostEmailRequest.verify = function verify(m) {
+      if (typeof m !== "object" || m === null) return "object expected";
+      var p = {};
+      if (m.organizationId != null && m.hasOwnProperty("organizationId")) {
+        if (!$util.isInteger(m.organizationId)) return "organizationId: integer expected";
+      }
+      if (m.webexMeetingNumber != null && m.hasOwnProperty("webexMeetingNumber")) {
+        p._webexMeetingNumber = 1;
+        if (!$util.isString(m.webexMeetingNumber)) return "webexMeetingNumber: string expected";
+      }
+      if (m.webLink != null && m.hasOwnProperty("webLink")) {
+        p._webLink = 1;
+        if (!$util.isString(m.webLink)) return "webLink: string expected";
+      }
+      return null;
+    };
+    GetHostEmailRequest.fromObject = function fromObject(d) {
+      if (d instanceof $root.webex.GetHostEmailRequest) return d;
+      var m = new $root.webex.GetHostEmailRequest();
+      if (d.organizationId != null) {
+        m.organizationId = d.organizationId | 0;
+      }
+      if (d.webexMeetingNumber != null) {
+        m.webexMeetingNumber = String(d.webexMeetingNumber);
+      }
+      if (d.webLink != null) {
+        m.webLink = String(d.webLink);
+      }
+      return m;
+    };
+    GetHostEmailRequest.toObject = function toObject(m, o) {
+      if (!o) o = {};
+      var d = {};
+      if (o.defaults) {
+        d.organizationId = 0;
+      }
+      if (m.organizationId != null && m.hasOwnProperty("organizationId")) {
+        d.organizationId = m.organizationId;
+      }
+      if (m.webexMeetingNumber != null && m.hasOwnProperty("webexMeetingNumber")) {
+        d.webexMeetingNumber = m.webexMeetingNumber;
+        if (o.oneofs) d._webexMeetingNumber = "webexMeetingNumber";
+      }
+      if (m.webLink != null && m.hasOwnProperty("webLink")) {
+        d.webLink = m.webLink;
+        if (o.oneofs) d._webLink = "webLink";
+      }
+      return d;
+    };
+    GetHostEmailRequest.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    return GetHostEmailRequest;
+  }();
+  webex.GetHostEmailResponse = function () {
+    function GetHostEmailResponse(p) {
+      if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
+    }
+    GetHostEmailResponse.prototype.email = "";
+    GetHostEmailResponse.create = function create(properties) {
+      return new GetHostEmailResponse(properties);
+    };
+    GetHostEmailResponse.encode = function encode(m, w) {
+      if (!w) w = $Writer.create();
+      if (m.email != null && Object.hasOwnProperty.call(m, "email")) w.uint32(10).string(m.email);
+      return w;
+    };
+    GetHostEmailResponse.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim();
+    };
+    GetHostEmailResponse.decode = function decode(r, l) {
+      if (!(r instanceof $Reader)) r = $Reader.create(r);
+      var c = l === undefined ? r.len : r.pos + l,
+        m = new $root.webex.GetHostEmailResponse();
+      while (r.pos < c) {
+        var t = r.uint32();
+        switch (t >>> 3) {
+          case 1:
+            m.email = r.string();
+            break;
+          default:
+            r.skipType(t & 7);
+            break;
+        }
+      }
+      return m;
+    };
+    GetHostEmailResponse.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+      return this.decode(reader, reader.uint32());
+    };
+    GetHostEmailResponse.verify = function verify(m) {
+      if (typeof m !== "object" || m === null) return "object expected";
+      if (m.email != null && m.hasOwnProperty("email")) {
+        if (!$util.isString(m.email)) return "email: string expected";
+      }
+      return null;
+    };
+    GetHostEmailResponse.fromObject = function fromObject(d) {
+      if (d instanceof $root.webex.GetHostEmailResponse) return d;
+      var m = new $root.webex.GetHostEmailResponse();
+      if (d.email != null) {
+        m.email = String(d.email);
+      }
+      return m;
+    };
+    GetHostEmailResponse.toObject = function toObject(m, o) {
+      if (!o) o = {};
+      var d = {};
+      if (o.defaults) {
+        d.email = "";
+      }
+      if (m.email != null && m.hasOwnProperty("email")) {
+        d.email = m.email;
+      }
+      return d;
+    };
+    GetHostEmailResponse.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    return GetHostEmailResponse;
+  }();
+  webex.GetIntegrationStatusRequest = function () {
+    function GetIntegrationStatusRequest(p) {
+      if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
+    }
+    GetIntegrationStatusRequest.prototype.organizationId = 0;
+    GetIntegrationStatusRequest.create = function create(properties) {
+      return new GetIntegrationStatusRequest(properties);
+    };
+    GetIntegrationStatusRequest.encode = function encode(m, w) {
+      if (!w) w = $Writer.create();
+      if (m.organizationId != null && Object.hasOwnProperty.call(m, "organizationId")) w.uint32(8).int32(m.organizationId);
+      return w;
+    };
+    GetIntegrationStatusRequest.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim();
+    };
+    GetIntegrationStatusRequest.decode = function decode(r, l) {
+      if (!(r instanceof $Reader)) r = $Reader.create(r);
+      var c = l === undefined ? r.len : r.pos + l,
+        m = new $root.webex.GetIntegrationStatusRequest();
+      while (r.pos < c) {
+        var t = r.uint32();
+        switch (t >>> 3) {
+          case 1:
+            m.organizationId = r.int32();
+            break;
+          default:
+            r.skipType(t & 7);
+            break;
+        }
+      }
+      return m;
+    };
+    GetIntegrationStatusRequest.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+      return this.decode(reader, reader.uint32());
+    };
+    GetIntegrationStatusRequest.verify = function verify(m) {
+      if (typeof m !== "object" || m === null) return "object expected";
+      if (m.organizationId != null && m.hasOwnProperty("organizationId")) {
+        if (!$util.isInteger(m.organizationId)) return "organizationId: integer expected";
+      }
+      return null;
+    };
+    GetIntegrationStatusRequest.fromObject = function fromObject(d) {
+      if (d instanceof $root.webex.GetIntegrationStatusRequest) return d;
+      var m = new $root.webex.GetIntegrationStatusRequest();
+      if (d.organizationId != null) {
+        m.organizationId = d.organizationId | 0;
+      }
+      return m;
+    };
+    GetIntegrationStatusRequest.toObject = function toObject(m, o) {
+      if (!o) o = {};
+      var d = {};
+      if (o.defaults) {
+        d.organizationId = 0;
+      }
+      if (m.organizationId != null && m.hasOwnProperty("organizationId")) {
+        d.organizationId = m.organizationId;
+      }
+      return d;
+    };
+    GetIntegrationStatusRequest.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    return GetIntegrationStatusRequest;
+  }();
+  webex.GetWebexIntegrationStatusResponse = function () {
+    function GetWebexIntegrationStatusResponse(p) {
+      if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
+    }
+    GetWebexIntegrationStatusResponse.prototype.status = 0;
+    GetWebexIntegrationStatusResponse.prototype.accessTokenExpiresAt = null;
+    GetWebexIntegrationStatusResponse.prototype.refreshTokenExpiresAt = null;
+    GetWebexIntegrationStatusResponse.create = function create(properties) {
+      return new GetWebexIntegrationStatusResponse(properties);
+    };
+    GetWebexIntegrationStatusResponse.encode = function encode(m, w) {
+      if (!w) w = $Writer.create();
+      if (m.status != null && Object.hasOwnProperty.call(m, "status")) w.uint32(8).int32(m.status);
+      if (m.accessTokenExpiresAt != null && Object.hasOwnProperty.call(m, "accessTokenExpiresAt")) $root.google.protobuf.Timestamp.encode(m.accessTokenExpiresAt, w.uint32(18).fork()).ldelim();
+      if (m.refreshTokenExpiresAt != null && Object.hasOwnProperty.call(m, "refreshTokenExpiresAt")) $root.google.protobuf.Timestamp.encode(m.refreshTokenExpiresAt, w.uint32(26).fork()).ldelim();
+      return w;
+    };
+    GetWebexIntegrationStatusResponse.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim();
+    };
+    GetWebexIntegrationStatusResponse.decode = function decode(r, l) {
+      if (!(r instanceof $Reader)) r = $Reader.create(r);
+      var c = l === undefined ? r.len : r.pos + l,
+        m = new $root.webex.GetWebexIntegrationStatusResponse();
+      while (r.pos < c) {
+        var t = r.uint32();
+        switch (t >>> 3) {
+          case 1:
+            m.status = r.int32();
+            break;
+          case 2:
+            m.accessTokenExpiresAt = $root.google.protobuf.Timestamp.decode(r, r.uint32());
+            break;
+          case 3:
+            m.refreshTokenExpiresAt = $root.google.protobuf.Timestamp.decode(r, r.uint32());
+            break;
+          default:
+            r.skipType(t & 7);
+            break;
+        }
+      }
+      return m;
+    };
+    GetWebexIntegrationStatusResponse.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+      return this.decode(reader, reader.uint32());
+    };
+    GetWebexIntegrationStatusResponse.verify = function verify(m) {
+      if (typeof m !== "object" || m === null) return "object expected";
+      if (m.status != null && m.hasOwnProperty("status")) {
+        switch (m.status) {
+          default:
+            return "status: enum value expected";
+          case 0:
+          case 1:
+          case 2:
+          case 3:
+            break;
+        }
+      }
+      if (m.accessTokenExpiresAt != null && m.hasOwnProperty("accessTokenExpiresAt")) {
+        {
+          var e = $root.google.protobuf.Timestamp.verify(m.accessTokenExpiresAt);
+          if (e) return "accessTokenExpiresAt." + e;
+        }
+      }
+      if (m.refreshTokenExpiresAt != null && m.hasOwnProperty("refreshTokenExpiresAt")) {
+        {
+          var e = $root.google.protobuf.Timestamp.verify(m.refreshTokenExpiresAt);
+          if (e) return "refreshTokenExpiresAt." + e;
+        }
+      }
+      return null;
+    };
+    GetWebexIntegrationStatusResponse.fromObject = function fromObject(d) {
+      if (d instanceof $root.webex.GetWebexIntegrationStatusResponse) return d;
+      var m = new $root.webex.GetWebexIntegrationStatusResponse();
+      switch (d.status) {
+        case "UNKNOWN_STATUS":
+        case 0:
+          m.status = 0;
+          break;
+        case "ACTIVE":
+        case 1:
+          m.status = 1;
+          break;
+        case "NEEDS_REAUTH":
+        case 2:
+          m.status = 2;
+          break;
+        case "NOT_FOUND":
+        case 3:
+          m.status = 3;
+          break;
+      }
+      if (d.accessTokenExpiresAt != null) {
+        if (typeof d.accessTokenExpiresAt !== "object") throw TypeError(".webex.GetWebexIntegrationStatusResponse.accessTokenExpiresAt: object expected");
+        m.accessTokenExpiresAt = $root.google.protobuf.Timestamp.fromObject(d.accessTokenExpiresAt);
+      }
+      if (d.refreshTokenExpiresAt != null) {
+        if (typeof d.refreshTokenExpiresAt !== "object") throw TypeError(".webex.GetWebexIntegrationStatusResponse.refreshTokenExpiresAt: object expected");
+        m.refreshTokenExpiresAt = $root.google.protobuf.Timestamp.fromObject(d.refreshTokenExpiresAt);
+      }
+      return m;
+    };
+    GetWebexIntegrationStatusResponse.toObject = function toObject(m, o) {
+      if (!o) o = {};
+      var d = {};
+      if (o.defaults) {
+        d.status = o.enums === String ? "UNKNOWN_STATUS" : 0;
+        d.accessTokenExpiresAt = null;
+        d.refreshTokenExpiresAt = null;
+      }
+      if (m.status != null && m.hasOwnProperty("status")) {
+        d.status = o.enums === String ? $root.webex.IntegrationStatus[m.status] : m.status;
+      }
+      if (m.accessTokenExpiresAt != null && m.hasOwnProperty("accessTokenExpiresAt")) {
+        d.accessTokenExpiresAt = $root.google.protobuf.Timestamp.toObject(m.accessTokenExpiresAt, o);
+      }
+      if (m.refreshTokenExpiresAt != null && m.hasOwnProperty("refreshTokenExpiresAt")) {
+        d.refreshTokenExpiresAt = $root.google.protobuf.Timestamp.toObject(m.refreshTokenExpiresAt, o);
+      }
+      return d;
+    };
+    GetWebexIntegrationStatusResponse.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    return GetWebexIntegrationStatusResponse;
+  }();
+  webex.GetMicrosoftIntegrationStatusResponse = function () {
+    function GetMicrosoftIntegrationStatusResponse(p) {
+      if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
+    }
+    GetMicrosoftIntegrationStatusResponse.prototype.status = 0;
+    GetMicrosoftIntegrationStatusResponse.prototype.tenantId = "";
+    GetMicrosoftIntegrationStatusResponse.create = function create(properties) {
+      return new GetMicrosoftIntegrationStatusResponse(properties);
+    };
+    GetMicrosoftIntegrationStatusResponse.encode = function encode(m, w) {
+      if (!w) w = $Writer.create();
+      if (m.status != null && Object.hasOwnProperty.call(m, "status")) w.uint32(8).int32(m.status);
+      if (m.tenantId != null && Object.hasOwnProperty.call(m, "tenantId")) w.uint32(18).string(m.tenantId);
+      return w;
+    };
+    GetMicrosoftIntegrationStatusResponse.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim();
+    };
+    GetMicrosoftIntegrationStatusResponse.decode = function decode(r, l) {
+      if (!(r instanceof $Reader)) r = $Reader.create(r);
+      var c = l === undefined ? r.len : r.pos + l,
+        m = new $root.webex.GetMicrosoftIntegrationStatusResponse();
+      while (r.pos < c) {
+        var t = r.uint32();
+        switch (t >>> 3) {
+          case 1:
+            m.status = r.int32();
+            break;
+          case 2:
+            m.tenantId = r.string();
+            break;
+          default:
+            r.skipType(t & 7);
+            break;
+        }
+      }
+      return m;
+    };
+    GetMicrosoftIntegrationStatusResponse.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+      return this.decode(reader, reader.uint32());
+    };
+    GetMicrosoftIntegrationStatusResponse.verify = function verify(m) {
+      if (typeof m !== "object" || m === null) return "object expected";
+      if (m.status != null && m.hasOwnProperty("status")) {
+        switch (m.status) {
+          default:
+            return "status: enum value expected";
+          case 0:
+          case 1:
+          case 2:
+          case 3:
+            break;
+        }
+      }
+      if (m.tenantId != null && m.hasOwnProperty("tenantId")) {
+        if (!$util.isString(m.tenantId)) return "tenantId: string expected";
+      }
+      return null;
+    };
+    GetMicrosoftIntegrationStatusResponse.fromObject = function fromObject(d) {
+      if (d instanceof $root.webex.GetMicrosoftIntegrationStatusResponse) return d;
+      var m = new $root.webex.GetMicrosoftIntegrationStatusResponse();
+      switch (d.status) {
+        case "UNKNOWN_STATUS":
+        case 0:
+          m.status = 0;
+          break;
+        case "ACTIVE":
+        case 1:
+          m.status = 1;
+          break;
+        case "NEEDS_REAUTH":
+        case 2:
+          m.status = 2;
+          break;
+        case "NOT_FOUND":
+        case 3:
+          m.status = 3;
+          break;
+      }
+      if (d.tenantId != null) {
+        m.tenantId = String(d.tenantId);
+      }
+      return m;
+    };
+    GetMicrosoftIntegrationStatusResponse.toObject = function toObject(m, o) {
+      if (!o) o = {};
+      var d = {};
+      if (o.defaults) {
+        d.status = o.enums === String ? "UNKNOWN_STATUS" : 0;
+        d.tenantId = "";
+      }
+      if (m.status != null && m.hasOwnProperty("status")) {
+        d.status = o.enums === String ? $root.webex.IntegrationStatus[m.status] : m.status;
+      }
+      if (m.tenantId != null && m.hasOwnProperty("tenantId")) {
+        d.tenantId = m.tenantId;
+      }
+      return d;
+    };
+    GetMicrosoftIntegrationStatusResponse.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    return GetMicrosoftIntegrationStatusResponse;
+  }();
+  webex.SaveTenantRequest = function () {
+    function SaveTenantRequest(p) {
+      if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
+    }
+    SaveTenantRequest.prototype.organizationId = 0;
+    SaveTenantRequest.prototype.tenantId = "";
+    SaveTenantRequest.create = function create(properties) {
+      return new SaveTenantRequest(properties);
+    };
+    SaveTenantRequest.encode = function encode(m, w) {
+      if (!w) w = $Writer.create();
+      if (m.organizationId != null && Object.hasOwnProperty.call(m, "organizationId")) w.uint32(8).int32(m.organizationId);
+      if (m.tenantId != null && Object.hasOwnProperty.call(m, "tenantId")) w.uint32(18).string(m.tenantId);
+      return w;
+    };
+    SaveTenantRequest.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim();
+    };
+    SaveTenantRequest.decode = function decode(r, l) {
+      if (!(r instanceof $Reader)) r = $Reader.create(r);
+      var c = l === undefined ? r.len : r.pos + l,
+        m = new $root.webex.SaveTenantRequest();
+      while (r.pos < c) {
+        var t = r.uint32();
+        switch (t >>> 3) {
+          case 1:
+            m.organizationId = r.int32();
+            break;
+          case 2:
+            m.tenantId = r.string();
+            break;
+          default:
+            r.skipType(t & 7);
+            break;
+        }
+      }
+      return m;
+    };
+    SaveTenantRequest.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+      return this.decode(reader, reader.uint32());
+    };
+    SaveTenantRequest.verify = function verify(m) {
+      if (typeof m !== "object" || m === null) return "object expected";
+      if (m.organizationId != null && m.hasOwnProperty("organizationId")) {
+        if (!$util.isInteger(m.organizationId)) return "organizationId: integer expected";
+      }
+      if (m.tenantId != null && m.hasOwnProperty("tenantId")) {
+        if (!$util.isString(m.tenantId)) return "tenantId: string expected";
+      }
+      return null;
+    };
+    SaveTenantRequest.fromObject = function fromObject(d) {
+      if (d instanceof $root.webex.SaveTenantRequest) return d;
+      var m = new $root.webex.SaveTenantRequest();
+      if (d.organizationId != null) {
+        m.organizationId = d.organizationId | 0;
+      }
+      if (d.tenantId != null) {
+        m.tenantId = String(d.tenantId);
+      }
+      return m;
+    };
+    SaveTenantRequest.toObject = function toObject(m, o) {
+      if (!o) o = {};
+      var d = {};
+      if (o.defaults) {
+        d.organizationId = 0;
+        d.tenantId = "";
+      }
+      if (m.organizationId != null && m.hasOwnProperty("organizationId")) {
+        d.organizationId = m.organizationId;
+      }
+      if (m.tenantId != null && m.hasOwnProperty("tenantId")) {
+        d.tenantId = m.tenantId;
+      }
+      return d;
+    };
+    SaveTenantRequest.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    return SaveTenantRequest;
+  }();
+  webex.ShareMeetingRequest = function () {
+    function ShareMeetingRequest(p) {
+      if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
+    }
+    ShareMeetingRequest.prototype.organizationId = 0;
+    ShareMeetingRequest.prototype.meetingUrl = "";
+    ShareMeetingRequest.prototype.deviceOemNumber = "";
+    ShareMeetingRequest.create = function create(properties) {
+      return new ShareMeetingRequest(properties);
+    };
+    ShareMeetingRequest.encode = function encode(m, w) {
+      if (!w) w = $Writer.create();
+      if (m.organizationId != null && Object.hasOwnProperty.call(m, "organizationId")) w.uint32(8).int32(m.organizationId);
+      if (m.meetingUrl != null && Object.hasOwnProperty.call(m, "meetingUrl")) w.uint32(18).string(m.meetingUrl);
+      if (m.deviceOemNumber != null && Object.hasOwnProperty.call(m, "deviceOemNumber")) w.uint32(26).string(m.deviceOemNumber);
+      return w;
+    };
+    ShareMeetingRequest.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim();
+    };
+    ShareMeetingRequest.decode = function decode(r, l) {
+      if (!(r instanceof $Reader)) r = $Reader.create(r);
+      var c = l === undefined ? r.len : r.pos + l,
+        m = new $root.webex.ShareMeetingRequest();
+      while (r.pos < c) {
+        var t = r.uint32();
+        switch (t >>> 3) {
+          case 1:
+            m.organizationId = r.int32();
+            break;
+          case 2:
+            m.meetingUrl = r.string();
+            break;
+          case 3:
+            m.deviceOemNumber = r.string();
+            break;
+          default:
+            r.skipType(t & 7);
+            break;
+        }
+      }
+      return m;
+    };
+    ShareMeetingRequest.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+      return this.decode(reader, reader.uint32());
+    };
+    ShareMeetingRequest.verify = function verify(m) {
+      if (typeof m !== "object" || m === null) return "object expected";
+      if (m.organizationId != null && m.hasOwnProperty("organizationId")) {
+        if (!$util.isInteger(m.organizationId)) return "organizationId: integer expected";
+      }
+      if (m.meetingUrl != null && m.hasOwnProperty("meetingUrl")) {
+        if (!$util.isString(m.meetingUrl)) return "meetingUrl: string expected";
+      }
+      if (m.deviceOemNumber != null && m.hasOwnProperty("deviceOemNumber")) {
+        if (!$util.isString(m.deviceOemNumber)) return "deviceOemNumber: string expected";
+      }
+      return null;
+    };
+    ShareMeetingRequest.fromObject = function fromObject(d) {
+      if (d instanceof $root.webex.ShareMeetingRequest) return d;
+      var m = new $root.webex.ShareMeetingRequest();
+      if (d.organizationId != null) {
+        m.organizationId = d.organizationId | 0;
+      }
+      if (d.meetingUrl != null) {
+        m.meetingUrl = String(d.meetingUrl);
+      }
+      if (d.deviceOemNumber != null) {
+        m.deviceOemNumber = String(d.deviceOemNumber);
+      }
+      return m;
+    };
+    ShareMeetingRequest.toObject = function toObject(m, o) {
+      if (!o) o = {};
+      var d = {};
+      if (o.defaults) {
+        d.organizationId = 0;
+        d.meetingUrl = "";
+        d.deviceOemNumber = "";
+      }
+      if (m.organizationId != null && m.hasOwnProperty("organizationId")) {
+        d.organizationId = m.organizationId;
+      }
+      if (m.meetingUrl != null && m.hasOwnProperty("meetingUrl")) {
+        d.meetingUrl = m.meetingUrl;
+      }
+      if (m.deviceOemNumber != null && m.hasOwnProperty("deviceOemNumber")) {
+        d.deviceOemNumber = m.deviceOemNumber;
+      }
+      return d;
+    };
+    ShareMeetingRequest.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    return ShareMeetingRequest;
+  }();
+  webex.ShareMeetingResponse = function () {
+    function ShareMeetingResponse(p) {
+      if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
+    }
+    ShareMeetingResponse.prototype.status = 0;
+    ShareMeetingResponse.create = function create(properties) {
+      return new ShareMeetingResponse(properties);
+    };
+    ShareMeetingResponse.encode = function encode(m, w) {
+      if (!w) w = $Writer.create();
+      if (m.status != null && Object.hasOwnProperty.call(m, "status")) w.uint32(8).int32(m.status);
+      return w;
+    };
+    ShareMeetingResponse.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim();
+    };
+    ShareMeetingResponse.decode = function decode(r, l) {
+      if (!(r instanceof $Reader)) r = $Reader.create(r);
+      var c = l === undefined ? r.len : r.pos + l,
+        m = new $root.webex.ShareMeetingResponse();
+      while (r.pos < c) {
+        var t = r.uint32();
+        switch (t >>> 3) {
+          case 1:
+            m.status = r.int32();
+            break;
+          default:
+            r.skipType(t & 7);
+            break;
+        }
+      }
+      return m;
+    };
+    ShareMeetingResponse.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+      return this.decode(reader, reader.uint32());
+    };
+    ShareMeetingResponse.verify = function verify(m) {
+      if (typeof m !== "object" || m === null) return "object expected";
+      if (m.status != null && m.hasOwnProperty("status")) {
+        switch (m.status) {
+          default:
+            return "status: enum value expected";
+          case 0:
+          case 1:
+          case 2:
+          case 3:
+          case 4:
+            break;
+        }
+      }
+      return null;
+    };
+    ShareMeetingResponse.fromObject = function fromObject(d) {
+      if (d instanceof $root.webex.ShareMeetingResponse) return d;
+      var m = new $root.webex.ShareMeetingResponse();
+      switch (d.status) {
+        case "UNKNOWN_SHARE_MEETING_STATUS":
+        case 0:
+          m.status = 0;
+          break;
+        case "SENT":
+        case 1:
+          m.status = 1;
+          break;
+        case "PENDING_BOT":
+        case 2:
+          m.status = 2;
+          break;
+        case "CURRENT_MEETING_NOT_FOUND":
+        case 3:
+          m.status = 3;
+          break;
+        case "MICROSOFT_TEAM_NOT_CONNECTED":
+        case 4:
+          m.status = 4;
+          break;
+      }
+      return m;
+    };
+    ShareMeetingResponse.toObject = function toObject(m, o) {
+      if (!o) o = {};
+      var d = {};
+      if (o.defaults) {
+        d.status = o.enums === String ? "UNKNOWN_SHARE_MEETING_STATUS" : 0;
+      }
+      if (m.status != null && m.hasOwnProperty("status")) {
+        d.status = o.enums === String ? $root.webex.ShareMeetingStatus[m.status] : m.status;
+      }
+      return d;
+    };
+    ShareMeetingResponse.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    return ShareMeetingResponse;
+  }();
+  webex.IntegrationStatus = function () {
+    const valuesById = {},
+      values = Object.create(valuesById);
+    values[valuesById[0] = "UNKNOWN_STATUS"] = 0;
+    values[valuesById[1] = "ACTIVE"] = 1;
+    values[valuesById[2] = "NEEDS_REAUTH"] = 2;
+    values[valuesById[3] = "NOT_FOUND"] = 3;
+    return values;
+  }();
+  return webex;
 })();
 export default $root;

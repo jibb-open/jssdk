@@ -8,13 +8,15 @@ export function startRecording() {
       meetingToken,
       interval,
       sensivityLevel,
-      alternativeEmail
+      alternativeEmail,
+      deviceSerialNumber
     };
     return async function () {
       let meetingToken = options.meetingToken;
       let interval = (options === null || options === void 0 ? void 0 : options.interval) || 0;
       let sensivityLevel = (options === null || options === void 0 ? void 0 : options.sensivityLevel) || 0;
       let altEmail = (options === null || options === void 0 ? void 0 : options.alternativeEmail) || "";
+      let deviceSerialNumber = (options === null || options === void 0 ? void 0 : options.deviceSerialNumber) || "";
       let headers = {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -24,7 +26,8 @@ export function startRecording() {
       let body = {
         write_interval: interval,
         level: sensivityLevel,
-        alternative_email: altEmail
+        alternative_email: altEmail,
+        device_serial_number: deviceSerialNumber
       };
       let response = await http.post("".concat(Config.apiBaseURL, "/v1/meetings/recordings/start"), body, headers);
       return response.data;

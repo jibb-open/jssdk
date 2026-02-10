@@ -1,6 +1,6 @@
 {
 	"name": "@jibb-open/jssdk",
-	"version": "3.18.4",
+	"version": "3.18.5",
 	"description": "",
 	"main": "dist/index.js",
 	"type": "module",
