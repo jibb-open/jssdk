@@ -1,3 +1,4 @@
+import "core-js/modules/es.object.from-entries.js";
 import "core-js/modules/es.weak-map.js";
 import "core-js/modules/web.dom-collections.iterator.js";
 function _classPrivateMethodInitSpec(obj, privateSet) { _checkPrivateRedeclaration(obj, privateSet); privateSet.add(obj); }
@@ -164,4 +165,27 @@ export class UserClaims extends StandardClaims {
   getUserId() {
     return this.userId;
   }
+}
+export const ShareMeetingStatus = Object.freeze({
+  UNKNOWN_SHARE_MEETING_STATUS: 0,
+  SENT: 1,
+  PENDING_BOT: 2,
+  CURRENT_MEETING_NOT_FOUND: 3,
+  MICROSOFT_TEAM_NOT_CONNECTED: 4
+});
+export const ShareMeetingStatusName = Object.freeze(Object.fromEntries(Object.entries(ShareMeetingStatus).map(_ref => {
+  let [k, v] = _ref;
+  return [v, k];
+})));
+export const ShareMeetingStatusCode = ShareMeetingStatus;
+export function normalizeShareMeetingStatus(input) {
+  if (typeof input === "number" && Number.isFinite(input)) return input;
+  if (typeof input === "string") {
+    const code = ShareMeetingStatus[input];
+    if (typeof code === "number") return code;
+    const upper = input.toUpperCase();
+    const code2 = ShareMeetingStatus[upper];
+    if (typeof code2 === "number") return code2;
+  }
+  return ShareMeetingStatus.UNKNOWN_SHARE_MEETING_STATUS;
 }
