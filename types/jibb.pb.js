@@ -1,3 +1,4 @@
+import "core-js/modules/es.symbol.description.js";
 import "core-js/modules/es.parse-int.js";
 import "core-js/modules/es.regexp.to-string.js";
 import $protobuf from "protobufjs/minimal.js";
@@ -3237,6 +3238,16 @@ export const user = $root.user = (() => {
     values[valuesById[8] = "PAUSED"] = 8;
     return values;
   }();
+  user.FeatureValueType = function () {
+    const valuesById = {},
+      values = Object.create(valuesById);
+    values[valuesById[0] = "FEATURE_VALUE_TYPE_UNSPECIFIED"] = 0;
+    values[valuesById[1] = "FEATURE_VALUE_TYPE_BOOL"] = 1;
+    values[valuesById[2] = "FEATURE_VALUE_TYPE_INT"] = 2;
+    values[valuesById[3] = "FEATURE_VALUE_TYPE_STRING"] = 3;
+    values[valuesById[4] = "FEATURE_VALUE_TYPE_JSON"] = 4;
+    return values;
+  }();
   user.UserDetails = function () {
     function UserDetails(p) {
       if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
@@ -4461,6 +4472,519 @@ export const user = $root.user = (() => {
     };
     return SubscriptionItem;
   }();
+  user.JibbDeviceDetails = function () {
+    function JibbDeviceDetails(p) {
+      if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
+    }
+    JibbDeviceDetails.prototype.password = "";
+    JibbDeviceDetails.prototype.ciscoSerialNumber = "";
+    JibbDeviceDetails.prototype.cameraConfig = null;
+    JibbDeviceDetails.create = function create(properties) {
+      return new JibbDeviceDetails(properties);
+    };
+    JibbDeviceDetails.encode = function encode(m, w) {
+      if (!w) w = $Writer.create();
+      if (m.password != null && Object.hasOwnProperty.call(m, "password")) w.uint32(10).string(m.password);
+      if (m.ciscoSerialNumber != null && Object.hasOwnProperty.call(m, "ciscoSerialNumber")) w.uint32(18).string(m.ciscoSerialNumber);
+      if (m.cameraConfig != null && Object.hasOwnProperty.call(m, "cameraConfig")) $root.user.JibbDeviceCameraConfig.encode(m.cameraConfig, w.uint32(26).fork()).ldelim();
+      return w;
+    };
+    JibbDeviceDetails.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim();
+    };
+    JibbDeviceDetails.decode = function decode(r, l) {
+      if (!(r instanceof $Reader)) r = $Reader.create(r);
+      var c = l === undefined ? r.len : r.pos + l,
+        m = new $root.user.JibbDeviceDetails();
+      while (r.pos < c) {
+        var t = r.uint32();
+        switch (t >>> 3) {
+          case 1:
+            m.password = r.string();
+            break;
+          case 2:
+            m.ciscoSerialNumber = r.string();
+            break;
+          case 3:
+            m.cameraConfig = $root.user.JibbDeviceCameraConfig.decode(r, r.uint32());
+            break;
+          default:
+            r.skipType(t & 7);
+            break;
+        }
+      }
+      return m;
+    };
+    JibbDeviceDetails.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+      return this.decode(reader, reader.uint32());
+    };
+    JibbDeviceDetails.verify = function verify(m) {
+      if (typeof m !== "object" || m === null) return "object expected";
+      if (m.password != null && m.hasOwnProperty("password")) {
+        if (!$util.isString(m.password)) return "password: string expected";
+      }
+      if (m.ciscoSerialNumber != null && m.hasOwnProperty("ciscoSerialNumber")) {
+        if (!$util.isString(m.ciscoSerialNumber)) return "ciscoSerialNumber: string expected";
+      }
+      if (m.cameraConfig != null && m.hasOwnProperty("cameraConfig")) {
+        {
+          var e = $root.user.JibbDeviceCameraConfig.verify(m.cameraConfig);
+          if (e) return "cameraConfig." + e;
+        }
+      }
+      return null;
+    };
+    JibbDeviceDetails.fromObject = function fromObject(d) {
+      if (d instanceof $root.user.JibbDeviceDetails) return d;
+      var m = new $root.user.JibbDeviceDetails();
+      if (d.password != null) {
+        m.password = String(d.password);
+      }
+      if (d.ciscoSerialNumber != null) {
+        m.ciscoSerialNumber = String(d.ciscoSerialNumber);
+      }
+      if (d.cameraConfig != null) {
+        if (typeof d.cameraConfig !== "object") throw TypeError(".user.JibbDeviceDetails.cameraConfig: object expected");
+        m.cameraConfig = $root.user.JibbDeviceCameraConfig.fromObject(d.cameraConfig);
+      }
+      return m;
+    };
+    JibbDeviceDetails.toObject = function toObject(m, o) {
+      if (!o) o = {};
+      var d = {};
+      if (o.defaults) {
+        d.password = "";
+        d.ciscoSerialNumber = "";
+        d.cameraConfig = null;
+      }
+      if (m.password != null && m.hasOwnProperty("password")) {
+        d.password = m.password;
+      }
+      if (m.ciscoSerialNumber != null && m.hasOwnProperty("ciscoSerialNumber")) {
+        d.ciscoSerialNumber = m.ciscoSerialNumber;
+      }
+      if (m.cameraConfig != null && m.hasOwnProperty("cameraConfig")) {
+        d.cameraConfig = $root.user.JibbDeviceCameraConfig.toObject(m.cameraConfig, o);
+      }
+      return d;
+    };
+    JibbDeviceDetails.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    return JibbDeviceDetails;
+  }();
+  user.JibbDeviceCameraConfig = function () {
+    function JibbDeviceCameraConfig(p) {
+      this.customCorners = [];
+      if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
+    }
+    JibbDeviceCameraConfig.prototype.cameraId = "";
+    JibbDeviceCameraConfig.prototype.customCorners = $util.emptyArray;
+    JibbDeviceCameraConfig.create = function create(properties) {
+      return new JibbDeviceCameraConfig(properties);
+    };
+    JibbDeviceCameraConfig.encode = function encode(m, w) {
+      if (!w) w = $Writer.create();
+      if (m.cameraId != null && Object.hasOwnProperty.call(m, "cameraId")) w.uint32(10).string(m.cameraId);
+      if (m.customCorners != null && m.customCorners.length) {
+        w.uint32(18).fork();
+        for (var i = 0; i < m.customCorners.length; ++i) w.sint32(m.customCorners[i]);
+        w.ldelim();
+      }
+      return w;
+    };
+    JibbDeviceCameraConfig.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim();
+    };
+    JibbDeviceCameraConfig.decode = function decode(r, l) {
+      if (!(r instanceof $Reader)) r = $Reader.create(r);
+      var c = l === undefined ? r.len : r.pos + l,
+        m = new $root.user.JibbDeviceCameraConfig();
+      while (r.pos < c) {
+        var t = r.uint32();
+        switch (t >>> 3) {
+          case 1:
+            m.cameraId = r.string();
+            break;
+          case 2:
+            if (!(m.customCorners && m.customCorners.length)) m.customCorners = [];
+            if ((t & 7) === 2) {
+              var c2 = r.uint32() + r.pos;
+              while (r.pos < c2) m.customCorners.push(r.sint32());
+            } else m.customCorners.push(r.sint32());
+            break;
+          default:
+            r.skipType(t & 7);
+            break;
+        }
+      }
+      return m;
+    };
+    JibbDeviceCameraConfig.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+      return this.decode(reader, reader.uint32());
+    };
+    JibbDeviceCameraConfig.verify = function verify(m) {
+      if (typeof m !== "object" || m === null) return "object expected";
+      if (m.cameraId != null && m.hasOwnProperty("cameraId")) {
+        if (!$util.isString(m.cameraId)) return "cameraId: string expected";
+      }
+      if (m.customCorners != null && m.hasOwnProperty("customCorners")) {
+        if (!Array.isArray(m.customCorners)) return "customCorners: array expected";
+        for (var i = 0; i < m.customCorners.length; ++i) {
+          if (!$util.isInteger(m.customCorners[i])) return "customCorners: integer[] expected";
+        }
+      }
+      return null;
+    };
+    JibbDeviceCameraConfig.fromObject = function fromObject(d) {
+      if (d instanceof $root.user.JibbDeviceCameraConfig) return d;
+      var m = new $root.user.JibbDeviceCameraConfig();
+      if (d.cameraId != null) {
+        m.cameraId = String(d.cameraId);
+      }
+      if (d.customCorners) {
+        if (!Array.isArray(d.customCorners)) throw TypeError(".user.JibbDeviceCameraConfig.customCorners: array expected");
+        m.customCorners = [];
+        for (var i = 0; i < d.customCorners.length; ++i) {
+          m.customCorners[i] = d.customCorners[i] | 0;
+        }
+      }
+      return m;
+    };
+    JibbDeviceCameraConfig.toObject = function toObject(m, o) {
+      if (!o) o = {};
+      var d = {};
+      if (o.arrays || o.defaults) {
+        d.customCorners = [];
+      }
+      if (o.defaults) {
+        d.cameraId = "";
+      }
+      if (m.cameraId != null && m.hasOwnProperty("cameraId")) {
+        d.cameraId = m.cameraId;
+      }
+      if (m.customCorners && m.customCorners.length) {
+        d.customCorners = [];
+        for (var j = 0; j < m.customCorners.length; ++j) {
+          d.customCorners[j] = m.customCorners[j];
+        }
+      }
+      return d;
+    };
+    JibbDeviceCameraConfig.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    return JibbDeviceCameraConfig;
+  }();
+  user.FeatureValue = function () {
+    function FeatureValue(p) {
+      if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
+    }
+    FeatureValue.prototype.featureKey = "";
+    FeatureValue.prototype.valueJson = "";
+    FeatureValue.create = function create(properties) {
+      return new FeatureValue(properties);
+    };
+    FeatureValue.encode = function encode(m, w) {
+      if (!w) w = $Writer.create();
+      if (m.featureKey != null && Object.hasOwnProperty.call(m, "featureKey")) w.uint32(10).string(m.featureKey);
+      if (m.valueJson != null && Object.hasOwnProperty.call(m, "valueJson")) w.uint32(18).string(m.valueJson);
+      return w;
+    };
+    FeatureValue.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim();
+    };
+    FeatureValue.decode = function decode(r, l) {
+      if (!(r instanceof $Reader)) r = $Reader.create(r);
+      var c = l === undefined ? r.len : r.pos + l,
+        m = new $root.user.FeatureValue();
+      while (r.pos < c) {
+        var t = r.uint32();
+        switch (t >>> 3) {
+          case 1:
+            m.featureKey = r.string();
+            break;
+          case 2:
+            m.valueJson = r.string();
+            break;
+          default:
+            r.skipType(t & 7);
+            break;
+        }
+      }
+      return m;
+    };
+    FeatureValue.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+      return this.decode(reader, reader.uint32());
+    };
+    FeatureValue.verify = function verify(m) {
+      if (typeof m !== "object" || m === null) return "object expected";
+      if (m.featureKey != null && m.hasOwnProperty("featureKey")) {
+        if (!$util.isString(m.featureKey)) return "featureKey: string expected";
+      }
+      if (m.valueJson != null && m.hasOwnProperty("valueJson")) {
+        if (!$util.isString(m.valueJson)) return "valueJson: string expected";
+      }
+      return null;
+    };
+    FeatureValue.fromObject = function fromObject(d) {
+      if (d instanceof $root.user.FeatureValue) return d;
+      var m = new $root.user.FeatureValue();
+      if (d.featureKey != null) {
+        m.featureKey = String(d.featureKey);
+      }
+      if (d.valueJson != null) {
+        m.valueJson = String(d.valueJson);
+      }
+      return m;
+    };
+    FeatureValue.toObject = function toObject(m, o) {
+      if (!o) o = {};
+      var d = {};
+      if (o.defaults) {
+        d.featureKey = "";
+        d.valueJson = "";
+      }
+      if (m.featureKey != null && m.hasOwnProperty("featureKey")) {
+        d.featureKey = m.featureKey;
+      }
+      if (m.valueJson != null && m.hasOwnProperty("valueJson")) {
+        d.valueJson = m.valueJson;
+      }
+      return d;
+    };
+    FeatureValue.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    return FeatureValue;
+  }();
+  user.Feature = function () {
+    function Feature(p) {
+      if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
+    }
+    Feature.prototype.key = "";
+    Feature.prototype.valueType = 0;
+    Feature.prototype.description = "";
+    Feature.create = function create(properties) {
+      return new Feature(properties);
+    };
+    Feature.encode = function encode(m, w) {
+      if (!w) w = $Writer.create();
+      if (m.key != null && Object.hasOwnProperty.call(m, "key")) w.uint32(10).string(m.key);
+      if (m.valueType != null && Object.hasOwnProperty.call(m, "valueType")) w.uint32(16).int32(m.valueType);
+      if (m.description != null && Object.hasOwnProperty.call(m, "description")) w.uint32(26).string(m.description);
+      return w;
+    };
+    Feature.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim();
+    };
+    Feature.decode = function decode(r, l) {
+      if (!(r instanceof $Reader)) r = $Reader.create(r);
+      var c = l === undefined ? r.len : r.pos + l,
+        m = new $root.user.Feature();
+      while (r.pos < c) {
+        var t = r.uint32();
+        switch (t >>> 3) {
+          case 1:
+            m.key = r.string();
+            break;
+          case 2:
+            m.valueType = r.int32();
+            break;
+          case 3:
+            m.description = r.string();
+            break;
+          default:
+            r.skipType(t & 7);
+            break;
+        }
+      }
+      return m;
+    };
+    Feature.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+      return this.decode(reader, reader.uint32());
+    };
+    Feature.verify = function verify(m) {
+      if (typeof m !== "object" || m === null) return "object expected";
+      if (m.key != null && m.hasOwnProperty("key")) {
+        if (!$util.isString(m.key)) return "key: string expected";
+      }
+      if (m.valueType != null && m.hasOwnProperty("valueType")) {
+        switch (m.valueType) {
+          default:
+            return "valueType: enum value expected";
+          case 0:
+          case 1:
+          case 2:
+          case 3:
+          case 4:
+            break;
+        }
+      }
+      if (m.description != null && m.hasOwnProperty("description")) {
+        if (!$util.isString(m.description)) return "description: string expected";
+      }
+      return null;
+    };
+    Feature.fromObject = function fromObject(d) {
+      if (d instanceof $root.user.Feature) return d;
+      var m = new $root.user.Feature();
+      if (d.key != null) {
+        m.key = String(d.key);
+      }
+      switch (d.valueType) {
+        case "FEATURE_VALUE_TYPE_UNSPECIFIED":
+        case 0:
+          m.valueType = 0;
+          break;
+        case "FEATURE_VALUE_TYPE_BOOL":
+        case 1:
+          m.valueType = 1;
+          break;
+        case "FEATURE_VALUE_TYPE_INT":
+        case 2:
+          m.valueType = 2;
+          break;
+        case "FEATURE_VALUE_TYPE_STRING":
+        case 3:
+          m.valueType = 3;
+          break;
+        case "FEATURE_VALUE_TYPE_JSON":
+        case 4:
+          m.valueType = 4;
+          break;
+      }
+      if (d.description != null) {
+        m.description = String(d.description);
+      }
+      return m;
+    };
+    Feature.toObject = function toObject(m, o) {
+      if (!o) o = {};
+      var d = {};
+      if (o.defaults) {
+        d.key = "";
+        d.valueType = o.enums === String ? "FEATURE_VALUE_TYPE_UNSPECIFIED" : 0;
+        d.description = "";
+      }
+      if (m.key != null && m.hasOwnProperty("key")) {
+        d.key = m.key;
+      }
+      if (m.valueType != null && m.hasOwnProperty("valueType")) {
+        d.valueType = o.enums === String ? $root.user.FeatureValueType[m.valueType] : m.valueType;
+      }
+      if (m.description != null && m.hasOwnProperty("description")) {
+        d.description = m.description;
+      }
+      return d;
+    };
+    Feature.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    return Feature;
+  }();
+  user.EffectiveFeature = function () {
+    function EffectiveFeature(p) {
+      if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
+    }
+    EffectiveFeature.prototype.featureKey = "";
+    EffectiveFeature.prototype.valueJson = "";
+    EffectiveFeature.prototype.source = "";
+    EffectiveFeature.create = function create(properties) {
+      return new EffectiveFeature(properties);
+    };
+    EffectiveFeature.encode = function encode(m, w) {
+      if (!w) w = $Writer.create();
+      if (m.featureKey != null && Object.hasOwnProperty.call(m, "featureKey")) w.uint32(10).string(m.featureKey);
+      if (m.valueJson != null && Object.hasOwnProperty.call(m, "valueJson")) w.uint32(18).string(m.valueJson);
+      if (m.source != null && Object.hasOwnProperty.call(m, "source")) w.uint32(26).string(m.source);
+      return w;
+    };
+    EffectiveFeature.encodeDelimited = function encodeDelimited(message, writer) {
+      return this.encode(message, writer).ldelim();
+    };
+    EffectiveFeature.decode = function decode(r, l) {
+      if (!(r instanceof $Reader)) r = $Reader.create(r);
+      var c = l === undefined ? r.len : r.pos + l,
+        m = new $root.user.EffectiveFeature();
+      while (r.pos < c) {
+        var t = r.uint32();
+        switch (t >>> 3) {
+          case 1:
+            m.featureKey = r.string();
+            break;
+          case 2:
+            m.valueJson = r.string();
+            break;
+          case 3:
+            m.source = r.string();
+            break;
+          default:
+            r.skipType(t & 7);
+            break;
+        }
+      }
+      return m;
+    };
+    EffectiveFeature.decodeDelimited = function decodeDelimited(reader) {
+      if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+      return this.decode(reader, reader.uint32());
+    };
+    EffectiveFeature.verify = function verify(m) {
+      if (typeof m !== "object" || m === null) return "object expected";
+      if (m.featureKey != null && m.hasOwnProperty("featureKey")) {
+        if (!$util.isString(m.featureKey)) return "featureKey: string expected";
+      }
+      if (m.valueJson != null && m.hasOwnProperty("valueJson")) {
+        if (!$util.isString(m.valueJson)) return "valueJson: string expected";
+      }
+      if (m.source != null && m.hasOwnProperty("source")) {
+        if (!$util.isString(m.source)) return "source: string expected";
+      }
+      return null;
+    };
+    EffectiveFeature.fromObject = function fromObject(d) {
+      if (d instanceof $root.user.EffectiveFeature) return d;
+      var m = new $root.user.EffectiveFeature();
+      if (d.featureKey != null) {
+        m.featureKey = String(d.featureKey);
+      }
+      if (d.valueJson != null) {
+        m.valueJson = String(d.valueJson);
+      }
+      if (d.source != null) {
+        m.source = String(d.source);
+      }
+      return m;
+    };
+    EffectiveFeature.toObject = function toObject(m, o) {
+      if (!o) o = {};
+      var d = {};
+      if (o.defaults) {
+        d.featureKey = "";
+        d.valueJson = "";
+        d.source = "";
+      }
+      if (m.featureKey != null && m.hasOwnProperty("featureKey")) {
+        d.featureKey = m.featureKey;
+      }
+      if (m.valueJson != null && m.hasOwnProperty("valueJson")) {
+        d.valueJson = m.valueJson;
+      }
+      if (m.source != null && m.hasOwnProperty("source")) {
+        d.source = m.source;
+      }
+      return d;
+    };
+    EffectiveFeature.prototype.toJSON = function toJSON() {
+      return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+    return EffectiveFeature;
+  }();
   return user;
 })();
 export const google = $root.google = (() => {
@@ -5419,6 +5943,7 @@ export const meeting = $root.meeting = (() => {
     Meeting.prototype.creationTime = $util.Long ? $util.Long.fromBits(0, 0, false) : 0;
     Meeting.prototype.capacity = 0;
     Meeting.prototype.isTemporary = false;
+    Meeting.prototype.ownerOrganizationId = 0;
     Meeting.create = function create(properties) {
       return new Meeting(properties);
     };
@@ -5430,6 +5955,7 @@ export const meeting = $root.meeting = (() => {
       if (m.creationTime != null && Object.hasOwnProperty.call(m, "creationTime")) w.uint32(56).int64(m.creationTime);
       if (m.capacity != null && Object.hasOwnProperty.call(m, "capacity")) w.uint32(64).int32(m.capacity);
       if (m.isTemporary != null && Object.hasOwnProperty.call(m, "isTemporary")) w.uint32(72).bool(m.isTemporary);
+      if (m.ownerOrganizationId != null && Object.hasOwnProperty.call(m, "ownerOrganizationId")) w.uint32(80).int32(m.ownerOrganizationId);
       return w;
     };
     Meeting.encodeDelimited = function encodeDelimited(message, writer) {
@@ -5459,6 +5985,9 @@ export const meeting = $root.meeting = (() => {
             break;
           case 9:
             m.isTemporary = r.bool();
+            break;
+          case 10:
+            m.ownerOrganizationId = r.int32();
             break;
           default:
             r.skipType(t & 7);
@@ -5491,6 +6020,9 @@ export const meeting = $root.meeting = (() => {
       if (m.isTemporary != null && m.hasOwnProperty("isTemporary")) {
         if (typeof m.isTemporary !== "boolean") return "isTemporary: boolean expected";
       }
+      if (m.ownerOrganizationId != null && m.hasOwnProperty("ownerOrganizationId")) {
+        if (!$util.isInteger(m.ownerOrganizationId)) return "ownerOrganizationId: integer expected";
+      }
       return null;
     };
     Meeting.fromObject = function fromObject(d) {
@@ -5514,6 +6046,9 @@ export const meeting = $root.meeting = (() => {
       if (d.isTemporary != null) {
         m.isTemporary = Boolean(d.isTemporary);
       }
+      if (d.ownerOrganizationId != null) {
+        m.ownerOrganizationId = d.ownerOrganizationId | 0;
+      }
       return m;
     };
     Meeting.toObject = function toObject(m, o) {
@@ -5529,6 +6064,7 @@ export const meeting = $root.meeting = (() => {
         } else d.creationTime = o.longs === String ? "0" : 0;
         d.capacity = 0;
         d.isTemporary = false;
+        d.ownerOrganizationId = 0;
       }
       if (m.id != null && m.hasOwnProperty("id")) {
         d.id = m.id;
@@ -5547,6 +6083,9 @@ export const meeting = $root.meeting = (() => {
       }
       if (m.isTemporary != null && m.hasOwnProperty("isTemporary")) {
         d.isTemporary = m.isTemporary;
+      }
+      if (m.ownerOrganizationId != null && m.hasOwnProperty("ownerOrganizationId")) {
+        d.ownerOrganizationId = m.ownerOrganizationId;
       }
       return d;
     };
@@ -7670,7 +8209,7 @@ export const webex = $root.webex = (() => {
     }
     ShareMeetingRequest.prototype.organizationId = 0;
     ShareMeetingRequest.prototype.meetingUrl = "";
-    ShareMeetingRequest.prototype.deviceOemNumber = "";
+    ShareMeetingRequest.prototype.deviceSerialNumber = "";
     ShareMeetingRequest.create = function create(properties) {
       return new ShareMeetingRequest(properties);
     };
@@ -7678,7 +8217,7 @@ export const webex = $root.webex = (() => {
       if (!w) w = $Writer.create();
       if (m.organizationId != null && Object.hasOwnProperty.call(m, "organizationId")) w.uint32(8).int32(m.organizationId);
       if (m.meetingUrl != null && Object.hasOwnProperty.call(m, "meetingUrl")) w.uint32(18).string(m.meetingUrl);
-      if (m.deviceOemNumber != null && Object.hasOwnProperty.call(m, "deviceOemNumber")) w.uint32(26).string(m.deviceOemNumber);
+      if (m.deviceSerialNumber != null && Object.hasOwnProperty.call(m, "deviceSerialNumber")) w.uint32(26).string(m.deviceSerialNumber);
       return w;
     };
     ShareMeetingRequest.encodeDelimited = function encodeDelimited(message, writer) {
@@ -7698,7 +8237,7 @@ export const webex = $root.webex = (() => {
             m.meetingUrl = r.string();
             break;
           case 3:
-            m.deviceOemNumber = r.string();
+            m.deviceSerialNumber = r.string();
             break;
           default:
             r.skipType(t & 7);
@@ -7719,8 +8258,8 @@ export const webex = $root.webex = (() => {
       if (m.meetingUrl != null && m.hasOwnProperty("meetingUrl")) {
         if (!$util.isString(m.meetingUrl)) return "meetingUrl: string expected";
       }
-      if (m.deviceOemNumber != null && m.hasOwnProperty("deviceOemNumber")) {
-        if (!$util.isString(m.deviceOemNumber)) return "deviceOemNumber: string expected";
+      if (m.deviceSerialNumber != null && m.hasOwnProperty("deviceSerialNumber")) {
+        if (!$util.isString(m.deviceSerialNumber)) return "deviceSerialNumber: string expected";
       }
       return null;
     };
@@ -7733,8 +8272,8 @@ export const webex = $root.webex = (() => {
       if (d.meetingUrl != null) {
         m.meetingUrl = String(d.meetingUrl);
       }
-      if (d.deviceOemNumber != null) {
-        m.deviceOemNumber = String(d.deviceOemNumber);
+      if (d.deviceSerialNumber != null) {
+        m.deviceSerialNumber = String(d.deviceSerialNumber);
       }
       return m;
     };
@@ -7744,7 +8283,7 @@ export const webex = $root.webex = (() => {
       if (o.defaults) {
         d.organizationId = 0;
         d.meetingUrl = "";
-        d.deviceOemNumber = "";
+        d.deviceSerialNumber = "";
       }
       if (m.organizationId != null && m.hasOwnProperty("organizationId")) {
         d.organizationId = m.organizationId;
@@ -7752,8 +8291,8 @@ export const webex = $root.webex = (() => {
       if (m.meetingUrl != null && m.hasOwnProperty("meetingUrl")) {
         d.meetingUrl = m.meetingUrl;
       }
-      if (m.deviceOemNumber != null && m.hasOwnProperty("deviceOemNumber")) {
-        d.deviceOemNumber = m.deviceOemNumber;
+      if (m.deviceSerialNumber != null && m.hasOwnProperty("deviceSerialNumber")) {
+        d.deviceSerialNumber = m.deviceSerialNumber;
       }
       return d;
     };
