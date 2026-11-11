@@ -1,6 +1,16 @@
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+import "core-js/modules/es.symbol.description.js";
 import "core-js/modules/es.array-buffer.constructor.js";
 import "core-js/modules/es.array-buffer.slice.js";
 import "core-js/modules/es.promise.js";
+import "core-js/modules/es.regexp.exec.js";
+import "core-js/modules/es.regexp.test.js";
+import "core-js/modules/es.regexp.to-string.js";
 import "core-js/modules/es.typed-array.uint8-array.js";
 import "core-js/modules/es.typed-array.fill.js";
 import "core-js/modules/es.typed-array.set.js";
@@ -8,14 +18,18 @@ import "core-js/modules/es.typed-array.sort.js";
 import "core-js/modules/es.typed-array.to-locale-string.js";
 import "core-js/modules/es.weak-map.js";
 import "core-js/modules/esnext.aggregate-error.js";
+import "core-js/modules/esnext.iterator.constructor.js";
+import "core-js/modules/esnext.iterator.filter.js";
+import "core-js/modules/esnext.iterator.find.js";
+import "core-js/modules/esnext.iterator.map.js";
 import "core-js/modules/esnext.promise.any.js";
 import "core-js/modules/web.dom-collections.iterator.js";
 import "core-js/modules/web.url.js";
 import "core-js/modules/web.url.to-json.js";
 import "core-js/modules/web.url-search-params.js";
-function _classPrivateMethodInitSpec(obj, privateSet) { _checkPrivateRedeclaration(obj, privateSet); privateSet.add(obj); }
-function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedeclaration(obj, privateMap); privateMap.set(obj, value); }
-function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
+function _classPrivateMethodInitSpec(e, a) { _checkPrivateRedeclaration(e, a), a.add(e); }
+function _classPrivateFieldInitSpec(e, t, a) { _checkPrivateRedeclaration(e, t), t.set(e, a); }
+function _checkPrivateRedeclaration(e, t) { if (t.has(e)) throw new TypeError("Cannot initialize the same private elements twice on an object"); }
 function _classPrivateFieldGet(s, a) { return s.get(_assertClassBrand(s, a)); }
 function _classPrivateFieldSet(s, a, r) { return s.set(_assertClassBrand(s, a), r), r; }
 function _assertClassBrand(e, t, n) { if ("function" == typeof e ? e === t : e.has(t)) return arguments.length < 3 ? t : n; throw new TypeError("Private element is not present on this object"); }
@@ -32,8 +46,9 @@ let clientType = ClientType.WEBAPP;
 let clientName = "client";
 let instance = undefined;
 const observable = new Observable();
-var _expiryTimer = /*#__PURE__*/new WeakMap();
-var _EventBusConnection_brand = /*#__PURE__*/new WeakSet();
+var _expiryTimer = new WeakMap();
+var _uriRequestVersion = new WeakMap();
+var _EventBusConnection_brand = new WeakSet();
 class EventBusConnection extends ObservableRetryConnection {
   static getInstance() {
     if (!instance) instance = new EventBusConnection();
@@ -55,11 +70,15 @@ class EventBusConnection extends ObservableRetryConnection {
     super("eventbus-".concat(clientName));
     _classPrivateMethodInitSpec(this, _EventBusConnection_brand);
     _classPrivateFieldInitSpec(this, _expiryTimer, void 0);
+    _classPrivateFieldInitSpec(this, _uriRequestVersion, void 0);
     this.observable = observable;
     this.userToken = null;
     _classPrivateFieldSet(_expiryTimer, this, null);
+    _classPrivateFieldSet(_uriRequestVersion, this, 0);
   }
   async stop() {
+    var _this$uriRequestVersi;
+    _classPrivateFieldSet(_uriRequestVersion, this, (_this$uriRequestVersi = _classPrivateFieldGet(_uriRequestVersion, this), ++_this$uriRequestVersi));
     clearTimeout(_classPrivateFieldGet(_expiryTimer, this));
     super.stop();
   }
@@ -75,21 +94,24 @@ class EventBusConnection extends ObservableRetryConnection {
     return this.write(request);
   }
   async getURI() {
+    var _this$uriRequestVersi2;
+    const requestVersion = _classPrivateFieldSet(_uriRequestVersion, this, (_this$uriRequestVersi2 = _classPrivateFieldGet(_uriRequestVersion, this), ++_this$uriRequestVersi2));
     try {
       this.userToken = await getUserToken();
       this.userClaims = new UserClaims(this.userToken);
       let seconds = this.userClaims.getSecondsUntilExpiry();
       if (seconds <= 0) {
         let e = new PermissionDeniedError("user token expired");
-        this.onError(e);
         throw e;
       }
-      _classPrivateFieldSet(_expiryTimer, this, setTimeout(() => {
-        this.onError(new SessionTimeoutError("user token expired"));
-      }, seconds));
+      if (requestVersion === _classPrivateFieldGet(_uriRequestVersion, this) && this.isStarted()) {
+        clearTimeout(_classPrivateFieldGet(_expiryTimer, this));
+        _classPrivateFieldSet(_expiryTimer, this, setTimeout(() => {
+          this.onError(new SessionTimeoutError("user token expired"));
+        }, seconds * 1000));
+      }
     } catch (err) {
       let e = new PermissionDeniedError(err);
-      this.onError(e);
       throw e;
     }
     let base = new URL(Config.apiBaseURL);
@@ -126,13 +148,11 @@ class EventBusConnection extends ObservableRetryConnection {
     });
   }
   startStream(_ref) {
-    let {
-      config,
-      runtimeConfig,
-      camera,
-      clientId,
-      meetingToken
-    } = _ref;
+    let config = _ref.config,
+      runtimeConfig = _ref.runtimeConfig,
+      camera = _ref.camera,
+      clientId = _ref.clientId,
+      meetingToken = _ref.meetingToken;
     return this.writeObject({
       startRequest: {
         config,
@@ -212,7 +232,9 @@ async function _onMessage(msg) {
 }
 function _getClientTypeAsString(clientType) {
   let found = Object.entries(ClientType).find(_ref2 => {
-    let [k, v] = _ref2;
+    let _ref3 = _slicedToArray(_ref2, 2),
+      k = _ref3[0],
+      v = _ref3[1];
     return v == clientType;
   });
   if (!found) throw new InvalidArgumentError("Invalid client type: ".concat(clientType));
@@ -284,8 +306,10 @@ function _callSubscribers(functionName) {
   for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
     args[_key - 1] = arguments[_key];
   }
-  let promises = [...observable.observers].map(_ref3 => {
-    let [k, o] = _ref3;
+  let promises = [...observable.observers].map(_ref4 => {
+    let _ref5 = _slicedToArray(_ref4, 2),
+      k = _ref5[0],
+      o = _ref5[1];
     return o[functionName];
   }).filter(fn => fn !== undefined).map(fn => fn(...args));
   return Promise.any(promises);

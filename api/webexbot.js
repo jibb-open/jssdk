@@ -2,12 +2,10 @@ import "core-js/modules/es.promise.js";
 import { Config } from '../config.js';
 import { http } from "../utils/http/index.js";
 export async function shareImage(_ref) {
-  let {
-    meetingToken,
-    message,
-    data,
-    mimeType
-  } = _ref;
+  let meetingToken = _ref.meetingToken,
+    message = _ref.message,
+    data = _ref.data,
+    mimeType = _ref.mimeType;
   let headers = {
     "Content-Type": "application/json",
     Accept: "application/json",

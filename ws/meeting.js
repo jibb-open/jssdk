@@ -1,6 +1,6 @@
-function _classPrivateMethodInitSpec(obj, privateSet) { _checkPrivateRedeclaration(obj, privateSet); privateSet.add(obj); }
-function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedeclaration(obj, privateMap); privateMap.set(obj, value); }
-function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
+function _classPrivateMethodInitSpec(e, a) { _checkPrivateRedeclaration(e, a), a.add(e); }
+function _classPrivateFieldInitSpec(e, t, a) { _checkPrivateRedeclaration(e, t), t.set(e, a); }
+function _checkPrivateRedeclaration(e, t) { if (t.has(e)) throw new TypeError("Cannot initialize the same private elements twice on an object"); }
 function _classPrivateFieldGet(s, a) { return s.get(_assertClassBrand(s, a)); }
 function _classPrivateFieldSet(s, a, r) { return s.set(_assertClassBrand(s, a), r), r; }
 function _assertClassBrand(e, t, n) { if ("function" == typeof e ? e === t : e.has(t)) return arguments.length < 3 ? t : n; throw new TypeError("Private element is not present on this object"); }
@@ -22,11 +22,10 @@ import { getUserClaims } from '../api/auth.js';
 import { Config } from "../config.js";
 import { logger } from "../utils/logger/index.js";
 import { MeetingClaims } from "../types/types.js";
-import { meeting, types } from "../types/proto.js";
+import { meeting } from "../types/proto.js";
 import { PermissionDeniedError, SessionTimeoutError } from '../types/exceptions.js';
 import { ObservableRetryConnection } from './observable_connection.js';
 let Message = meeting.Message;
-let ErrorCode = types.Code;
 if ((globalThis === null || globalThis === void 0 ? void 0 : globalThis.WebSocket) == undefined) {
   import("isomorphic-ws").then(webSocket => {
     globalThis.WebSocket = webSocket.default;
@@ -34,8 +33,8 @@ if ((globalThis === null || globalThis === void 0 ? void 0 : globalThis.WebSocke
     console.log(err);
   });
 }
-var _expiryTimer = /*#__PURE__*/new WeakMap();
-var _MeetingConnectionImp_brand = /*#__PURE__*/new WeakSet();
+var _expiryTimer = new WeakMap();
+var _MeetingConnectionImp_brand = new WeakSet();
 class MeetingConnectionImp extends ObservableRetryConnection {
   constructor() {
     let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
@@ -61,10 +60,10 @@ class MeetingConnectionImp extends ObservableRetryConnection {
       this.onError(e);
       throw e;
     }
+    clearTimeout(_classPrivateFieldGet(_expiryTimer, this));
     _classPrivateFieldSet(_expiryTimer, this, setTimeout(() => {
-      this.stop();
       this.onError(new SessionTimeoutError("meeting token expired"));
-    }, seconds));
+    }, seconds * 1000));
     super.start();
   }
   stop() {
@@ -72,16 +71,7 @@ class MeetingConnectionImp extends ObservableRetryConnection {
     super.stop();
   }
   async getURI() {
-    try {
-      if (this.meetingClaims.isExpired()) {
-        let e = new PermissionDeniedError("meeting token expired");
-        this.onError(e);
-        throw e;
-      }
-    } catch (err) {
-      let e = new PermissionDeniedError(err);
-      throw e;
-    }
+    if (this.meetingClaims.isExpired()) throw new PermissionDeniedError("meeting token expired");
     let base = new URL(Config.apiBaseURL);
     let url = base.host + (base.pathname !== '/' ? base.pathname : '');
     return "wss://" + url + "/ws/meetings/" + this.meetingId + "?meeting_token=" + this.meetingToken;
@@ -148,10 +138,8 @@ class MeetingConnectionImp extends ObservableRetryConnection {
     await this.write(buf);
   }
   async sendDrawing(_ref) {
-    let {
-      email,
-      data
-    } = _ref;
+    let email = _ref.email,
+      data = _ref.data;
     let msg = Message.fromObject({
       drawing: {
         email: email,

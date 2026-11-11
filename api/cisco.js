@@ -2,12 +2,10 @@ import "core-js/modules/es.json.stringify.js";
 import "core-js/modules/es.promise.js";
 import { Config } from "../config.js";
 export async function getMacro(_ref) {
-  let {
-    apiKey,
-    selectInputs,
-    cameraControl,
-    mtr
-  } = _ref;
+  let apiKey = _ref.apiKey,
+    selectInputs = _ref.selectInputs,
+    cameraControl = _ref.cameraControl,
+    mtr = _ref.mtr;
   let body = {
     api_key: apiKey,
     select_inputs: selectInputs,

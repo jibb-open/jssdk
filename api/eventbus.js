@@ -7,10 +7,8 @@ export async function getCameraList(clientId) {
   return response.data.items;
 }
 export async function getCameraPreview(_ref) {
-  let {
-    cameraId,
-    clientId
-  } = _ref;
+  let cameraId = _ref.cameraId,
+    clientId = _ref.clientId;
   let body = {
     source: {
       id: cameraId
@@ -20,20 +18,18 @@ export async function getCameraPreview(_ref) {
   return response.data.image;
 }
 export async function startStream(_ref2) {
-  let {
-    meetingToken,
-    surfaceType,
-    cameraId,
-    sipUri,
-    flipLeftRight,
-    flipUpDown,
-    rotation,
-    fixedCorners,
-    clientId,
-    customCorners,
-    enableColor,
-    enableEstimation
-  } = _ref2;
+  let meetingToken = _ref2.meetingToken,
+    surfaceType = _ref2.surfaceType,
+    cameraId = _ref2.cameraId,
+    sipUri = _ref2.sipUri,
+    flipLeftRight = _ref2.flipLeftRight,
+    flipUpDown = _ref2.flipUpDown,
+    rotation = _ref2.rotation,
+    fixedCorners = _ref2.fixedCorners,
+    clientId = _ref2.clientId,
+    customCorners = _ref2.customCorners,
+    enableColor = _ref2.enableColor,
+    enableEstimation = _ref2.enableEstimation;
   let request = {
     config: {
       surface_type: surfaceType
@@ -74,16 +70,14 @@ export async function sendMessage(body) {
   return http.post("".concat(Config.apiBaseURL, "/v1/eventbus"), body, await _prepareRequestHeaders());
 }
 export async function setRuntimeConfig(_ref3) {
-  let {
-    flipLeftRight,
-    flipUpDown,
-    rotation,
-    fixedCorners,
-    customCorners,
-    clientId,
-    enableColor,
-    enableEstimation
-  } = _ref3;
+  let flipLeftRight = _ref3.flipLeftRight,
+    flipUpDown = _ref3.flipUpDown,
+    rotation = _ref3.rotation,
+    fixedCorners = _ref3.fixedCorners,
+    customCorners = _ref3.customCorners,
+    clientId = _ref3.clientId,
+    enableColor = _ref3.enableColor,
+    enableEstimation = _ref3.enableEstimation;
   let body = {
     runtime_config_request: {
       runtime_config: _makeRuntimeConfig({
@@ -111,15 +105,13 @@ async function _prepareRequestHeaders() {
   };
 }
 function _makeRuntimeConfig(_ref4) {
-  let {
-    fixedCorners,
-    flipLeftRight,
-    flipUpDown,
-    rotation,
-    customCorners,
-    enableColor,
-    enableEstimation
-  } = _ref4;
+  let fixedCorners = _ref4.fixedCorners,
+    flipLeftRight = _ref4.flipLeftRight,
+    flipUpDown = _ref4.flipUpDown,
+    rotation = _ref4.rotation,
+    customCorners = _ref4.customCorners,
+    enableColor = _ref4.enableColor,
+    enableEstimation = _ref4.enableEstimation;
   switch (rotation) {
     case 90:
       rotation = "1";

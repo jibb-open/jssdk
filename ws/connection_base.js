@@ -1,77 +1,91 @@
 import "core-js/modules/es.promise.js";
 import "core-js/modules/es.weak-map.js";
 import "core-js/modules/web.dom-collections.iterator.js";
-function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedeclaration(obj, privateMap); privateMap.set(obj, value); }
-function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
+function _classPrivateMethodInitSpec(e, a) { _checkPrivateRedeclaration(e, a), a.add(e); }
+function _classPrivateFieldInitSpec(e, t, a) { _checkPrivateRedeclaration(e, t), t.set(e, a); }
+function _checkPrivateRedeclaration(e, t) { if (t.has(e)) throw new TypeError("Cannot initialize the same private elements twice on an object"); }
 function _classPrivateFieldGet(s, a) { return s.get(_assertClassBrand(s, a)); }
 function _classPrivateFieldSet(s, a, r) { return s.set(_assertClassBrand(s, a), r), r; }
 function _assertClassBrand(e, t, n) { if ("function" == typeof e ? e === t : e.has(t)) return arguments.length < 3 ? t : n; throw new TypeError("Private element is not present on this object"); }
 import { logger } from "../utils/logger/index.js";
 import { Future } from "../utils/future.js";
 import { types } from "../types/proto.js";
-import { TooManyConnectionsError, PermissionDeniedError, InvalidArgumentError, SessionTimeoutError, InternalError, GenericError } from "../types/exceptions.js";
+import { TooManyConnectionsError, PermissionDeniedError, InvalidArgumentError, SessionTimeoutError, InternalError, GenericError, NotConnectedError } from "../types/exceptions.js";
 const ErrorCode = types.Code;
 export const ConnectionStatus = {
   CONNECTED: "CONNECTED",
   DISCONNECTED: "DISCONNECTED",
   CONNECTING: "CONNECTING"
 };
-var _connectionStatus = /*#__PURE__*/new WeakMap();
-var _connectionFuture = /*#__PURE__*/new WeakMap();
-var _socket = /*#__PURE__*/new WeakMap();
+var _connectionStatus = new WeakMap();
+var _connectionFuture = new WeakMap();
+var _socket = new WeakMap();
+var _connectionAttempt = new WeakMap();
+var _ConnectionBase_brand = new WeakSet();
 export class ConnectionBase {
   constructor(name) {
+    _classPrivateMethodInitSpec(this, _ConnectionBase_brand);
     _classPrivateFieldInitSpec(this, _connectionStatus, void 0);
     _classPrivateFieldInitSpec(this, _connectionFuture, void 0);
     _classPrivateFieldInitSpec(this, _socket, void 0);
+    _classPrivateFieldInitSpec(this, _connectionAttempt, void 0);
     this.name = name;
     _classPrivateFieldSet(_connectionStatus, this, ConnectionStatus.DISCONNECTED);
     _classPrivateFieldSet(_connectionFuture, this, new Future());
     _classPrivateFieldGet(_connectionFuture, this).reject("disconnected");
     _classPrivateFieldSet(_socket, this, null);
+    _classPrivateFieldSet(_connectionAttempt, this, 0);
   }
   async connect() {
-    if (_classPrivateFieldGet(_socket, this) != null) return;
+    var _this$connectionAttem;
+    if (_classPrivateFieldGet(_socket, this) != null || _classPrivateFieldGet(_connectionStatus, this) === ConnectionStatus.CONNECTING) return;
     logger.info("".concat(this.name, ": connecting ..."));
     _classPrivateFieldSet(_connectionStatus, this, ConnectionStatus.CONNECTING);
     _classPrivateFieldSet(_connectionFuture, this, new Future());
-    let uri = await this.getURI();
-    _classPrivateFieldSet(_socket, this, new WebSocket(uri));
-    _classPrivateFieldGet(_socket, this).binaryType = "arraybuffer";
-    _classPrivateFieldGet(_socket, this).addEventListener("open", () => {
-      this.onConnected();
-    });
-    _classPrivateFieldGet(_socket, this).addEventListener("close", () => {
-      this.onDisconnected();
-    });
-    _classPrivateFieldGet(_socket, this).addEventListener("message", event => {
-      this.onData(event.data);
-    });
-    _classPrivateFieldGet(_socket, this).addEventListener("error", err => {
-      this.onError(err);
-    });
+    const attempt = _classPrivateFieldSet(_connectionAttempt, this, (_this$connectionAttem = _classPrivateFieldGet(_connectionAttempt, this), ++_this$connectionAttem));
+    try {
+      const uri = await this.getURI();
+      if (attempt !== _classPrivateFieldGet(_connectionAttempt, this)) return;
+      const socket = new WebSocket(uri);
+      _classPrivateFieldSet(_socket, this, socket);
+      const isCurrent = () => attempt === _classPrivateFieldGet(_connectionAttempt, this) && _classPrivateFieldGet(_socket, this) === socket;
+      socket.binaryType = "arraybuffer";
+      socket.addEventListener("open", () => {
+        if (isCurrent()) this.onConnected();
+      });
+      socket.addEventListener("close", () => {
+        if (isCurrent()) this.onDisconnected();
+      });
+      socket.addEventListener("message", event => {
+        if (isCurrent()) this.onData(event.data);
+      });
+      socket.addEventListener("error", err => {
+        if (isCurrent()) this.onError(err);
+      });
+    } catch (err) {
+      if (attempt !== _classPrivateFieldGet(_connectionAttempt, this)) return;
+      this.disconnect();
+      throw err;
+    }
   }
   async getURI() {
     throw new Error("connection.getURI is not implemented");
   }
   disconnect() {
-    if (_classPrivateFieldGet(_socket, this) != null) {
-      _classPrivateFieldGet(_socket, this).close();
-      _classPrivateFieldSet(_socket, this, null);
-      logger.info("connection disconnected: ", this.name);
-    }
+    const hadSocket = _classPrivateFieldGet(_socket, this) != null;
+    _assertClassBrand(_ConnectionBase_brand, this, _closeSocket).call(this);
+    if (hadSocket) this.onDisconnected();
   }
   async write(data) {
-    var _classPrivateFieldGet2, _classPrivateFieldGet3;
     await this.waitForConnection();
-    (_classPrivateFieldGet2 = _classPrivateFieldGet(_socket, this)) === null || _classPrivateFieldGet2 === void 0 || (_classPrivateFieldGet3 = _classPrivateFieldGet2.send) === null || _classPrivateFieldGet3 === void 0 || _classPrivateFieldGet3.call(_classPrivateFieldGet2, data);
+    if (!this.isConnected() || !_classPrivateFieldGet(_socket, this)) throw new NotConnectedError("connection disconnected");
+    _classPrivateFieldGet(_socket, this).send(data);
   }
   parseJSONResponse(msg) {
     try {
-      let {
-        code,
-        reason
-      } = JSON.parse(msg);
+      let _JSON$parse = JSON.parse(msg),
+        code = _JSON$parse.code,
+        reason = _JSON$parse.reason;
       switch (code) {
         case ErrorCode.ERR_TOO_MANY_CONNECTIONS:
           return this.onError(new TooManyConnectionsError(reason));
@@ -100,14 +114,8 @@ export class ConnectionBase {
     _classPrivateFieldGet(_connectionFuture, this).set("connected");
   }
   onDisconnected() {
-    if (_classPrivateFieldGet(_socket, this) != null) {
-      _classPrivateFieldGet(_socket, this).close();
-      _classPrivateFieldSet(_socket, this, null);
-      logger.info("connection disconnected: ", this.name);
-    }
+    _assertClassBrand(_ConnectionBase_brand, this, _closeSocket).call(this);
     logger.warn("".concat(this.name, ": disconnected"));
-    _classPrivateFieldSet(_connectionStatus, this, ConnectionStatus.DISCONNECTED);
-    _classPrivateFieldGet(_connectionFuture, this).reject("disconnected");
   }
   isConnected() {
     return _classPrivateFieldGet(_connectionStatus, this) == ConnectionStatus.CONNECTED;
@@ -121,5 +129,19 @@ export class ConnectionBase {
   onData(_data) {}
   onError(err) {
     logger.warn("".concat(this.name, ": onError: ").concat(err));
+  }
+}
+function _closeSocket() {
+  var _this$connectionAttem2;
+  _classPrivateFieldSet(_connectionAttempt, this, (_this$connectionAttem2 = _classPrivateFieldGet(_connectionAttempt, this), ++_this$connectionAttem2));
+  const socket = _classPrivateFieldGet(_socket, this);
+  _classPrivateFieldSet(_socket, this, null);
+  _classPrivateFieldSet(_connectionStatus, this, ConnectionStatus.DISCONNECTED);
+  _classPrivateFieldGet(_connectionFuture, this).reject("disconnected");
+  _classPrivateFieldSet(_connectionFuture, this, new Future());
+  _classPrivateFieldGet(_connectionFuture, this).reject("disconnected");
+  if (socket != null) {
+    socket.close();
+    logger.info("connection disconnected: ", this.name);
   }
 }

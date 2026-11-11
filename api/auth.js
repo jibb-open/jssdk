@@ -5,16 +5,18 @@ import { AccessLevel, UserClaims } from "../types/types.js";
 import { http } from "../utils/http/index.js";
 let _userClaims = new Map();
 let _apiKey = undefined;
-let _getIdToken = async () => {
-  throw new Error("not implemented");
+const notConfigured = async () => {
+  throw new Error("Authentication is not configured");
 };
-export function configure(_ref) {
-  let {
-    apiKey,
-    getIdToken
-  } = _ref;
-  if (apiKey) _apiKey = apiKey;
-  if (getIdToken) _getIdToken = getIdToken;
+let _getIdToken = notConfigured;
+let _authVersion = 0;
+export function configure() {
+  let _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+    apiKey = _ref.apiKey,
+    getIdToken = _ref.getIdToken;
+  _authVersion++;
+  _apiKey = apiKey;
+  _getIdToken = getIdToken || notConfigured;
   _userClaims.clear();
 }
 export function setUserToken(token) {
@@ -29,32 +31,37 @@ export async function getUserClaims() {
   });
 }
 export async function getUserToken() {
-  let {
-    minExpiry,
-    accessLevel
-  } = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  minExpiry = minExpiry || 30 * 60;
-  accessLevel = accessLevel || AccessLevel.USER;
+  let _ref2 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+    minExpiry = _ref2.minExpiry,
+    accessLevel = _ref2.accessLevel;
+  minExpiry = minExpiry !== null && minExpiry !== void 0 ? minExpiry : 30 * 60;
+  accessLevel = accessLevel !== null && accessLevel !== void 0 ? accessLevel : AccessLevel.USER;
+  const authVersion = _authVersion;
   let claim = _userClaims.get(accessLevel);
   let refresh = false;
   let exp = claim ? claim.getSecondsUntilExpiry() : 0;
-  if (exp < 60) {
+  if (exp <= 60) {
     claim = undefined;
     refresh = true;
   } else if (exp < minExpiry) refresh = true;
   if (refresh) {
     return _refreshUserToken(accessLevel).then(token => {
+      if (authVersion !== _authVersion) throw new Error("Authentication configuration changed during token refresh");
+      if (new UserClaims(token).isExpired()) throw new Error("Token refresh returned an expired or invalid token");
       setUserToken(token, accessLevel);
       return token;
     }).catch(_err => {
-      if (claim) return claim.token;else throw _err;
+      if (authVersion !== _authVersion) throw new Error("Authentication configuration changed during token refresh");
+      if (claim && !claim.isExpired()) return claim.token;else throw _err;
     });
   } else {
     if (claim) return claim.token;else throw new Error("could not create user token");
   }
 }
 export function logout() {
+  _authVersion++;
   _apiKey = undefined;
+  _getIdToken = notConfigured;
   _userClaims.clear();
 }
 export async function generateAPIKey() {

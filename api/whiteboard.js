@@ -8,10 +8,8 @@ export class Whiteboard {
     this.meetingToken = meetingToken;
   }
   async saveImage(_ref) {
-    let {
-      image,
-      type
-    } = _ref;
+    let image = _ref.image,
+      type = _ref.type;
     type = type || "";
     switch (type.toLowerCase()) {
       case "jpeg":
