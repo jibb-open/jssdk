@@ -1,9 +1,21 @@
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+import "core-js/modules/es.symbol.description.js";
 import "core-js/modules/es.object.from-entries.js";
+import "core-js/modules/es.regexp.exec.js";
+import "core-js/modules/es.regexp.test.js";
+import "core-js/modules/es.regexp.to-string.js";
 import "core-js/modules/es.weak-map.js";
+import "core-js/modules/esnext.iterator.constructor.js";
+import "core-js/modules/esnext.iterator.map.js";
 import "core-js/modules/web.dom-collections.iterator.js";
-function _classPrivateMethodInitSpec(obj, privateSet) { _checkPrivateRedeclaration(obj, privateSet); privateSet.add(obj); }
-function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedeclaration(obj, privateMap); privateMap.set(obj, value); }
-function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
+function _classPrivateMethodInitSpec(e, a) { _checkPrivateRedeclaration(e, a), a.add(e); }
+function _classPrivateFieldInitSpec(e, t, a) { _checkPrivateRedeclaration(e, t), t.set(e, a); }
+function _checkPrivateRedeclaration(e, t) { if (t.has(e)) throw new TypeError("Cannot initialize the same private elements twice on an object"); }
 function _classPrivateFieldGet(s, a) { return s.get(_assertClassBrand(s, a)); }
 function _classPrivateFieldSet(s, a, r) { return s.set(_assertClassBrand(s, a), r), r; }
 function _assertClassBrand(e, t, n) { if ("function" == typeof e ? e === t : e.has(t)) return arguments.length < 3 ? t : n; throw new TypeError("Private element is not present on this object"); }
@@ -38,9 +50,9 @@ export const SkuAction = {
   DELETE: "2",
   NO_CHANGE: "3"
 };
-var _billingFrequencies = /*#__PURE__*/new WeakMap();
-var _name = /*#__PURE__*/new WeakMap();
-var _JibbPlan_brand = /*#__PURE__*/new WeakSet();
+var _billingFrequencies = new WeakMap();
+var _name = new WeakMap();
+var _JibbPlan_brand = new WeakSet();
 class JibbPlan {
   constructor(name, count) {
     _classPrivateMethodInitSpec(this, _JibbPlan_brand);
@@ -131,8 +143,8 @@ class StandardClaims {
     this.expiryTime = new Date(this.claims.exp * 1000);
   }
   getSecondsUntilExpiry() {
-    let sec = this.expiryTime - Date.now();
-    return sec < 0 ? 0 : sec;
+    const seconds = (this.expiryTime.getTime() - Date.now()) / 1000;
+    return Number.isFinite(seconds) ? Math.max(0, seconds) : 0;
   }
   getHoursUntilExpiry() {
     let sec = this.getSecondsUntilExpiry();
@@ -174,7 +186,9 @@ export const ShareMeetingStatus = Object.freeze({
   MICROSOFT_TEAM_NOT_CONNECTED: 4
 });
 export const ShareMeetingStatusName = Object.freeze(Object.fromEntries(Object.entries(ShareMeetingStatus).map(_ref => {
-  let [k, v] = _ref;
+  let _ref2 = _slicedToArray(_ref, 2),
+    k = _ref2[0],
+    v = _ref2[1];
   return [v, k];
 })));
 export const ShareMeetingStatusCode = ShareMeetingStatus;

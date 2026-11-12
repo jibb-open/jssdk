@@ -7,12 +7,10 @@ import { InvalidArgumentError, NotFoundError, PermissionDeniedError } from "../t
 import { http } from "../utils/http/index.js";
 import { UserClaims, MeetingClaims, MeetingTypes } from "../types/types.js";
 export async function createMeeting(_ref) {
-  let {
-    title,
-    isTemporary,
-    capacity,
-    meetingType
-  } = _ref;
+  let title = _ref.title,
+    isTemporary = _ref.isTemporary,
+    capacity = _ref.capacity,
+    meetingType = _ref.meetingType;
   let headers = {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -28,12 +26,10 @@ export async function createMeeting(_ref) {
   return response.data.meetingId;
 }
 export async function createTemporaryShare(_ref2) {
-  let {
-    meetingId,
-    permission,
-    expiry,
-    auxData
-  } = _ref2;
+  let meetingId = _ref2.meetingId,
+    permission = _ref2.permission,
+    expiry = _ref2.expiry,
+    auxData = _ref2.auxData;
   let headers = {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -50,10 +46,8 @@ export async function createTemporaryShare(_ref2) {
   return response.data.shareId;
 }
 export async function getMeetingTokenFromTempShareId(_ref3) {
-  let {
-    meetingId,
-    shareId
-  } = _ref3;
+  let meetingId = _ref3.meetingId,
+    shareId = _ref3.shareId;
   let headers = {
     "Content-Type": "application/json",
     Accept: "application/json"
@@ -62,10 +56,8 @@ export async function getMeetingTokenFromTempShareId(_ref3) {
   return response.data.token;
 }
 export async function deleteMeetingImages(_ref4) {
-  let {
-    meetingId,
-    mtoken
-  } = _ref4;
+  let meetingId = _ref4.meetingId,
+    mtoken = _ref4.mtoken;
   let headers = {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -75,10 +67,8 @@ export async function deleteMeetingImages(_ref4) {
   return http.delete("".concat(Config.apiBaseURL, "/v1/meetings/").concat(meetingId, "/images"), headers);
 }
 export async function getMeetingImages(_ref5) {
-  let {
-    meetingId,
-    meetingToken
-  } = _ref5;
+  let meetingId = _ref5.meetingId,
+    meetingToken = _ref5.meetingToken;
   let headers = {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -89,11 +79,9 @@ export async function getMeetingImages(_ref5) {
   return response.data;
 }
 export async function getMeetingImage(_ref6) {
-  let {
-    meetingId,
-    meetingToken,
-    imageId
-  } = _ref6;
+  let meetingId = _ref6.meetingId,
+    meetingToken = _ref6.meetingToken,
+    imageId = _ref6.imageId;
   let headers = {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -104,10 +92,8 @@ export async function getMeetingImage(_ref6) {
   return response.data;
 }
 export async function startMeeting(_ref7) {
-  let {
-    meetingId,
-    meetingToken
-  } = _ref7;
+  let meetingId = _ref7.meetingId,
+    meetingToken = _ref7.meetingToken;
   let headers = {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -122,10 +108,8 @@ export async function startMeeting(_ref7) {
   }
 }
 export async function endMeeting(_ref8) {
-  let {
-    meetingId,
-    meetingToken
-  } = _ref8;
+  let meetingId = _ref8.meetingId,
+    meetingToken = _ref8.meetingToken;
   let headers = {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -143,11 +127,10 @@ export async function deleteMeeting(meetingId) {
   return http.delete("".concat(Config.apiBaseURL, "/v1/meetings/").concat(meetingId), headers);
 }
 export async function getMeetingToken(_ref9) {
-  let {
-    meetingId,
-    permission,
-    expiry = 3600
-  } = _ref9;
+  let meetingId = _ref9.meetingId,
+    permission = _ref9.permission,
+    _ref9$expiry = _ref9.expiry,
+    expiry = _ref9$expiry === void 0 ? 3600 : _ref9$expiry;
   let userToken;
   try {
     userToken = await getUserToken();
@@ -200,12 +183,10 @@ export async function getMeetingDetails(meetingId) {
   let response = await http.get("".concat(Config.apiBaseURL, "/v1/meetings/").concat(meetingId), headers);
   return response.data;
 }
-export async function updateMeeting(_ref10) {
-  let {
-    meetingId,
-    title,
-    capacity
-  } = _ref10;
+export async function updateMeeting(_ref0) {
+  let meetingId = _ref0.meetingId,
+    title = _ref0.title,
+    capacity = _ref0.capacity;
   let headers = {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -229,13 +210,11 @@ export async function isMeetingOwner(meetingToken) {
     return false;
   }
 }
-export async function createShare(_ref11) {
-  let {
-    email,
-    meetingId,
-    permission,
-    meetingToken
-  } = _ref11;
+export async function createShare(_ref1) {
+  let email = _ref1.email,
+    meetingId = _ref1.meetingId,
+    permission = _ref1.permission,
+    meetingToken = _ref1.meetingToken;
   let headers = {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -275,11 +254,9 @@ export async function deleteShare(shareId) {
   };
   return http.delete("".concat(Config.apiBaseURL, "/v1/meetings/shares/").concat(shareId), headers);
 }
-export async function updateShare(_ref12) {
-  let {
-    shareId,
-    permission
-  } = _ref12;
+export async function updateShare(_ref10) {
+  let shareId = _ref10.shareId,
+    permission = _ref10.permission;
   let headers = {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -290,11 +267,9 @@ export async function updateShare(_ref12) {
   };
   return http.patch("".concat(Config.apiBaseURL, "/v1/meetings/shares/").concat(shareId), body, headers);
 }
-export async function createShortUrl(_ref13) {
-  let {
-    meetingToken,
-    url
-  } = _ref13;
+export async function createShortUrl(_ref11) {
+  let meetingToken = _ref11.meetingToken,
+    url = _ref11.url;
   let headers = {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -315,11 +290,9 @@ export async function getFullUrl(hashKey) {
   let response = await http.get("".concat(Config.apiBaseURL, "/v1/meetings/url-shortener/").concat(hashKey), headers);
   return response.data.fullUrl;
 }
-export async function authorizeShortMeeting(_ref14) {
-  let {
-    hashKey,
-    password
-  } = _ref14;
+export async function authorizeShortMeeting(_ref12) {
+  let hashKey = _ref12.hashKey,
+    password = _ref12.password;
   let headers = {
     "Content-Type": "application/json",
     Accept: "application/json"

@@ -12,12 +12,13 @@ import "core-js/modules/web.dom-collections.iterator.js";
 import "core-js/modules/web.url.js";
 import "core-js/modules/web.url.to-json.js";
 import "core-js/modules/web.url-search-params.js";
-function _classPrivateMethodInitSpec(obj, privateSet) { _checkPrivateRedeclaration(obj, privateSet); privateSet.add(obj); }
-function _get() { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get.bind(); } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(arguments.length < 3 ? target : receiver); } return desc.value; }; } return _get.apply(this, arguments); }
-function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedeclaration(obj, privateMap); privateMap.set(obj, value); }
-function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
+function _classPrivateMethodInitSpec(e, a) { _checkPrivateRedeclaration(e, a), a.add(e); }
+function _superPropGet(t, o, e, r) { var p = _get(_getPrototypeOf(1 & r ? t.prototype : t), o, e); return 2 & r && "function" == typeof p ? function (t) { return p.apply(e, t); } : p; }
+function _get() { return _get = "undefined" != typeof Reflect && Reflect.get ? Reflect.get.bind() : function (e, t, r) { var p = _superPropBase(e, t); if (p) { var n = Object.getOwnPropertyDescriptor(p, t); return n.get ? n.get.call(arguments.length < 3 ? e : r) : n.value; } }, _get.apply(null, arguments); }
+function _superPropBase(t, o) { for (; !{}.hasOwnProperty.call(t, o) && null !== (t = _getPrototypeOf(t));); return t; }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _classPrivateFieldInitSpec(e, t, a) { _checkPrivateRedeclaration(e, t), t.set(e, a); }
+function _checkPrivateRedeclaration(e, t) { if (t.has(e)) throw new TypeError("Cannot initialize the same private elements twice on an object"); }
 function _classPrivateFieldGet(s, a) { return s.get(_assertClassBrand(s, a)); }
 function _classPrivateFieldSet(s, a, r) { return s.set(_assertClassBrand(s, a), r), r; }
 function _assertClassBrand(e, t, n) { if ("function" == typeof e ? e === t : e.has(t)) return arguments.length < 3 ? t : n; throw new TypeError("Private element is not present on this object"); }
@@ -27,9 +28,9 @@ import { MeetingClaims, UserClaims } from "../types/types.js";
 import { ipsa } from "../types/proto.js";
 import { getUserToken } from "../api/auth.js";
 import { ObservableRetryConnection } from "./observable_connection.js";
-import { AlreadyStartedError, InvalidArgumentError, NotConnectedError, PermissionDeniedError, SessionTimeoutError } from "../types/exceptions.js";
-var _meetingExpiryTimer = /*#__PURE__*/new WeakMap();
-var _IPSAClass_brand = /*#__PURE__*/new WeakSet();
+import { AlreadyStartedError, InvalidArgumentError, PermissionDeniedError, SessionTimeoutError } from "../types/exceptions.js";
+var _meetingExpiryTimer = new WeakMap();
+var _IPSAClass_brand = new WeakSet();
 class IPSAClass extends ObservableRetryConnection {
   constructor(options) {
     super('ipsa', options);
@@ -41,10 +42,8 @@ class IPSAClass extends ObservableRetryConnection {
     this.meetingClaims = null;
   }
   async start(_ref) {
-    let {
-      meetingToken,
-      request
-    } = _ref;
+    let meetingToken = _ref.meetingToken,
+      request = _ref.request;
     if (this.isStarted()) {
       this.onError(new AlreadyStartedError("already started"));
       return;
@@ -63,7 +62,7 @@ class IPSAClass extends ObservableRetryConnection {
       _classPrivateFieldSet(_meetingExpiryTimer, this, setTimeout(() => {
         let e = new SessionTimeoutError("meeting token expired");
         this.onError(e);
-      }, seconds));
+      }, seconds * 1000));
     }
     super.start();
   }
@@ -83,12 +82,10 @@ class IPSAClass extends ObservableRetryConnection {
       let seconds = claims.getSecondsUntilExpiry();
       if (seconds <= 0) {
         let e = new PermissionDeniedError("user token expired");
-        this.onError(e);
         throw e;
       }
     } catch (err) {
       let e = new PermissionDeniedError(err);
-      this.onError(e);
       throw e;
     }
     let meetingId = this.meetingClaims.meetindId;
@@ -122,8 +119,8 @@ class IPSAClass extends ObservableRetryConnection {
   }
   onConnected() {
     super.onConnected();
-    _assertClassBrand(_IPSAClass_brand, this, _write).call(this, this.configRequest);
-    _assertClassBrand(_IPSAClass_brand, this, _write).call(this, this.runtimeConfigRequest);
+    _assertClassBrand(_IPSAClass_brand, this, _writeConfig).call(this, this.configRequest);
+    _assertClassBrand(_IPSAClass_brand, this, _writeConfig).call(this, this.runtimeConfigRequest);
   }
   setRuntimeConfig(cfg) {
     if (!cfg) throw new InvalidArgumentError("bad request");
@@ -131,7 +128,7 @@ class IPSAClass extends ObservableRetryConnection {
       runtimeConfig: cfg
     });
     this.runtimeConfigRequest = request;
-    if (this.isConnected()) _assertClassBrand(_IPSAClass_brand, this, _write).call(this, request);
+    if (this.isConnected()) _assertClassBrand(_IPSAClass_brand, this, _writeConfig).call(this, request);
   }
 }
 _IPSAClass = IPSAClass;
@@ -144,8 +141,13 @@ async function _write(msg) {
   }
   if (msg) {
     let data = ipsa.Request.encode(msg).finish();
-    _get(_getPrototypeOf(_IPSAClass.prototype), "write", this).call(this, data);
+    return _superPropGet(_IPSAClass.prototype, "write", this, 2)([data]);
   }
+}
+function _writeConfig(request) {
+  _assertClassBrand(_IPSAClass_brand, this, _write).call(this, request).catch(err => {
+    if (this.isStarted()) this.onError(err);
+  });
 }
 function _setConfig(cfg) {
   if (!cfg) throw new InvalidArgumentError("bad request");

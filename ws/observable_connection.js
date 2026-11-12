@@ -1,13 +1,15 @@
 import "core-js/modules/es.weak-map.js";
+import "core-js/modules/esnext.iterator.constructor.js";
+import "core-js/modules/esnext.iterator.for-each.js";
 import "core-js/modules/web.dom-collections.iterator.js";
-function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedeclaration(obj, privateMap); privateMap.set(obj, value); }
-function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
+function _classPrivateFieldInitSpec(e, t, a) { _checkPrivateRedeclaration(e, t), t.set(e, a); }
+function _checkPrivateRedeclaration(e, t) { if (t.has(e)) throw new TypeError("Cannot initialize the same private elements twice on an object"); }
 function _classPrivateFieldGet(s, a) { return s.get(_assertClassBrand(s, a)); }
 function _classPrivateFieldSet(s, a, r) { return s.set(_assertClassBrand(s, a), r), r; }
 function _assertClassBrand(e, t, n) { if ("function" == typeof e ? e === t : e.has(t)) return arguments.length < 3 ? t : n; throw new TypeError("Private element is not present on this object"); }
 import { logger } from "../utils/logger/index.js";
 import { RetryConnection } from "./retry_connection.js";
-var _lastId = /*#__PURE__*/new WeakMap();
+var _lastId = new WeakMap();
 export class Observable {
   constructor() {
     _classPrivateFieldInitSpec(this, _lastId, void 0);
